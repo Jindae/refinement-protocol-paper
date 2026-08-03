@@ -1,0 +1,122 @@
+\documentclass[ai,article,submit,oneauthor]{Definitions/mdpi}
+
+\usepackage{amsfonts}
+\usepackage{bm}
+\usepackage{threeparttable}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{positivegain}{RGB}{0, 90, 180} 
+\definecolor{negativegain}{RGB}{190, 30, 45} 
+\newcommand{\posgain}[1]{\textcolor{positivegain}{#1}} 
+\newcommand{\neggain}[1]{\textcolor{negativegain}{#1}} 
+\newcommand{\sigposgain}[1]{\textcolor{positivegain}{\textbf{#1}}} 
+\newcommand{\signeggain}[1]{\textcolor{negativegain}{\textbf{#1}}}
+\newcommand{\sigposci}[1]{\textcolor{positivegain}{#1}}
+\newcommand{\signegci}[1]{\textcolor{negativegain}{#1}}
+
+\setlength{\headheight}{24pt}
+
+\graphicspath{{figures/}}
+
+\newcommand{\selfrefine}{Self-Refine}
+\newcommand{\selfdebug}{Self-Debug}
+\newcommand{\pp}{percentage points}
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+\newcommand{\researchquestion}[2]{%
+    \par\medskip
+    \noindent\textbf{#1.} \textit{#2}\par
+    \smallskip
+}
+
+% Model names used throughout the paper
+\newcommand{\gptthreefive}{GPT-3.5}
+\newcommand{\gptfouromini}{GPT-4o mini}
+\newcommand{\gptfouro}{GPT-4o}
+\newcommand{\gptfivesixsol}{GPT-5.6 Sol}
+\newcommand{\qwentwofive}{Qwen2.5}
+\newcommand{\deepseekvtwo}{DeepSeek-V2}
+\newcommand{\qwenthreecoder}{Qwen3-Coder}
+\newcommand{\modelentry}[2]{%
+    \textbf{#1}\newline
+    {\scriptsize #2}%
+}
+\newcommand{\rqanswer}[2]{%
+    \begin{center}
+    \fbox{\parbox{0.92\columnwidth}{%
+        \textbf{Answer to #1.} #2}}
+    \end{center}    
+}
+
+\lstdefinestyle{prompt}{
+basicstyle=\ttfamily\scriptsize,
+frame=single,
+breaklines=true,
+breakindent=0pt,
+breakautoindent=false,
+columns=fullflexible,
+keepspaces=true,
+showstringspaces=false,
+aboveskip=6pt,
+belowskip=6pt,
+xleftmargin=3pt,
+xrightmargin=3pt,
+framexleftmargin=3pt,
+framexrightmargin=3pt,
+captionpos=b
+}
+
+\firstpage{1}
+\makeatletter
+\setcounter{page}{\@firstpage}
+\makeatother
+\pubvolume{1}
+\issuenum{1}
+\articlenumber{0}
+\pubyear{2026}
+\copyrightyear{2026}
+\datereceived{}
+\daterevised{}
+\dateaccepted{}
+\datepublished{}
+
+\Title{Evaluating Self-Refinement Protocols for Code Generation: Explicit Critique, Revision Planning, and Decision-Conditioned Refinement}
+\Author{Jindae Kim $^{1,*}$}
+\AuthorNames{Jindae Kim}
+\address{%
+$^{1}$ \quad Department of Computer Science and Engineering, Seoul National University of Science and Technology, Seoul 01811, Republic of Korea; jindae.kim@seoultech.ac.kr}
+\corres{Correspondence: jindae.kim@seoultech.ac.kr}
+
+\abstract{
+
+}
+
+\keyword{large language models; code generation; self-refinement; self-critique}
+
+\begin{document}
+
+%\appendixtitles{yes}
+%\appendixstart
+%\appendix
+%\input{sections/appendix}
+
+\authorcontributions{Not applicable.}
+
+% Replace this placeholder with the verified funding statement before submission.
+\funding{This research was supported by Seoul National University of Science and Technology.}
+
+\institutionalreview{Not applicable.}
+\informedconsent{Not applicable.}
+
+% Replace this placeholder with the archival repository and persistent links.
+\dataavailability{The replication package, including the execution scripts and detailed data used in this study, is openly available on Figshare at \url{https://doi.org/10.6084/m9.figshare.33128393.v1}~\cite{replication}.}
+
+\conflictsofinterest{The author declares no conflicts of interest.}
+
+\begin{adjustwidth}{-\extralength}{0cm}
+\reftitle{References}
+\bibliography{references}
+\PublishersNote{}
+\end{adjustwidth}
+
+\end{document}
