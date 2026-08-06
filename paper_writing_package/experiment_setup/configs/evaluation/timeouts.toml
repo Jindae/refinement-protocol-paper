@@ -1,0 +1,119 @@
+schema_version = "candidate-timeout-policy-v2"
+policy_version = "candidate-timeouts-2026-08-04-r2"
+confirmation_mode = "deferred_after_primary_batch"
+confirmation_multiplier = 1.5
+default_confirmation_timeout_seconds = 120.0
+
+[benchmarks.humaneval_plus]
+default_primary_timeout_seconds = 10.0
+reference_audit_id = "timing-humaneval-20260803-r2-v3"
+reference_summary_sha256 = "e0f41fdd39a19fcce79d81ee4f27bd9ad0a3d6b510a799cf0b1cb80ee9822656"
+expected_override_count = 0
+expected_confirmation_override_count = 3
+
+[[benchmarks.humaneval_plus.confirmation_overrides]]
+upstream_task_id = "HumanEval/38"
+evaluator_internal_bound_seconds = 126.0
+confirmation_timeout_seconds = 180.0
+
+[[benchmarks.humaneval_plus.confirmation_overrides]]
+upstream_task_id = "HumanEval/50"
+evaluator_internal_bound_seconds = 126.0
+confirmation_timeout_seconds = 180.0
+
+[[benchmarks.humaneval_plus.confirmation_overrides]]
+upstream_task_id = "HumanEval/53"
+evaluator_internal_bound_seconds = 126.0
+confirmation_timeout_seconds = 180.0
+
+[benchmarks.mbpp_plus]
+default_primary_timeout_seconds = 10.0
+reference_audit_id = "timing-mbpp-20260803-r2-v3"
+reference_summary_sha256 = "8691dc3a6c6443593e2f913d5cf3823d70ce71618ccf80c7a94810ff036efc62"
+expected_override_count = 1
+
+[[benchmarks.mbpp_plus.overrides]]
+upstream_task_id = "Mbpp/599"
+reference_max_seconds = 27.77106370399997
+primary_timeout_seconds = 60.0
+
+[benchmarks.bigcodebench_instruct]
+default_primary_timeout_seconds = 10.0
+reference_audit_id = "timing-bigcodebench-20260803-r2-v3"
+reference_summary_sha256 = "39b8276dc3b3773e29dc4a300b5e979d48af3ab28a9e9e48fdd5e9cae9d2ed81"
+expected_override_count = 15
+
+[[benchmarks.bigcodebench_instruct.overrides]]
+upstream_task_id = "BigCodeBench/461"
+reference_max_seconds = 155.83696939400397
+primary_timeout_seconds = 240.0
+
+[[benchmarks.bigcodebench_instruct.overrides]]
+upstream_task_id = "BigCodeBench/1104"
+reference_max_seconds = 73.16264660900197
+primary_timeout_seconds = 120.0
+
+[[benchmarks.bigcodebench_instruct.overrides]]
+upstream_task_id = "BigCodeBench/1040"
+reference_max_seconds = 60.15855779899721
+primary_timeout_seconds = 120.0
+
+[[benchmarks.bigcodebench_instruct.overrides]]
+upstream_task_id = "BigCodeBench/417"
+reference_max_seconds = 54.92395689299883
+primary_timeout_seconds = 120.0
+
+[[benchmarks.bigcodebench_instruct.overrides]]
+upstream_task_id = "BigCodeBench/195"
+reference_max_seconds = 45.178970132998074
+primary_timeout_seconds = 120.0
+
+[[benchmarks.bigcodebench_instruct.overrides]]
+upstream_task_id = "BigCodeBench/102"
+reference_max_seconds = 31.60384588799934
+primary_timeout_seconds = 60.0
+
+[[benchmarks.bigcodebench_instruct.overrides]]
+upstream_task_id = "BigCodeBench/1103"
+reference_max_seconds = 20.197346945999016
+primary_timeout_seconds = 60.0
+
+[[benchmarks.bigcodebench_instruct.overrides]]
+upstream_task_id = "BigCodeBench/220"
+reference_max_seconds = 20.184821486000146
+primary_timeout_seconds = 60.0
+
+[[benchmarks.bigcodebench_instruct.overrides]]
+upstream_task_id = "BigCodeBench/289"
+reference_max_seconds = 18.226342262001708
+primary_timeout_seconds = 30.0
+
+[[benchmarks.bigcodebench_instruct.overrides]]
+upstream_task_id = "BigCodeBench/17"
+reference_max_seconds = 15.147047335995012
+primary_timeout_seconds = 30.0
+
+[[benchmarks.bigcodebench_instruct.overrides]]
+upstream_task_id = "BigCodeBench/1105"
+reference_max_seconds = 12.147938503003388
+primary_timeout_seconds = 30.0
+
+[[benchmarks.bigcodebench_instruct.overrides]]
+upstream_task_id = "BigCodeBench/0"
+reference_max_seconds = 11.858244604998617
+primary_timeout_seconds = 30.0
+
+[[benchmarks.bigcodebench_instruct.overrides]]
+upstream_task_id = "BigCodeBench/821"
+reference_max_seconds = 11.40088364899566
+primary_timeout_seconds = 30.0
+
+[[benchmarks.bigcodebench_instruct.overrides]]
+upstream_task_id = "BigCodeBench/819"
+reference_max_seconds = 10.492596737996791
+primary_timeout_seconds = 30.0
+
+[[benchmarks.bigcodebench_instruct.overrides]]
+upstream_task_id = "BigCodeBench/421"
+reference_max_seconds = 10.226658190003945
+primary_timeout_seconds = 30.0

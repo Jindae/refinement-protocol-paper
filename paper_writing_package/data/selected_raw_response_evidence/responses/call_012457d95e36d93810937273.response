@@ -1,0 +1,3 @@
+REFINE
+
+The initial candidate does not fully satisfy the task specification. While it correctly implements the core functionality, it returns `None` when no match is found, but the assertion expects a specific return format that implies a match should always be returned (as evidenced by the test case which doesn't test the no-match scenario

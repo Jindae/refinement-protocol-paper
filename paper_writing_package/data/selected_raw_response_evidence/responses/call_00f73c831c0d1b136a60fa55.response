@@ -1,0 +1,3 @@
+REFINE
+
+The initial candidate has a function name mismatch ("occurance_substring" instead of "occurrence_substring") and the test case doesn't match the function's return format. The assertion expects a tuple with the substring and positions, but the function returns a tuple with the substring and positions, which is

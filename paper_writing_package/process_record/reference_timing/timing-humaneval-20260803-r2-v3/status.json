@@ -1,0 +1,33 @@
+{
+  "anomaly_count": 0,
+  "attempt_directory": "/data/refinement-protocol/runs/logs/reference-timing-audit/humaneval_plus/timing-humaneval-20260803-r2-v3",
+  "attempt_id": "timing-humaneval-20260803-r2-v3",
+  "benchmark_id": "humaneval_plus",
+  "completed_observations": 489,
+  "cwd": "/data/refinement-protocol",
+  "ended_at": "2026-08-03T07:31:27.795942+00:00",
+  "exit_code": 0,
+  "expected_observations": 489,
+  "expected_tasks": 163,
+  "git_commit": "dacca01c0f97504b5f35b24a80732d1af4b2e059",
+  "index_path": "/data/refinement-protocol/runs/logs/reference-timing-audit/humaneval_plus/timing-humaneval-20260803-r2-v3/observations-index.json",
+  "index_sha256": "052772d0c9b102bc6a388ab6d644ce1393e2ec4fa03d989f45a4388cc403cb98",
+  "job_kind": "reference-timing-audit",
+  "log_path": "/data/refinement-protocol/runs/logs/reference-timing-audit/humaneval_plus/timing-humaneval-20260803-r2-v3/audit.log",
+  "output_paths": [
+    "/data/refinement-protocol/runs/logs/reference-timing-audit/humaneval_plus/timing-humaneval-20260803-r2-v3/observations",
+    "/data/refinement-protocol/runs/logs/reference-timing-audit/humaneval_plus/timing-humaneval-20260803-r2-v3/observations-index.json",
+    "/data/refinement-protocol/runs/logs/reference-timing-audit/humaneval_plus/timing-humaneval-20260803-r2-v3/summary.json"
+  ],
+  "phase": "completed",
+  "pid": 751117,
+  "repetitions": 3,
+  "schema_version": "reference-timing-audit-status-v1",
+  "started_at": "2026-08-03T07:22:39.237898+00:00",
+  "state": "completed",
+  "summary_path": "/data/refinement-protocol/runs/logs/reference-timing-audit/humaneval_plus/timing-humaneval-20260803-r2-v3/summary.json",
+  "summary_sha256": "e0f41fdd39a19fcce79d81ee4f27bd9ad0a3d6b510a799cf0b1cb80ee9822656",
+  "updated_at": "2026-08-03T07:31:27.796162+00:00",
+  "validation_result": "complete-reference-timing-audit",
+  "wall_timeout_seconds": 180.0
+}

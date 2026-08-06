@@ -1,0 +1,23 @@
+RESPONSE FORMAT: Put the complete Python solution inside exactly one complete fenced Python code block beginning with ```python. Any text outside that single block will be ignored. Do not use any other fenced blocks.
+
+Review and, if needed, revise the initial candidate so that it satisfies the task specification, using the supplied critique and revision plan as guidance. You may preserve its behavior or source when no change is needed.
+
+Use only the supplied task specification, initial candidate, critique, and revision plan. Do not assume access to tests, execution results, diagnostics, or external feedback.
+
+<task_specification>
+{{task_specification}}
+</task_specification>
+
+<initial_candidate>
+{{initial_candidate}}
+</initial_candidate>
+
+<critique>
+{{critique}}
+</critique>
+
+<revision_plan>
+{{revision_plan}}
+</revision_plan>
+
+Return the complete Python source code using the response format above.

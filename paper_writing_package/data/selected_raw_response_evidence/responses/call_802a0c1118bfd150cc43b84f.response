@@ -1,0 +1,3 @@
+REFINE
+
+The initial candidate does not correctly handle the task specification. The assertion expects the function to return (0, 7, 'clearly') for the input "clearly!! we can see the sky", but the current implementation would return (0, 7, 'clearly') only if 'clear

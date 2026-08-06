@@ -1,0 +1,44 @@
+schema_version = "prompt-manifest-v1"
+prompt_set_version = "primary-prompts-2026-08-04-r1"
+
+[[templates]]
+stage = "direct_generation"
+template_path = "prompts/v3/direct_generation.txt"
+template_sha256 = "307ba53cd4ac07322b5744be0a11a0af0f1ca97da38ed5eae80c3a8cd4514a9c"
+input_fields = ["task_specification"]
+
+[[templates]]
+stage = "refinement_need_decision"
+template_path = "prompts/v3/refinement_need_decision.txt"
+template_sha256 = "5228cf065595383ed366cb10ecb1667fc53ccb14931f18a01a5a16ea827d3321"
+input_fields = ["task_specification", "initial_candidate"]
+
+[[templates]]
+stage = "direct_revision"
+template_path = "prompts/v3/direct_revision.txt"
+template_sha256 = "40020c45556623ddee4f420d6f30c74ef3a9e9ac667e8bf68bf0199a6115d412"
+input_fields = ["task_specification", "initial_candidate"]
+
+[[templates]]
+stage = "critique_generation"
+template_path = "prompts/v3/critique_generation.txt"
+template_sha256 = "54272bcd7e2ebaf90a38a0647cc7dceeb8ecf39473c63fc8249bc5c2f1735efa"
+input_fields = ["task_specification", "initial_candidate"]
+
+[[templates]]
+stage = "critique_conditioned_revision"
+template_path = "prompts/v3/critique_conditioned_revision.txt"
+template_sha256 = "db2a4349b1af7b578e0360fbed48539013c619c054fe2a48d42c9e827bfa8fc5"
+input_fields = ["task_specification", "initial_candidate", "critique"]
+
+[[templates]]
+stage = "revision_planning"
+template_path = "prompts/v3/revision_planning.txt"
+template_sha256 = "b267660022630fcbd567c891218a30cb8b4b0167afb514b8fc2da21b9a461b81"
+input_fields = ["task_specification", "initial_candidate", "critique"]
+
+[[templates]]
+stage = "plan_conditioned_revision"
+template_path = "prompts/v3/plan_conditioned_revision.txt"
+template_sha256 = "0a3a31cfbe39438ac1f644c636a78ac46be829d39367f12ad319992aec177af7"
+input_fields = ["task_specification", "initial_candidate", "critique", "revision_plan"]

@@ -1,0 +1,46 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "self-refinement-study"
+version = "0.1.0"
+description = "Auditable infrastructure for a feedback-free code self-refinement study"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "pydantic==2.11.7",
+]
+
+[project.optional-dependencies]
+benchmark-bigcodebench = [
+  "pyarrow==25.0.0",
+]
+benchmark-evalplus = [
+  "evalplus==0.3.1",
+]
+dev = [
+  "editables==0.5",
+  "mypy==1.17.1",
+  "pytest==8.4.1",
+  "ruff==0.12.7",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/self_refinement"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-config --strict-markers"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["src", "tests", "scripts"]

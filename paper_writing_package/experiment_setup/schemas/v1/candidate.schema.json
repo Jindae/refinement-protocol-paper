@@ -1,0 +1,222 @@
+{
+  "$defs": {
+    "CandidateKind": {
+      "enum": [
+        "initial",
+        "revised"
+      ],
+      "title": "CandidateKind",
+      "type": "string"
+    },
+    "CandidateRef": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_record_id": {
+          "minLength": 3,
+          "pattern": "^[a-z][a-z0-9_]*_[a-f0-9]{16,64}$",
+          "title": "Candidate Record Id",
+          "type": "string"
+        },
+        "source_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Source Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "candidate_record_id",
+        "source_sha256"
+      ],
+      "title": "CandidateRef",
+      "type": "object"
+    },
+    "Protocol": {
+      "enum": [
+        "direct",
+        "r",
+        "cr",
+        "cpr",
+        "dr",
+        "dcr",
+        "dcpr"
+      ],
+      "title": "Protocol",
+      "type": "string"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "producer": {
+          "minLength": 1,
+          "title": "Producer",
+          "type": "string"
+        },
+        "run_id": {
+          "anyOf": [
+            {
+              "minLength": 3,
+              "pattern": "^[a-z][a-z0-9_]*_[a-f0-9]{16,64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Run Id"
+        },
+        "source_record_ids": {
+          "default": [],
+          "items": {
+            "minLength": 3,
+            "pattern": "^[a-z][a-z0-9_]*_[a-f0-9]{16,64}$",
+            "type": "string"
+          },
+          "title": "Source Record Ids",
+          "type": "array"
+        },
+        "study_version": {
+          "minLength": 1,
+          "title": "Study Version",
+          "type": "string"
+        },
+        "supersedes_record_id": {
+          "anyOf": [
+            {
+              "minLength": 3,
+              "pattern": "^[a-z][a-z0-9_]*_[a-f0-9]{16,64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Supersedes Record Id"
+        }
+      },
+      "required": [
+        "study_version",
+        "created_at",
+        "producer"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "candidate_kind": {
+      "$ref": "#/$defs/CandidateKind"
+    },
+    "critique_record_id": {
+      "anyOf": [
+        {
+          "minLength": 3,
+          "pattern": "^[a-z][a-z0-9_]*_[a-f0-9]{16,64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Critique Record Id"
+    },
+    "initial_candidate": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CandidateRef"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "model_call_record_id": {
+      "minLength": 3,
+      "pattern": "^[a-z][a-z0-9_]*_[a-f0-9]{16,64}$",
+      "title": "Model Call Record Id",
+      "type": "string"
+    },
+    "model_configuration_record_id": {
+      "minLength": 3,
+      "pattern": "^[a-z][a-z0-9_]*_[a-f0-9]{16,64}$",
+      "title": "Model Configuration Record Id",
+      "type": "string"
+    },
+    "protocol": {
+      "$ref": "#/$defs/Protocol"
+    },
+    "provenance": {
+      "$ref": "#/$defs/Provenance"
+    },
+    "record_id": {
+      "minLength": 3,
+      "pattern": "^[a-z][a-z0-9_]*_[a-f0-9]{16,64}$",
+      "title": "Record Id",
+      "type": "string"
+    },
+    "record_type": {
+      "const": "candidate",
+      "default": "candidate",
+      "title": "Record Type",
+      "type": "string"
+    },
+    "revision_plan_record_id": {
+      "anyOf": [
+        {
+          "minLength": 3,
+          "pattern": "^[a-z][a-z0-9_]*_[a-f0-9]{16,64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Revision Plan Record Id"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_code": {
+      "minLength": 1,
+      "title": "Source Code",
+      "type": "string"
+    },
+    "source_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Source Sha256",
+      "type": "string"
+    },
+    "task_record_id": {
+      "minLength": 3,
+      "pattern": "^[a-z][a-z0-9_]*_[a-f0-9]{16,64}$",
+      "title": "Task Record Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "record_id",
+    "provenance",
+    "candidate_kind",
+    "protocol",
+    "task_record_id",
+    "model_configuration_record_id",
+    "model_call_record_id",
+    "source_code",
+    "source_sha256"
+  ],
+  "title": "CandidateRecord",
+  "type": "object"
+}

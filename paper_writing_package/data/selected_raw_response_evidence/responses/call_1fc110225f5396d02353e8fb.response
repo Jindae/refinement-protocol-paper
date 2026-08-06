@@ -1,0 +1,3 @@
+PRESERVE
+
+The initial candidate exactly matches the task specification. It correctly implements a function that finds words longer than n characters from a given string, and produces the expected output ['python', 'programming', 'language'] for the provided test case. The function signature, parameter names, docstring, and logic all align

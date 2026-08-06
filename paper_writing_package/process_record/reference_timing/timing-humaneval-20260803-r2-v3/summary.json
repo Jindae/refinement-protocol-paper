@@ -1,0 +1,1736 @@
+{
+  "anomalies": [],
+  "anomaly_count": 0,
+  "audit_id": "timing-humaneval-20260803-r2-v3",
+  "benchmark_id": "humaneval_plus",
+  "benchmark_manifest_version": "evalplus-benchmarks-2026-08-03-r4",
+  "benchmark_revision": "v0.1.10",
+  "dataset_sha256": "272720b90ac375502c8ed23cd791c2a93dfb22a911641a494da74a426c09f101",
+  "duration_seconds": {
+    "maximum": 6.576463318997412,
+    "median": 0.9439299689984182,
+    "minimum": 0.8692380729917204,
+    "p90": 1.072638209006982,
+    "p95": 1.3044148329936434,
+    "p99": 4.230072450998705
+  },
+  "environment_id": "main-python-3.12.13-3f53565ca1cdb569",
+  "evaluator_configuration_sha256": "76e6816fbb7106fa3fa846d76b8bc922c8baab8cae1996d750d97356f070fb10",
+  "expected_observations": 489,
+  "expected_repetitions": 3,
+  "expected_tasks": 163,
+  "git_commit": "dacca01c0f97504b5f35b24a80732d1af4b2e059",
+  "observations": 489,
+  "observed_tasks": 163,
+  "passing_observations": 489,
+  "per_task": [
+    {
+      "maximum_seconds": 1.1187082850083243,
+      "median_seconds": 1.0909948999906192,
+      "minimum_seconds": 0.9435718659951817,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/0"
+    },
+    {
+      "maximum_seconds": 1.1064995030028513,
+      "median_seconds": 0.931381535003311,
+      "minimum_seconds": 0.9025501459982479,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/1"
+    },
+    {
+      "maximum_seconds": 1.034921320999274,
+      "median_seconds": 0.9939698149973992,
+      "minimum_seconds": 0.9851755679992493,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/10"
+    },
+    {
+      "maximum_seconds": 1.088197343997308,
+      "median_seconds": 1.0641596539935563,
+      "minimum_seconds": 1.039529947011033,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/100"
+    },
+    {
+      "maximum_seconds": 0.9474794830020983,
+      "median_seconds": 0.9331634039990604,
+      "minimum_seconds": 0.918337741997675,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/101"
+    },
+    {
+      "maximum_seconds": 0.9400652670010459,
+      "median_seconds": 0.9284020970080746,
+      "minimum_seconds": 0.9207227169972612,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/102"
+    },
+    {
+      "maximum_seconds": 1.023087260997272,
+      "median_seconds": 0.936602588990354,
+      "minimum_seconds": 0.9234160889900522,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/103"
+    },
+    {
+      "maximum_seconds": 0.9441489890014054,
+      "median_seconds": 0.9403413050022209,
+      "minimum_seconds": 0.9248107409948716,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/104"
+    },
+    {
+      "maximum_seconds": 1.0071991349977907,
+      "median_seconds": 1.0047140379901975,
+      "minimum_seconds": 0.9688551260042004,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/105"
+    },
+    {
+      "maximum_seconds": 1.029671723008505,
+      "median_seconds": 0.9365762019879185,
+      "minimum_seconds": 0.9067408250120934,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/106"
+    },
+    {
+      "maximum_seconds": 1.0799788180011092,
+      "median_seconds": 0.9188122909981757,
+      "minimum_seconds": 0.9151513859978877,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/107"
+    },
+    {
+      "maximum_seconds": 1.1090411850018427,
+      "median_seconds": 1.0918888820015127,
+      "minimum_seconds": 1.0321173160045873,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/108"
+    },
+    {
+      "maximum_seconds": 1.0122744630061788,
+      "median_seconds": 0.9721156779996818,
+      "minimum_seconds": 0.9170435130072292,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/109"
+    },
+    {
+      "maximum_seconds": 1.084930016004364,
+      "median_seconds": 0.9872163050022209,
+      "minimum_seconds": 0.9603847069956828,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/11"
+    },
+    {
+      "maximum_seconds": 0.9394660919933813,
+      "median_seconds": 0.924014778007404,
+      "minimum_seconds": 0.9226461429934716,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/110"
+    },
+    {
+      "maximum_seconds": 0.927215460993466,
+      "median_seconds": 0.9097463420039276,
+      "minimum_seconds": 0.9095600920118159,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/111"
+    },
+    {
+      "maximum_seconds": 0.9641074649989605,
+      "median_seconds": 0.9194468510104343,
+      "minimum_seconds": 0.9089268790121423,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/112"
+    },
+    {
+      "maximum_seconds": 0.9732605010067346,
+      "median_seconds": 0.9470357720128959,
+      "minimum_seconds": 0.9331217699946137,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/113"
+    },
+    {
+      "maximum_seconds": 0.9285084619914414,
+      "median_seconds": 0.9271851049998077,
+      "minimum_seconds": 0.9134063700039405,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/114"
+    },
+    {
+      "maximum_seconds": 0.9435312519926811,
+      "median_seconds": 0.9338672589947237,
+      "minimum_seconds": 0.9125886539986823,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/115"
+    },
+    {
+      "maximum_seconds": 0.9989408490073401,
+      "median_seconds": 0.9646311469987268,
+      "minimum_seconds": 0.9539973780047148,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/116"
+    },
+    {
+      "maximum_seconds": 1.0359518800105434,
+      "median_seconds": 0.9329108159872703,
+      "minimum_seconds": 0.9160788430017419,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/117"
+    },
+    {
+      "maximum_seconds": 0.9437998329958646,
+      "median_seconds": 0.9381874529935885,
+      "minimum_seconds": 0.932559922002838,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/118"
+    },
+    {
+      "maximum_seconds": 0.9836243730096612,
+      "median_seconds": 0.9444061270041857,
+      "minimum_seconds": 0.9273399770027027,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/119"
+    },
+    {
+      "maximum_seconds": 1.0641403470071964,
+      "median_seconds": 0.9562552650022553,
+      "minimum_seconds": 0.9393341699906159,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/12"
+    },
+    {
+      "maximum_seconds": 0.9510533810098423,
+      "median_seconds": 0.9233767889963929,
+      "minimum_seconds": 0.9197956880088896,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/120"
+    },
+    {
+      "maximum_seconds": 1.0275736280018464,
+      "median_seconds": 0.9543300450022798,
+      "minimum_seconds": 0.9205616699910024,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/121"
+    },
+    {
+      "maximum_seconds": 0.9553315249941079,
+      "median_seconds": 0.9543892560031964,
+      "minimum_seconds": 0.921071270990069,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/122"
+    },
+    {
+      "maximum_seconds": 0.9953086030000122,
+      "median_seconds": 0.9362629520037444,
+      "minimum_seconds": 0.903031137000653,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/123"
+    },
+    {
+      "maximum_seconds": 1.0054528599866899,
+      "median_seconds": 0.9335336759977508,
+      "minimum_seconds": 0.9023769400082529,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/124"
+    },
+    {
+      "maximum_seconds": 1.0625911009992706,
+      "median_seconds": 0.9914120699977502,
+      "minimum_seconds": 0.9301473630039254,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/125"
+    },
+    {
+      "maximum_seconds": 1.0542434880044311,
+      "median_seconds": 1.0349225730024045,
+      "minimum_seconds": 1.0020282110053813,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/126"
+    },
+    {
+      "maximum_seconds": 0.9893109159893356,
+      "median_seconds": 0.9708998629939742,
+      "minimum_seconds": 0.9576381069928175,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/127"
+    },
+    {
+      "maximum_seconds": 0.9533032499894034,
+      "median_seconds": 0.9360906820074888,
+      "minimum_seconds": 0.9354102200013585,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/128"
+    },
+    {
+      "maximum_seconds": 0.9278330150118563,
+      "median_seconds": 0.9274155530001735,
+      "minimum_seconds": 0.904137699995772,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/129"
+    },
+    {
+      "maximum_seconds": 1.1040823939983966,
+      "median_seconds": 1.083404042001348,
+      "minimum_seconds": 1.0451683099963702,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/13"
+    },
+    {
+      "maximum_seconds": 2.8639366709976457,
+      "median_seconds": 2.8287427330069477,
+      "minimum_seconds": 2.7968764870020095,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/130"
+    },
+    {
+      "maximum_seconds": 0.9175078080006642,
+      "median_seconds": 0.9109902429918293,
+      "minimum_seconds": 0.9011314530071104,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/131"
+    },
+    {
+      "maximum_seconds": 0.9498752420040546,
+      "median_seconds": 0.9382962889940245,
+      "minimum_seconds": 0.9295476350089302,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/132"
+    },
+    {
+      "maximum_seconds": 0.9850158519984689,
+      "median_seconds": 0.9405181199981598,
+      "minimum_seconds": 0.9378571190027287,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/133"
+    },
+    {
+      "maximum_seconds": 0.9424009029899025,
+      "median_seconds": 0.9348457110027084,
+      "minimum_seconds": 0.9270151139935479,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/134"
+    },
+    {
+      "maximum_seconds": 0.9529097939957865,
+      "median_seconds": 0.9474651100026676,
+      "minimum_seconds": 0.9373421739874175,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/135"
+    },
+    {
+      "maximum_seconds": 1.0361234940064605,
+      "median_seconds": 0.9472189819935011,
+      "minimum_seconds": 0.939202691995888,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/136"
+    },
+    {
+      "maximum_seconds": 0.9785428640025202,
+      "median_seconds": 0.9492333119997056,
+      "minimum_seconds": 0.9237950680108042,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/137"
+    },
+    {
+      "maximum_seconds": 1.0242333180067362,
+      "median_seconds": 0.9230639659945155,
+      "minimum_seconds": 0.9024754339916399,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/138"
+    },
+    {
+      "maximum_seconds": 6.576463318997412,
+      "median_seconds": 6.531233171001077,
+      "minimum_seconds": 6.393757679004921,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/139"
+    },
+    {
+      "maximum_seconds": 1.0637907309865113,
+      "median_seconds": 1.063330910008517,
+      "minimum_seconds": 0.9940650829958031,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/14"
+    },
+    {
+      "maximum_seconds": 1.0930446770071285,
+      "median_seconds": 0.9442798880045302,
+      "minimum_seconds": 0.9405010260088602,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/140"
+    },
+    {
+      "maximum_seconds": 1.071184522996191,
+      "median_seconds": 0.9402051570068579,
+      "minimum_seconds": 0.9092094690131489,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/141"
+    },
+    {
+      "maximum_seconds": 0.9986128970049322,
+      "median_seconds": 0.9419833790016128,
+      "minimum_seconds": 0.9306727049988694,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/142"
+    },
+    {
+      "maximum_seconds": 1.1897706750023644,
+      "median_seconds": 0.9537082850001752,
+      "minimum_seconds": 0.8944407719973242,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/143"
+    },
+    {
+      "maximum_seconds": 1.121327544999076,
+      "median_seconds": 0.924610999005381,
+      "minimum_seconds": 0.897245390995522,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/144"
+    },
+    {
+      "maximum_seconds": 0.9661551320023136,
+      "median_seconds": 0.9472352860029787,
+      "minimum_seconds": 0.9408378900116077,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/145"
+    },
+    {
+      "maximum_seconds": 0.9325738850020571,
+      "median_seconds": 0.9289775969955372,
+      "minimum_seconds": 0.9277040599990869,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/146"
+    },
+    {
+      "maximum_seconds": 1.4472563809977146,
+      "median_seconds": 1.0509937949973391,
+      "minimum_seconds": 0.9976818680006545,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/147"
+    },
+    {
+      "maximum_seconds": 0.9314319550030632,
+      "median_seconds": 0.9253033800050616,
+      "minimum_seconds": 0.9070952619949821,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/148"
+    },
+    {
+      "maximum_seconds": 1.0019753160013352,
+      "median_seconds": 0.9266603229916655,
+      "minimum_seconds": 0.9237508740043268,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/149"
+    },
+    {
+      "maximum_seconds": 4.244126253994182,
+      "median_seconds": 4.230072450998705,
+      "minimum_seconds": 4.151802576001501,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/15"
+    },
+    {
+      "maximum_seconds": 0.986262001999421,
+      "median_seconds": 0.9627724589954596,
+      "minimum_seconds": 0.9359899640112417,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/150"
+    },
+    {
+      "maximum_seconds": 1.0321274349989835,
+      "median_seconds": 0.9345310329954373,
+      "minimum_seconds": 0.9118807490012841,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/151"
+    },
+    {
+      "maximum_seconds": 1.080724953993922,
+      "median_seconds": 1.072638209006982,
+      "minimum_seconds": 1.071623151001404,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/152"
+    },
+    {
+      "maximum_seconds": 1.0603384179994464,
+      "median_seconds": 1.042949137990945,
+      "minimum_seconds": 0.9991440109879477,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/153"
+    },
+    {
+      "maximum_seconds": 0.9466688329994213,
+      "median_seconds": 0.9439310830057366,
+      "minimum_seconds": 0.9340355250024004,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/154"
+    },
+    {
+      "maximum_seconds": 0.9099708900030237,
+      "median_seconds": 0.9098080109979492,
+      "minimum_seconds": 0.9011762379959691,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/155"
+    },
+    {
+      "maximum_seconds": 0.9635674099990865,
+      "median_seconds": 0.9029537030000938,
+      "minimum_seconds": 0.8984109979937784,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/156"
+    },
+    {
+      "maximum_seconds": 0.9713471590075642,
+      "median_seconds": 0.9527185959886992,
+      "minimum_seconds": 0.931780016006087,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/157"
+    },
+    {
+      "maximum_seconds": 0.9420990600046935,
+      "median_seconds": 0.9359144729969557,
+      "minimum_seconds": 0.9105965810013004,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/158"
+    },
+    {
+      "maximum_seconds": 1.0272764269902837,
+      "median_seconds": 0.9745063760055928,
+      "minimum_seconds": 0.9457201519981027,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/159"
+    },
+    {
+      "maximum_seconds": 1.4134461479989113,
+      "median_seconds": 0.9588322819909081,
+      "minimum_seconds": 0.927480648009805,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/16"
+    },
+    {
+      "maximum_seconds": 1.0166327399929287,
+      "median_seconds": 0.930174001987325,
+      "minimum_seconds": 0.9277389090129873,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/160"
+    },
+    {
+      "maximum_seconds": 1.009074543006136,
+      "median_seconds": 0.9929793659975985,
+      "minimum_seconds": 0.9586170569964452,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/161"
+    },
+    {
+      "maximum_seconds": 1.0933530900074402,
+      "median_seconds": 0.9646849510027096,
+      "minimum_seconds": 0.9354628250002861,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/162"
+    },
+    {
+      "maximum_seconds": 0.9528577720047906,
+      "median_seconds": 0.9295507219940191,
+      "minimum_seconds": 0.8973850430047605,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/163"
+    },
+    {
+      "maximum_seconds": 1.0489887639996596,
+      "median_seconds": 0.9218533859966556,
+      "minimum_seconds": 0.921582380993641,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/17"
+    },
+    {
+      "maximum_seconds": 0.9954916820133803,
+      "median_seconds": 0.9484555579983862,
+      "minimum_seconds": 0.9294173679954838,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/18"
+    },
+    {
+      "maximum_seconds": 0.9302017720037838,
+      "median_seconds": 0.9109441019973019,
+      "minimum_seconds": 0.8948783340019872,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/19"
+    },
+    {
+      "maximum_seconds": 0.9549810370081104,
+      "median_seconds": 0.9454167619987857,
+      "minimum_seconds": 0.9310527039924636,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/2"
+    },
+    {
+      "maximum_seconds": 0.9437695989909116,
+      "median_seconds": 0.9194541769975331,
+      "minimum_seconds": 0.9127486290090019,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/20"
+    },
+    {
+      "maximum_seconds": 0.9411617110017687,
+      "median_seconds": 0.9408373949991073,
+      "minimum_seconds": 0.9316319119971013,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/21"
+    },
+    {
+      "maximum_seconds": 1.0463132389995735,
+      "median_seconds": 1.027118159996462,
+      "minimum_seconds": 0.952972711995244,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/22"
+    },
+    {
+      "maximum_seconds": 0.9284375129936961,
+      "median_seconds": 0.9226504679973004,
+      "minimum_seconds": 0.9061448349966668,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/23"
+    },
+    {
+      "maximum_seconds": 1.3044148329936434,
+      "median_seconds": 0.9829938929906348,
+      "minimum_seconds": 0.9607553090027068,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/24"
+    },
+    {
+      "maximum_seconds": 1.1613543790008407,
+      "median_seconds": 1.0687057829927653,
+      "minimum_seconds": 1.065859176000231,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/25"
+    },
+    {
+      "maximum_seconds": 1.0652392170013627,
+      "median_seconds": 0.9263443250092678,
+      "minimum_seconds": 0.9201615600031801,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/26"
+    },
+    {
+      "maximum_seconds": 1.0575750970019726,
+      "median_seconds": 1.0459639640030218,
+      "minimum_seconds": 1.0076789539889432,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/27"
+    },
+    {
+      "maximum_seconds": 1.020561954996083,
+      "median_seconds": 0.9620847540063551,
+      "minimum_seconds": 0.9452582780068042,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/28"
+    },
+    {
+      "maximum_seconds": 0.9378625910030678,
+      "median_seconds": 0.9122075099876383,
+      "minimum_seconds": 0.9066500600019936,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/29"
+    },
+    {
+      "maximum_seconds": 1.3531919839879265,
+      "median_seconds": 0.9223690029903082,
+      "minimum_seconds": 0.9143635329965036,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/3"
+    },
+    {
+      "maximum_seconds": 0.9327673059888184,
+      "median_seconds": 0.9324324960034573,
+      "minimum_seconds": 0.9284403110068524,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/30"
+    },
+    {
+      "maximum_seconds": 1.005076857007225,
+      "median_seconds": 0.9911714470072184,
+      "minimum_seconds": 0.9772229000082007,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/31"
+    },
+    {
+      "maximum_seconds": 0.9421790299966233,
+      "median_seconds": 0.9384445670002606,
+      "minimum_seconds": 0.9361507869907655,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/33"
+    },
+    {
+      "maximum_seconds": 0.945641793005052,
+      "median_seconds": 0.9401538379897829,
+      "minimum_seconds": 0.9359958280110732,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/34"
+    },
+    {
+      "maximum_seconds": 0.9332434140087571,
+      "median_seconds": 0.9289754860074027,
+      "minimum_seconds": 0.9207395900011761,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/35"
+    },
+    {
+      "maximum_seconds": 2.667841992995818,
+      "median_seconds": 2.653580623009475,
+      "minimum_seconds": 2.6369619269971736,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/36"
+    },
+    {
+      "maximum_seconds": 0.9637668119976297,
+      "median_seconds": 0.9134168809978291,
+      "minimum_seconds": 0.8956005649961298,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/37"
+    },
+    {
+      "maximum_seconds": 0.9660545700025978,
+      "median_seconds": 0.9304533929971512,
+      "minimum_seconds": 0.927567345002899,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/38"
+    },
+    {
+      "maximum_seconds": 0.9751147930073785,
+      "median_seconds": 0.9344736169878161,
+      "minimum_seconds": 0.9192302260053111,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/39"
+    },
+    {
+      "maximum_seconds": 0.966562025991152,
+      "median_seconds": 0.9463133770041168,
+      "minimum_seconds": 0.9448605509969639,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/4"
+    },
+    {
+      "maximum_seconds": 0.945752318992163,
+      "median_seconds": 0.9329003479942912,
+      "minimum_seconds": 0.9320042159961304,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/40"
+    },
+    {
+      "maximum_seconds": 1.0089014810073422,
+      "median_seconds": 0.9309879569918849,
+      "minimum_seconds": 0.9245117750106147,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/41"
+    },
+    {
+      "maximum_seconds": 1.0604093470028602,
+      "median_seconds": 0.9326673159957863,
+      "minimum_seconds": 0.9204040490003536,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/42"
+    },
+    {
+      "maximum_seconds": 1.062079236988211,
+      "median_seconds": 1.0350278379919473,
+      "minimum_seconds": 0.9482534109993139,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/43"
+    },
+    {
+      "maximum_seconds": 1.0629700059944298,
+      "median_seconds": 1.0553318289894378,
+      "minimum_seconds": 0.9342193659977056,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/44"
+    },
+    {
+      "maximum_seconds": 0.9756938030041056,
+      "median_seconds": 0.8695350759953726,
+      "minimum_seconds": 0.8692380729917204,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/45"
+    },
+    {
+      "maximum_seconds": 0.9259528660040814,
+      "median_seconds": 0.9137516880000476,
+      "minimum_seconds": 0.9045236020028824,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/46"
+    },
+    {
+      "maximum_seconds": 0.9248557950049872,
+      "median_seconds": 0.9224997560086194,
+      "minimum_seconds": 0.9144837150088279,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/47"
+    },
+    {
+      "maximum_seconds": 0.9290837839944288,
+      "median_seconds": 0.9255375530046877,
+      "minimum_seconds": 0.9048886169912294,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/48"
+    },
+    {
+      "maximum_seconds": 0.9230615239939652,
+      "median_seconds": 0.9141635330015561,
+      "minimum_seconds": 0.911283094988903,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/49"
+    },
+    {
+      "maximum_seconds": 1.0414556229952723,
+      "median_seconds": 0.9719151940080337,
+      "minimum_seconds": 0.9239317440078594,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/5"
+    },
+    {
+      "maximum_seconds": 0.954705409007147,
+      "median_seconds": 0.9278629780019401,
+      "minimum_seconds": 0.924767641001381,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/50"
+    },
+    {
+      "maximum_seconds": 0.9277766820014222,
+      "median_seconds": 0.9256215750065167,
+      "minimum_seconds": 0.9068004470027518,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/51"
+    },
+    {
+      "maximum_seconds": 0.9215565600025002,
+      "median_seconds": 0.918299640994519,
+      "minimum_seconds": 0.9115923909994308,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/52"
+    },
+    {
+      "maximum_seconds": 1.0179789829999208,
+      "median_seconds": 0.9292803769931197,
+      "minimum_seconds": 0.9221975929976907,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/53"
+    },
+    {
+      "maximum_seconds": 0.9587327149929479,
+      "median_seconds": 0.9343424429971492,
+      "minimum_seconds": 0.9318747560027987,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/54"
+    },
+    {
+      "maximum_seconds": 0.9093402849975973,
+      "median_seconds": 0.9067856030014809,
+      "minimum_seconds": 0.9038030119991163,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/55"
+    },
+    {
+      "maximum_seconds": 0.9279952039942145,
+      "median_seconds": 0.9192063329974189,
+      "minimum_seconds": 0.9133496809954522,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/56"
+    },
+    {
+      "maximum_seconds": 1.065140717997565,
+      "median_seconds": 0.961845308993361,
+      "minimum_seconds": 0.920617259995197,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/57"
+    },
+    {
+      "maximum_seconds": 0.9365860289981356,
+      "median_seconds": 0.9350720850052312,
+      "minimum_seconds": 0.9325981690053595,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/58"
+    },
+    {
+      "maximum_seconds": 2.893968500997289,
+      "median_seconds": 2.875070794005296,
+      "minimum_seconds": 2.837069931003498,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/59"
+    },
+    {
+      "maximum_seconds": 0.9225636409973959,
+      "median_seconds": 0.9225286869914271,
+      "minimum_seconds": 0.9042762080061948,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/6"
+    },
+    {
+      "maximum_seconds": 1.0493085750058526,
+      "median_seconds": 1.037786862012581,
+      "minimum_seconds": 0.9954015620023711,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/60"
+    },
+    {
+      "maximum_seconds": 1.0166820430022199,
+      "median_seconds": 0.929105517003336,
+      "minimum_seconds": 0.9218907699978445,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/61"
+    },
+    {
+      "maximum_seconds": 0.9520952960010618,
+      "median_seconds": 0.9513953999994555,
+      "minimum_seconds": 0.9449092029972235,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/62"
+    },
+    {
+      "maximum_seconds": 0.9988012870016973,
+      "median_seconds": 0.9958361190074356,
+      "minimum_seconds": 0.986377249006182,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/63"
+    },
+    {
+      "maximum_seconds": 1.0915302470093593,
+      "median_seconds": 1.032408447994385,
+      "minimum_seconds": 0.9367553339980077,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/64"
+    },
+    {
+      "maximum_seconds": 1.02270534899435,
+      "median_seconds": 0.9686485109996283,
+      "minimum_seconds": 0.9674301399936667,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/65"
+    },
+    {
+      "maximum_seconds": 0.9748091320070671,
+      "median_seconds": 0.9418957339948975,
+      "minimum_seconds": 0.9390865640016273,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/66"
+    },
+    {
+      "maximum_seconds": 1.0480871880135965,
+      "median_seconds": 0.9485604210058227,
+      "minimum_seconds": 0.9253448429954005,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/67"
+    },
+    {
+      "maximum_seconds": 1.149629769002786,
+      "median_seconds": 1.0639649340009782,
+      "minimum_seconds": 1.026990587997716,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/68"
+    },
+    {
+      "maximum_seconds": 1.031315957006882,
+      "median_seconds": 0.9984099809953477,
+      "minimum_seconds": 0.9221710109995911,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/69"
+    },
+    {
+      "maximum_seconds": 0.9452467920054914,
+      "median_seconds": 0.9378351949999342,
+      "minimum_seconds": 0.8998195919994032,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/7"
+    },
+    {
+      "maximum_seconds": 1.023289056000067,
+      "median_seconds": 0.9369727150042308,
+      "minimum_seconds": 0.9274038779985858,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/70"
+    },
+    {
+      "maximum_seconds": 0.9355704550107475,
+      "median_seconds": 0.9320247159921564,
+      "minimum_seconds": 0.9207280379923759,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/71"
+    },
+    {
+      "maximum_seconds": 0.9686865659896284,
+      "median_seconds": 0.9291435079940129,
+      "minimum_seconds": 0.9232827450032346,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/72"
+    },
+    {
+      "maximum_seconds": 0.9825799819955137,
+      "median_seconds": 0.9430889819923323,
+      "minimum_seconds": 0.9428695480019087,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/73"
+    },
+    {
+      "maximum_seconds": 0.9843522739975015,
+      "median_seconds": 0.9644152050022967,
+      "minimum_seconds": 0.9435491089971038,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/74"
+    },
+    {
+      "maximum_seconds": 1.0423194070026511,
+      "median_seconds": 0.9332684600085486,
+      "minimum_seconds": 0.9168305530038197,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/75"
+    },
+    {
+      "maximum_seconds": 1.0569263180077542,
+      "median_seconds": 0.9474154880008427,
+      "minimum_seconds": 0.9181191020034021,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/76"
+    },
+    {
+      "maximum_seconds": 1.045414552994771,
+      "median_seconds": 1.04398690200469,
+      "minimum_seconds": 1.0391348729899619,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/77"
+    },
+    {
+      "maximum_seconds": 1.0325373520026915,
+      "median_seconds": 0.9781008340069093,
+      "minimum_seconds": 0.9621602300030645,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/78"
+    },
+    {
+      "maximum_seconds": 0.930841623005108,
+      "median_seconds": 0.9234559629985597,
+      "minimum_seconds": 0.9202969780017156,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/79"
+    },
+    {
+      "maximum_seconds": 1.1523902720073238,
+      "median_seconds": 0.994392443986726,
+      "minimum_seconds": 0.949416490009753,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/8"
+    },
+    {
+      "maximum_seconds": 0.9404539620009018,
+      "median_seconds": 0.9364883279922651,
+      "minimum_seconds": 0.9082309749937849,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/80"
+    },
+    {
+      "maximum_seconds": 0.9927577130001737,
+      "median_seconds": 0.9406272670021281,
+      "minimum_seconds": 0.9263134710054146,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/81"
+    },
+    {
+      "maximum_seconds": 0.9440918979962589,
+      "median_seconds": 0.9439299689984182,
+      "minimum_seconds": 0.9276996999979019,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/82"
+    },
+    {
+      "maximum_seconds": 2.573879675997887,
+      "median_seconds": 2.5555670379981166,
+      "minimum_seconds": 2.544964514003368,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/83"
+    },
+    {
+      "maximum_seconds": 1.0060668869991787,
+      "median_seconds": 0.9508161249978002,
+      "minimum_seconds": 0.8940207720006583,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/84"
+    },
+    {
+      "maximum_seconds": 0.9363850110094063,
+      "median_seconds": 0.9335626329993829,
+      "minimum_seconds": 0.9251859840005636,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/85"
+    },
+    {
+      "maximum_seconds": 0.9423491140041733,
+      "median_seconds": 0.9254331749980338,
+      "minimum_seconds": 0.9191643950034631,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/86"
+    },
+    {
+      "maximum_seconds": 0.9374372729944298,
+      "median_seconds": 0.9349986480083317,
+      "minimum_seconds": 0.9084291080071125,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/87"
+    },
+    {
+      "maximum_seconds": 1.0151572550093988,
+      "median_seconds": 0.9495416400022805,
+      "minimum_seconds": 0.946285979996901,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/88"
+    },
+    {
+      "maximum_seconds": 0.9548786030063638,
+      "median_seconds": 0.9353065250033978,
+      "minimum_seconds": 0.9267242349887965,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/89"
+    },
+    {
+      "maximum_seconds": 1.0394973790098447,
+      "median_seconds": 0.9650155039998936,
+      "minimum_seconds": 0.939129933991353,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/9"
+    },
+    {
+      "maximum_seconds": 1.005960206995951,
+      "median_seconds": 0.9686027849966194,
+      "minimum_seconds": 0.928823177004233,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/90"
+    },
+    {
+      "maximum_seconds": 1.0176814180013025,
+      "median_seconds": 0.9644637220044388,
+      "minimum_seconds": 0.9132803349930327,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/91"
+    },
+    {
+      "maximum_seconds": 1.0955892139900243,
+      "median_seconds": 1.051654923998285,
+      "minimum_seconds": 0.9062732519960264,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/92"
+    },
+    {
+      "maximum_seconds": 1.075556897005299,
+      "median_seconds": 1.0373090120119741,
+      "minimum_seconds": 0.9542587680043653,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/93"
+    },
+    {
+      "maximum_seconds": 2.3673348190059187,
+      "median_seconds": 2.3576227109879255,
+      "minimum_seconds": 2.34493596800894,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/94"
+    },
+    {
+      "maximum_seconds": 0.9218284160015173,
+      "median_seconds": 0.9071764630061807,
+      "minimum_seconds": 0.9009866929991404,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/95"
+    },
+    {
+      "maximum_seconds": 0.9614607350085862,
+      "median_seconds": 0.9575793499971041,
+      "minimum_seconds": 0.949677836993942,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/96"
+    },
+    {
+      "maximum_seconds": 1.0774919670075178,
+      "median_seconds": 0.9596788439957891,
+      "minimum_seconds": 0.9120734640018782,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/97"
+    },
+    {
+      "maximum_seconds": 1.0855606370023452,
+      "median_seconds": 1.050363058995572,
+      "minimum_seconds": 0.9840368770092027,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/98"
+    },
+    {
+      "maximum_seconds": 0.945577807011432,
+      "median_seconds": 0.9241485520033166,
+      "minimum_seconds": 0.9116069599986076,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/99"
+    }
+  ],
+  "schema_version": "reference-timing-summary-v1",
+  "slowest_tasks": [
+    {
+      "maximum_seconds": 6.576463318997412,
+      "median_seconds": 6.531233171001077,
+      "minimum_seconds": 6.393757679004921,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/139"
+    },
+    {
+      "maximum_seconds": 4.244126253994182,
+      "median_seconds": 4.230072450998705,
+      "minimum_seconds": 4.151802576001501,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/15"
+    },
+    {
+      "maximum_seconds": 2.893968500997289,
+      "median_seconds": 2.875070794005296,
+      "minimum_seconds": 2.837069931003498,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/59"
+    },
+    {
+      "maximum_seconds": 2.8639366709976457,
+      "median_seconds": 2.8287427330069477,
+      "minimum_seconds": 2.7968764870020095,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/130"
+    },
+    {
+      "maximum_seconds": 2.667841992995818,
+      "median_seconds": 2.653580623009475,
+      "minimum_seconds": 2.6369619269971736,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/36"
+    },
+    {
+      "maximum_seconds": 2.573879675997887,
+      "median_seconds": 2.5555670379981166,
+      "minimum_seconds": 2.544964514003368,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/83"
+    },
+    {
+      "maximum_seconds": 2.3673348190059187,
+      "median_seconds": 2.3576227109879255,
+      "minimum_seconds": 2.34493596800894,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/94"
+    },
+    {
+      "maximum_seconds": 1.4472563809977146,
+      "median_seconds": 1.0509937949973391,
+      "minimum_seconds": 0.9976818680006545,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/147"
+    },
+    {
+      "maximum_seconds": 1.4134461479989113,
+      "median_seconds": 0.9588322819909081,
+      "minimum_seconds": 0.927480648009805,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/16"
+    },
+    {
+      "maximum_seconds": 1.3531919839879265,
+      "median_seconds": 0.9223690029903082,
+      "minimum_seconds": 0.9143635329965036,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/3"
+    },
+    {
+      "maximum_seconds": 1.3044148329936434,
+      "median_seconds": 0.9829938929906348,
+      "minimum_seconds": 0.9607553090027068,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/24"
+    },
+    {
+      "maximum_seconds": 1.1897706750023644,
+      "median_seconds": 0.9537082850001752,
+      "minimum_seconds": 0.8944407719973242,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/143"
+    },
+    {
+      "maximum_seconds": 1.1613543790008407,
+      "median_seconds": 1.0687057829927653,
+      "minimum_seconds": 1.065859176000231,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/25"
+    },
+    {
+      "maximum_seconds": 1.1523902720073238,
+      "median_seconds": 0.994392443986726,
+      "minimum_seconds": 0.949416490009753,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/8"
+    },
+    {
+      "maximum_seconds": 1.149629769002786,
+      "median_seconds": 1.0639649340009782,
+      "minimum_seconds": 1.026990587997716,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/68"
+    },
+    {
+      "maximum_seconds": 1.121327544999076,
+      "median_seconds": 0.924610999005381,
+      "minimum_seconds": 0.897245390995522,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/144"
+    },
+    {
+      "maximum_seconds": 1.1187082850083243,
+      "median_seconds": 1.0909948999906192,
+      "minimum_seconds": 0.9435718659951817,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/0"
+    },
+    {
+      "maximum_seconds": 1.1090411850018427,
+      "median_seconds": 1.0918888820015127,
+      "minimum_seconds": 1.0321173160045873,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/108"
+    },
+    {
+      "maximum_seconds": 1.1064995030028513,
+      "median_seconds": 0.931381535003311,
+      "minimum_seconds": 0.9025501459982479,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/1"
+    },
+    {
+      "maximum_seconds": 1.1040823939983966,
+      "median_seconds": 1.083404042001348,
+      "minimum_seconds": 1.0451683099963702,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/13"
+    },
+    {
+      "maximum_seconds": 1.0955892139900243,
+      "median_seconds": 1.051654923998285,
+      "minimum_seconds": 0.9062732519960264,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/92"
+    },
+    {
+      "maximum_seconds": 1.0933530900074402,
+      "median_seconds": 0.9646849510027096,
+      "minimum_seconds": 0.9354628250002861,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/162"
+    },
+    {
+      "maximum_seconds": 1.0930446770071285,
+      "median_seconds": 0.9442798880045302,
+      "minimum_seconds": 0.9405010260088602,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/140"
+    },
+    {
+      "maximum_seconds": 1.0915302470093593,
+      "median_seconds": 1.032408447994385,
+      "minimum_seconds": 0.9367553339980077,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/64"
+    },
+    {
+      "maximum_seconds": 1.088197343997308,
+      "median_seconds": 1.0641596539935563,
+      "minimum_seconds": 1.039529947011033,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/100"
+    },
+    {
+      "maximum_seconds": 1.0855606370023452,
+      "median_seconds": 1.050363058995572,
+      "minimum_seconds": 0.9840368770092027,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/98"
+    },
+    {
+      "maximum_seconds": 1.084930016004364,
+      "median_seconds": 0.9872163050022209,
+      "minimum_seconds": 0.9603847069956828,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/11"
+    },
+    {
+      "maximum_seconds": 1.080724953993922,
+      "median_seconds": 1.072638209006982,
+      "minimum_seconds": 1.071623151001404,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/152"
+    },
+    {
+      "maximum_seconds": 1.0799788180011092,
+      "median_seconds": 0.9188122909981757,
+      "minimum_seconds": 0.9151513859978877,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/107"
+    },
+    {
+      "maximum_seconds": 1.0774919670075178,
+      "median_seconds": 0.9596788439957891,
+      "minimum_seconds": 0.9120734640018782,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/97"
+    },
+    {
+      "maximum_seconds": 1.075556897005299,
+      "median_seconds": 1.0373090120119741,
+      "minimum_seconds": 0.9542587680043653,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/93"
+    },
+    {
+      "maximum_seconds": 1.071184522996191,
+      "median_seconds": 0.9402051570068579,
+      "minimum_seconds": 0.9092094690131489,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/141"
+    },
+    {
+      "maximum_seconds": 1.0652392170013627,
+      "median_seconds": 0.9263443250092678,
+      "minimum_seconds": 0.9201615600031801,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/26"
+    },
+    {
+      "maximum_seconds": 1.065140717997565,
+      "median_seconds": 0.961845308993361,
+      "minimum_seconds": 0.920617259995197,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/57"
+    },
+    {
+      "maximum_seconds": 1.0641403470071964,
+      "median_seconds": 0.9562552650022553,
+      "minimum_seconds": 0.9393341699906159,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/12"
+    },
+    {
+      "maximum_seconds": 1.0637907309865113,
+      "median_seconds": 1.063330910008517,
+      "minimum_seconds": 0.9940650829958031,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/14"
+    },
+    {
+      "maximum_seconds": 1.0629700059944298,
+      "median_seconds": 1.0553318289894378,
+      "minimum_seconds": 0.9342193659977056,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/44"
+    },
+    {
+      "maximum_seconds": 1.0625911009992706,
+      "median_seconds": 0.9914120699977502,
+      "minimum_seconds": 0.9301473630039254,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/125"
+    },
+    {
+      "maximum_seconds": 1.062079236988211,
+      "median_seconds": 1.0350278379919473,
+      "minimum_seconds": 0.9482534109993139,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/43"
+    },
+    {
+      "maximum_seconds": 1.0604093470028602,
+      "median_seconds": 0.9326673159957863,
+      "minimum_seconds": 0.9204040490003536,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/42"
+    },
+    {
+      "maximum_seconds": 1.0603384179994464,
+      "median_seconds": 1.042949137990945,
+      "minimum_seconds": 0.9991440109879477,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/153"
+    },
+    {
+      "maximum_seconds": 1.0575750970019726,
+      "median_seconds": 1.0459639640030218,
+      "minimum_seconds": 1.0076789539889432,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/27"
+    },
+    {
+      "maximum_seconds": 1.0569263180077542,
+      "median_seconds": 0.9474154880008427,
+      "minimum_seconds": 0.9181191020034021,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/76"
+    },
+    {
+      "maximum_seconds": 1.0542434880044311,
+      "median_seconds": 1.0349225730024045,
+      "minimum_seconds": 1.0020282110053813,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/126"
+    },
+    {
+      "maximum_seconds": 1.0493085750058526,
+      "median_seconds": 1.037786862012581,
+      "minimum_seconds": 0.9954015620023711,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/60"
+    },
+    {
+      "maximum_seconds": 1.0489887639996596,
+      "median_seconds": 0.9218533859966556,
+      "minimum_seconds": 0.921582380993641,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/17"
+    },
+    {
+      "maximum_seconds": 1.0480871880135965,
+      "median_seconds": 0.9485604210058227,
+      "minimum_seconds": 0.9253448429954005,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/67"
+    },
+    {
+      "maximum_seconds": 1.0463132389995735,
+      "median_seconds": 1.027118159996462,
+      "minimum_seconds": 0.952972711995244,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/22"
+    },
+    {
+      "maximum_seconds": 1.045414552994771,
+      "median_seconds": 1.04398690200469,
+      "minimum_seconds": 1.0391348729899619,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/77"
+    },
+    {
+      "maximum_seconds": 1.0423194070026511,
+      "median_seconds": 0.9332684600085486,
+      "minimum_seconds": 0.9168305530038197,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "HumanEval/75"
+    }
+  ],
+  "timeout_policy": "not-selected-from-audit-data-yet"
+}

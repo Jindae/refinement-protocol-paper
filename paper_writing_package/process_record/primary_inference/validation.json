@@ -1,0 +1,11 @@
+{
+  "attempt_id": "campaign-primary-20260804T104734Z",
+  "manifest_record_id": "run_manifest_c8942708e851989a5e1303fa",
+  "model_call_records": 70386,
+  "model_count": 6,
+  "phase_count_per_model": 7,
+  "raw_responses_validated": 70386,
+  "run_id": "run_c99d3b1d562acc3e80026e48",
+  "task_count": 1677,
+  "validation_result": "passed"
+}

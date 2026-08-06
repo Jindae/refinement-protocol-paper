@@ -1,0 +1,115 @@
+schema_version = "paper-writing-package-profile-v1"
+profile_version = "paper-writing-pre-results-2026-08-06-r2"
+package_stage = "validated_inference_pre_evaluation_results"
+content_mode = "authoring_compact"
+
+readable_files = [
+  "README.md",
+  "EXPERIMENT_EXECUTION_GUIDELINES.md",
+  "EXPERIMENT_RUNBOOK.md",
+  "pyproject.toml",
+  "requirements.lock",
+  "requirements-bigcodebench.lock",
+  "requirements-vllm.lock",
+  "documents/01_project_overview.md",
+  "documents/02_refinement_protocol.md",
+  "documents/03_research_questions.md",
+  "documents/04_experiment_plan.md",
+  "documents/05_models_and_benchmarks.md",
+  "documents/06_glossary.md",
+  "documents/07_background_papers.md",
+  "documents/08_analysis_pipeline.md",
+  "documents/PAPER_WRITING_GUIDELINE.md",
+  "documents/PACKAGE_PREPRATION_GUIDELINE.md",
+  "documents/RESULTS_INDEX.md",
+]
+
+readable_trees = [
+  "analysis_tools",
+  "prompts/v3",
+  "schemas",
+]
+
+adopted_configuration_files = [
+  "configs/adjudication/decision_rubric_v2.toml",
+  "configs/benchmarks/bigcodebench.toml",
+  "configs/benchmarks/evalplus.toml",
+  "configs/evaluation/timeouts.toml",
+  "configs/experiments/model_campaign_six_models.toml",
+  "configs/experiments/primary_scope_v2.toml",
+  "configs/inference/primary_six_models.toml",
+  "configs/models/checkpoints_v2.toml",
+  "configs/prompts/primary_frozen.toml",
+]
+
+accepted_reference_audits = [
+  "runs/logs/reference-timing-audit/humaneval_plus/timing-humaneval-20260803-r2-v3",
+  "runs/logs/reference-timing-audit/mbpp_plus/timing-mbpp-20260803-r2-v3",
+  "runs/logs/reference-timing-audit/bigcodebench_instruct/timing-bigcodebench-20260803-r2-v3",
+]
+
+# Benchmark release bytes and complete reference observations belong in the replication package.
+benchmark_source_files = []
+
+preparation_evidence_files = [
+  "runs/logs/model-download/models-20260803-r1/status.json",
+  "runs/logs/model-download/models-20260803-r1/local-manifest.json",
+  "runs/logs/model-download/models-20260804-r2-new-three/status.json",
+  "runs/logs/model-download/models-20260804-r2-new-three/local-manifest.json",
+  "runs/logs/vllm-environment/vllm-setup-20260803-r1/status.json",
+  "runs/logs/vllm-environment/vllm-setup-20260803-r1/validation.json",
+  "runs/logs/vllm-environment/vllm-setup-20260803-r1/pip-freeze.txt",
+  "runs/logs/vllm-primary-inference-smoke/vllm-primary-smoke-six-models-20260804-r1/status.json",
+  "runs/logs/vllm-primary-inference-smoke/vllm-primary-smoke-six-models-20260804-r1/summary.json",
+  "runs/logs/vllm-primary-inference-smoke/vllm-primary-smoke-six-models-20260804-r1/validation.json",
+]
+
+selected_decision_ids = [
+  "DEC-20260802-01",
+  "DEC-20260802-02",
+  "DEC-20260802-03",
+  "DEC-20260802-07",
+  "DEC-20260803-09",
+  "DEC-20260803-11",
+  "DEC-20260803-12",
+  "DEC-20260803-13",
+  "DEC-20260803-15",
+  "DEC-20260803-16",
+  "DEC-20260803-17",
+  "DEC-20260803-19",
+  "DEC-20260803-20",
+  "DEC-20260803-21",
+  "DEC-20260804-25",
+  "DEC-20260804-26",
+  "DEC-20260804-28",
+  "DEC-20260804-30",
+  "DEC-20260804-31",
+  "DEC-20260804-32",
+  "DEC-20260806-33",
+  "DEC-20260806-34",
+  "DEC-20260806-35",
+  "DEC-20260806-36",
+]
+
+selected_issue_ids = [
+  "ISSUE-20260806-14",
+  "ISSUE-20260804-12",
+  "ISSUE-20260803-09",
+  "ISSUE-20260803-03",
+  "ISSUE-20260803-02",
+  "ISSUE-20260803-01",
+]
+
+[availability]
+validated_primary_inference_raw = false
+validated_primary_inference_processed_artifacts = true
+validated_inference_call_inventory = true
+selected_model_format_exception_raw = true
+validated_decision_resolution = true
+accepted_reference_timing_raw = false
+accepted_reference_timing_summaries = true
+candidate_evaluation_raw = false
+canonical_processed_dataset = false
+rq_results = false
+paper_tables = false
+paper_figures = false

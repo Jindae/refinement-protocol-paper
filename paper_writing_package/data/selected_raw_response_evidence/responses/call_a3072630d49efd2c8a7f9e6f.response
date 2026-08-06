@@ -1,0 +1,3 @@
+REFINE
+
+The initial candidate returns a `collections.Counter` as specified in the task output requirement, but the function implementation returns a pandas DataFrame. The task specification explicitly states the function should output a `collections.Counter`, not a DataFrame. The candidate's implementation contradicts this requirement by returning a DataFrame instead of the required Counter

@@ -1,0 +1,140 @@
+{
+  "$defs": {
+    "Provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "producer": {
+          "minLength": 1,
+          "title": "Producer",
+          "type": "string"
+        },
+        "run_id": {
+          "anyOf": [
+            {
+              "minLength": 3,
+              "pattern": "^[a-z][a-z0-9_]*_[a-f0-9]{16,64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Run Id"
+        },
+        "source_record_ids": {
+          "default": [],
+          "items": {
+            "minLength": 3,
+            "pattern": "^[a-z][a-z0-9_]*_[a-f0-9]{16,64}$",
+            "type": "string"
+          },
+          "title": "Source Record Ids",
+          "type": "array"
+        },
+        "study_version": {
+          "minLength": 1,
+          "title": "Study Version",
+          "type": "string"
+        },
+        "supersedes_record_id": {
+          "anyOf": [
+            {
+              "minLength": 3,
+              "pattern": "^[a-z][a-z0-9_]*_[a-f0-9]{16,64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Supersedes Record Id"
+        }
+      },
+      "required": [
+        "study_version",
+        "created_at",
+        "producer"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "benchmark_id": {
+      "minLength": 1,
+      "title": "Benchmark Id",
+      "type": "string"
+    },
+    "benchmark_revision": {
+      "minLength": 1,
+      "title": "Benchmark Revision",
+      "type": "string"
+    },
+    "language": {
+      "const": "python",
+      "default": "python",
+      "title": "Language",
+      "type": "string"
+    },
+    "metadata": {
+      "additionalProperties": true,
+      "title": "Metadata",
+      "type": "object"
+    },
+    "provenance": {
+      "$ref": "#/$defs/Provenance"
+    },
+    "record_id": {
+      "minLength": 3,
+      "pattern": "^[a-z][a-z0-9_]*_[a-f0-9]{16,64}$",
+      "title": "Record Id",
+      "type": "string"
+    },
+    "record_type": {
+      "const": "task_metadata",
+      "default": "task_metadata",
+      "title": "Record Type",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "specification_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Specification Sha256",
+      "type": "string"
+    },
+    "task_specification": {
+      "minLength": 1,
+      "title": "Task Specification",
+      "type": "string"
+    },
+    "upstream_task_id": {
+      "minLength": 1,
+      "title": "Upstream Task Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "record_id",
+    "provenance",
+    "benchmark_id",
+    "benchmark_revision",
+    "upstream_task_id",
+    "task_specification",
+    "specification_sha256"
+  ],
+  "title": "TaskMetadata",
+  "type": "object"
+}

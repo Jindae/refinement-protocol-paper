@@ -1,0 +1,3 @@
+REFINE
+
+The initial candidate has a bug in the logic for removing the first and last occurrences. When the first and last occurrences are the same character (like the 'l' in "hello"), the current implementation removes the character at the first index but then tries to remove it again at the last index, which would

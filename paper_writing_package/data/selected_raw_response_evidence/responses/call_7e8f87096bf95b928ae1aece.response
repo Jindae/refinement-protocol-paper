@@ -1,0 +1,6 @@
+REFINE
+
+The initial candidate has several issues that need to be addressed:
+
+1. It uses `OUTPUT_DIR = './output'` but the task specification requires saving to a 'data' directory relative to the parent directory of the script
+2. It imports pandas but doesn't use it in the function signature (though

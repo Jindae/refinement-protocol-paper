@@ -1,0 +1,6 @@
+REFINE
+
+The initial candidate has a few issues that need to be addressed:
+
+1. The function should return a `matplotlib.axes._axes.Axes` object, but the candidate returns the axes object from matplotlib, not seaborn
+2. The candidate uses `plt.figure(figsize=(10, 8))` which

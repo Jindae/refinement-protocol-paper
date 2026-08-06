@@ -1,0 +1,3 @@
+REFINE
+
+The initial candidate's return type annotation is incorrect. The task specification states that the function should return "np.ndarray: A numpy array containing the difference between the ASCII values of each pair of adjacent letters in the word. float: The entropy of the differences." However, the candidate uses `tuple[np.ndarray,

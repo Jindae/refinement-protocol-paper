@@ -1,0 +1,17 @@
+{
+  "attempt_id": "vllm-primary-smoke-six-models-20260804-r1",
+  "configuration_sha256": "d136c5af178ace0480209be85e1c6725d24742e92208e1864c6a9cbfa324d09e",
+  "configuration_version": "primary-inference-2026-08-04-r3",
+  "expected_models": 6,
+  "models": [
+    "qwen2.5-coder-7b-instruct",
+    "qwen2.5-coder-14b-instruct",
+    "deepseek-coder-v2-lite-instruct",
+    "devstral-small-2-24b-instruct",
+    "qwen3-coder-30b-a3b-instruct-fp8",
+    "gemma-4-31b-it-qat-w4a16"
+  ],
+  "passed_models": 6,
+  "schema_version": "vllm-model-smoke-summary-v1",
+  "validation_result": "all-model-smokes-passed"
+}

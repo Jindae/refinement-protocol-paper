@@ -1,0 +1,3 @@
+REFINE
+
+The initial candidate has a critical flaw: it uses `base_url` parameter instead of the actual webpage URL (`url`) when calling `urljoin`. This will produce incorrect absolute URLs. The function should use the `url` parameter as the base for resolving relative links, not the `base_url` parameter

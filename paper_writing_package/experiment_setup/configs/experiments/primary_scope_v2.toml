@@ -1,0 +1,13 @@
+schema_version = "campaign-scope-configuration-v1"
+scope_version = "primary-scope-2026-08-04-r2"
+study_version = "study-v0.2.0"
+selection = "all_manifest_included"
+
+[benchmark_manifests]
+evalplus = "evalplus-benchmarks-2026-08-04-r5"
+bigcodebench = "bigcodebench-instruct-2026-08-03-r6"
+
+[expected_benchmark_counts]
+humaneval_plus = 163
+mbpp_plus = 378
+bigcodebench_instruct = 1136

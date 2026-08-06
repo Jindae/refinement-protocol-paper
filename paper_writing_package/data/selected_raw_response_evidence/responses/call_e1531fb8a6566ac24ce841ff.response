@@ -1,0 +1,3 @@
+REFINE
+
+The initial candidate has a fundamental issue with the data structure. It creates a DataFrame where each column represents a category, but the rows represent subcategories. This means when plotting a horizontal stacked bar chart, each row (representing a subcategory) gets stacked across categories, which is not the intended behavior described

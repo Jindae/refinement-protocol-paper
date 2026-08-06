@@ -1,0 +1,17 @@
+{
+  "attempt_id": "campaign-primary-20260804T104734Z",
+  "expected_models": 6,
+  "expected_task_phase_units": 70434,
+  "models": [
+    "qwen2.5-coder-7b-instruct",
+    "qwen2.5-coder-14b-instruct",
+    "deepseek-coder-v2-lite-instruct",
+    "devstral-small-2-24b-instruct",
+    "qwen3-coder-30b-a3b-instruct-fp8",
+    "gemma-4-31b-it-qat-w4a16"
+  ],
+  "run_id": "run_c99d3b1d562acc3e80026e48",
+  "schema_version": "model-campaign-summary-v1",
+  "task_count": 1677,
+  "validation_result": "complete"
+}

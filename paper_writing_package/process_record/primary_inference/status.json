@@ -1,0 +1,74 @@
+{
+  "attempt_directory": "/data/refinement-protocol/runs/logs/model-campaign/campaign-primary-20260804T104734Z",
+  "attempt_id": "campaign-primary-20260804T104734Z",
+  "campaign_configuration": "/data/refinement-protocol/configs/experiments/model_campaign_six_models.toml",
+  "campaign_configuration_sha256": "05fc9a14156804931b7ee7411a1eb2d2aaefafd262ce11646a1c41036dbda95d",
+  "completed_models": 6,
+  "completed_task_phase_units": 70434,
+  "current_model_id": null,
+  "current_model_index": 6,
+  "current_phase": {
+    "benchmark_counts": {
+      "bigcodebench_instruct": {
+        "blocked": 0,
+        "completed": 1136,
+        "failed": 0,
+        "reused": 0,
+        "total": 1136
+      },
+      "humaneval_plus": {
+        "blocked": 0,
+        "completed": 163,
+        "failed": 0,
+        "reused": 0,
+        "total": 163
+      },
+      "mbpp_plus": {
+        "blocked": 2,
+        "completed": 375,
+        "failed": 1,
+        "reused": 0,
+        "total": 378
+      }
+    },
+    "blocked": 2,
+    "completed": 1674,
+    "failed": 1,
+    "phase": "cpr_revision",
+    "reused": 0,
+    "stage": "plan_conditioned_revision",
+    "terminal": 1677,
+    "total": 1677
+  },
+  "cwd": "/data/refinement-protocol",
+  "ended_at": "2026-08-05T21:16:11.259849+00:00",
+  "exit_code": 0,
+  "expected_models": 6,
+  "expected_task_phase_units": 70434,
+  "git_commit": "8a04c51251e671fb87d5cf33febc602ada1e94ce",
+  "gpu_used_memory_mib": [
+    15,
+    15
+  ],
+  "job_kind": "model-campaign",
+  "log_path": "/data/refinement-protocol/runs/logs/model-campaign/campaign-primary-20260804T104734Z/run.log",
+  "output_paths": [
+    "/data/refinement-protocol/runs/registry/run_c99d3b1d562acc3e80026e48",
+    "/data/refinement-protocol/runs/logs/model-campaign/campaign-primary-20260804T104734Z/summary.json"
+  ],
+  "phase": "completed",
+  "pid": 1089759,
+  "predecessor_attempt_id": null,
+  "registry_root": "/data/refinement-protocol/runs/registry/run_c99d3b1d562acc3e80026e48",
+  "retry_failed": false,
+  "run_id": "run_c99d3b1d562acc3e80026e48",
+  "schema_version": "model-campaign-status-v1",
+  "scope_path": "/data/refinement-protocol/runs/registry/run_c99d3b1d562acc3e80026e48/scope.json",
+  "scope_sha256": "ac2ace2fc3823e81da9deb2ddb84c8637bc5ebdfe6da386a50824b6789334cc5",
+  "started_at": "2026-08-04T10:47:51.124317+00:00",
+  "state": "completed",
+  "terminal_manifest_record_id": "run_manifest_c8942708e851989a5e1303fa",
+  "updated_at": "2026-08-05T21:44:47.080573+00:00",
+  "validation_path": "/data/refinement-protocol/runs/logs/model-campaign/campaign-primary-20260804T104734Z/validation.json",
+  "validation_result": "passed"
+}

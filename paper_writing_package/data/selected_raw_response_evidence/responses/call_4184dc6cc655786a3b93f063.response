@@ -1,0 +1,3 @@
+REFINE
+
+The initial candidate does not satisfy the task specification. The function signature shows three parameters (a, b, c) but the assertion only provides two values (15, 25) with an expected result of 20. The function should use all three parameters or the task specification should be clarified

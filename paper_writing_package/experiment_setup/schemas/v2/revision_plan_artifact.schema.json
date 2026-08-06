@@ -1,0 +1,157 @@
+{
+  "$defs": {
+    "CandidateRef": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_record_id": {
+          "minLength": 3,
+          "pattern": "^[a-z][a-z0-9_]*_[a-f0-9]{16,64}$",
+          "title": "Candidate Record Id",
+          "type": "string"
+        },
+        "source_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Source Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "candidate_record_id",
+        "source_sha256"
+      ],
+      "title": "CandidateRef",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "producer": {
+          "minLength": 1,
+          "title": "Producer",
+          "type": "string"
+        },
+        "run_id": {
+          "anyOf": [
+            {
+              "minLength": 3,
+              "pattern": "^[a-z][a-z0-9_]*_[a-f0-9]{16,64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Run Id"
+        },
+        "source_record_ids": {
+          "default": [],
+          "items": {
+            "minLength": 3,
+            "pattern": "^[a-z][a-z0-9_]*_[a-f0-9]{16,64}$",
+            "type": "string"
+          },
+          "title": "Source Record Ids",
+          "type": "array"
+        },
+        "study_version": {
+          "minLength": 1,
+          "title": "Study Version",
+          "type": "string"
+        },
+        "supersedes_record_id": {
+          "anyOf": [
+            {
+              "minLength": 3,
+              "pattern": "^[a-z][a-z0-9_]*_[a-f0-9]{16,64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Supersedes Record Id"
+        }
+      },
+      "required": [
+        "study_version",
+        "created_at",
+        "producer"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "content_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Content Sha256",
+      "type": "string"
+    },
+    "critique_record_id": {
+      "minLength": 3,
+      "pattern": "^[a-z][a-z0-9_]*_[a-f0-9]{16,64}$",
+      "title": "Critique Record Id",
+      "type": "string"
+    },
+    "critique_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Critique Sha256",
+      "type": "string"
+    },
+    "initial_candidate": {
+      "$ref": "#/$defs/CandidateRef"
+    },
+    "model_call_record_id": {
+      "minLength": 3,
+      "pattern": "^[a-z][a-z0-9_]*_[a-f0-9]{16,64}$",
+      "title": "Model Call Record Id",
+      "type": "string"
+    },
+    "plan": {
+      "minLength": 1,
+      "title": "Plan",
+      "type": "string"
+    },
+    "provenance": {
+      "$ref": "#/$defs/Provenance"
+    },
+    "record_id": {
+      "minLength": 3,
+      "pattern": "^[a-z][a-z0-9_]*_[a-f0-9]{16,64}$",
+      "title": "Record Id",
+      "type": "string"
+    },
+    "record_type": {
+      "const": "revision_plan_artifact",
+      "default": "revision_plan_artifact",
+      "title": "Record Type",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "2.0.0",
+      "default": "2.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "record_id",
+    "provenance",
+    "model_call_record_id",
+    "initial_candidate",
+    "critique_record_id",
+    "critique_sha256",
+    "plan",
+    "content_sha256"
+  ],
+  "title": "RevisionPlanArtifact",
+  "type": "object"
+}

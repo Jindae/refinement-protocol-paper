@@ -1,0 +1,3456 @@
+{
+  "anomalies": [],
+  "anomaly_count": 0,
+  "audit_id": "timing-mbpp-20260803-r2-v3",
+  "benchmark_id": "mbpp_plus",
+  "benchmark_manifest_version": "evalplus-benchmarks-2026-08-03-r4",
+  "benchmark_revision": "v0.2.0",
+  "dataset_sha256": "af43697e8791c4c149bdfd6b489d8b5412507551ac20e28a439f650b8225db63",
+  "duration_seconds": {
+    "maximum": 27.77106370399997,
+    "median": 0.928588798007695,
+    "minimum": 0.8711315270047635,
+    "p90": 1.055334884003969,
+    "p95": 1.2339812599966535,
+    "p99": 4.803209174002404
+  },
+  "environment_id": "main-python-3.12.13-3f53565ca1cdb569",
+  "evaluator_configuration_sha256": "76e6816fbb7106fa3fa846d76b8bc922c8baab8cae1996d750d97356f070fb10",
+  "expected_observations": 1134,
+  "expected_repetitions": 3,
+  "expected_tasks": 378,
+  "git_commit": "444c5a9a22e6f89cc7a3e41a19fd7b96e1fad3ed",
+  "observations": 1134,
+  "observed_tasks": 378,
+  "passing_observations": 1134,
+  "per_task": [
+    {
+      "maximum_seconds": 0.94328339099593,
+      "median_seconds": 0.9382330730004469,
+      "minimum_seconds": 0.9167464110068977,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/100"
+    },
+    {
+      "maximum_seconds": 0.9292826809978578,
+      "median_seconds": 0.9285146370093571,
+      "minimum_seconds": 0.9203401099948678,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/101"
+    },
+    {
+      "maximum_seconds": 0.9285227040090831,
+      "median_seconds": 0.9232560319942422,
+      "minimum_seconds": 0.9113463529938599,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/102"
+    },
+    {
+      "maximum_seconds": 0.9164256249932805,
+      "median_seconds": 0.9118241190008121,
+      "minimum_seconds": 0.9113230039947666,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/103"
+    },
+    {
+      "maximum_seconds": 0.923811756001669,
+      "median_seconds": 0.909817153995391,
+      "minimum_seconds": 0.9092612319946056,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/104"
+    },
+    {
+      "maximum_seconds": 0.9622609119978733,
+      "median_seconds": 0.9146536179905524,
+      "minimum_seconds": 0.90619775900268,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/105"
+    },
+    {
+      "maximum_seconds": 0.9205337580060586,
+      "median_seconds": 0.8973473680089228,
+      "minimum_seconds": 0.8894732979970286,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/106"
+    },
+    {
+      "maximum_seconds": 0.9281744699983392,
+      "median_seconds": 0.9033897709887242,
+      "minimum_seconds": 0.8864903460053029,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/108"
+    },
+    {
+      "maximum_seconds": 0.9124633239989635,
+      "median_seconds": 0.9062313230097061,
+      "minimum_seconds": 0.9037489800102776,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/109"
+    },
+    {
+      "maximum_seconds": 1.2968940110004041,
+      "median_seconds": 0.9540188569953898,
+      "minimum_seconds": 0.9365606690116692,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/11"
+    },
+    {
+      "maximum_seconds": 0.986611772008473,
+      "median_seconds": 0.9371331310103415,
+      "minimum_seconds": 0.9125221470021643,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/111"
+    },
+    {
+      "maximum_seconds": 0.9188317079970147,
+      "median_seconds": 0.8962768619967392,
+      "minimum_seconds": 0.8901755580009194,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/113"
+    },
+    {
+      "maximum_seconds": 0.9994999560003635,
+      "median_seconds": 0.9191519650048576,
+      "minimum_seconds": 0.9178563370078336,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/116"
+    },
+    {
+      "maximum_seconds": 1.0159499400033383,
+      "median_seconds": 0.9341082600003574,
+      "minimum_seconds": 0.8968972819857299,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/118"
+    },
+    {
+      "maximum_seconds": 1.0413618040038273,
+      "median_seconds": 1.031982243002858,
+      "minimum_seconds": 0.9744589670008281,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/119"
+    },
+    {
+      "maximum_seconds": 0.942311573002371,
+      "median_seconds": 0.9363668959995266,
+      "minimum_seconds": 0.9129081730061444,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/12"
+    },
+    {
+      "maximum_seconds": 1.0323561010009144,
+      "median_seconds": 1.0275224670040188,
+      "minimum_seconds": 0.9109424889902584,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/120"
+    },
+    {
+      "maximum_seconds": 4.5389420129940845,
+      "median_seconds": 4.325849878005101,
+      "minimum_seconds": 4.272435423001298,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/123"
+    },
+    {
+      "maximum_seconds": 1.0183237740129698,
+      "median_seconds": 0.9318467389966827,
+      "minimum_seconds": 0.9047688260034192,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/124"
+    },
+    {
+      "maximum_seconds": 1.0649500879953848,
+      "median_seconds": 1.0223651749984128,
+      "minimum_seconds": 0.9795860840094974,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/125"
+    },
+    {
+      "maximum_seconds": 1.4527690499962773,
+      "median_seconds": 0.9757955630047945,
+      "minimum_seconds": 0.9069167169946013,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/126"
+    },
+    {
+      "maximum_seconds": 1.0097967429901473,
+      "median_seconds": 0.9298368979943916,
+      "minimum_seconds": 0.9264546389895258,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/127"
+    },
+    {
+      "maximum_seconds": 0.947244299997692,
+      "median_seconds": 0.9280573210126022,
+      "minimum_seconds": 0.9094678179972107,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/128"
+    },
+    {
+      "maximum_seconds": 0.9317779269913444,
+      "median_seconds": 0.9191825029993197,
+      "minimum_seconds": 0.909400780001306,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/129"
+    },
+    {
+      "maximum_seconds": 0.9258655680023367,
+      "median_seconds": 0.9236689550016308,
+      "minimum_seconds": 0.9132729300035862,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/130"
+    },
+    {
+      "maximum_seconds": 1.0013930590066593,
+      "median_seconds": 0.9276625529892044,
+      "minimum_seconds": 0.8996906130050775,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/131"
+    },
+    {
+      "maximum_seconds": 0.9184232810075628,
+      "median_seconds": 0.9097244160075206,
+      "minimum_seconds": 0.8987334720004583,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/132"
+    },
+    {
+      "maximum_seconds": 1.128914711996913,
+      "median_seconds": 0.9906283680029446,
+      "minimum_seconds": 0.9297501719993306,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/133"
+    },
+    {
+      "maximum_seconds": 0.9971453809994273,
+      "median_seconds": 0.9503674900042824,
+      "minimum_seconds": 0.9270358559879242,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/135"
+    },
+    {
+      "maximum_seconds": 1.0687109160062391,
+      "median_seconds": 1.0562842340004863,
+      "minimum_seconds": 1.000600541010499,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/137"
+    },
+    {
+      "maximum_seconds": 1.0624417789949803,
+      "median_seconds": 1.0485406490042806,
+      "minimum_seconds": 0.9972289389988873,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/138"
+    },
+    {
+      "maximum_seconds": 0.9696737189951818,
+      "median_seconds": 0.9260854470048798,
+      "minimum_seconds": 0.89262369700009,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/139"
+    },
+    {
+      "maximum_seconds": 0.9756871270074043,
+      "median_seconds": 0.9549724359967513,
+      "minimum_seconds": 0.9147896299982676,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/14"
+    },
+    {
+      "maximum_seconds": 0.934110147994943,
+      "median_seconds": 0.9223273740062723,
+      "minimum_seconds": 0.9156791690038517,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/140"
+    },
+    {
+      "maximum_seconds": 0.9473525659996085,
+      "median_seconds": 0.9230404830013867,
+      "minimum_seconds": 0.9156382329965709,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/141"
+    },
+    {
+      "maximum_seconds": 0.9369863939937204,
+      "median_seconds": 0.9331121099967277,
+      "minimum_seconds": 0.93031629199686,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/142"
+    },
+    {
+      "maximum_seconds": 0.9414874350040918,
+      "median_seconds": 0.9303082850092323,
+      "minimum_seconds": 0.914803114006645,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/145"
+    },
+    {
+      "maximum_seconds": 1.0712844299996505,
+      "median_seconds": 0.9828136709984392,
+      "minimum_seconds": 0.9643013029999565,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/16"
+    },
+    {
+      "maximum_seconds": 0.9266054049949162,
+      "median_seconds": 0.9133869560027961,
+      "minimum_seconds": 0.9081522469932679,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/160"
+    },
+    {
+      "maximum_seconds": 0.9203863540024031,
+      "median_seconds": 0.9041467330098385,
+      "minimum_seconds": 0.9000852099998156,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/161"
+    },
+    {
+      "maximum_seconds": 1.4189280830032658,
+      "median_seconds": 1.3844652290135855,
+      "minimum_seconds": 1.37851085200964,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/162"
+    },
+    {
+      "maximum_seconds": 0.9151444070012076,
+      "median_seconds": 0.9088376540021272,
+      "minimum_seconds": 0.9070217779953964,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/165"
+    },
+    {
+      "maximum_seconds": 0.9113685339980293,
+      "median_seconds": 0.9083842870022636,
+      "minimum_seconds": 0.8944264330057194,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/166"
+    },
+    {
+      "maximum_seconds": 0.90350634099741,
+      "median_seconds": 0.8978876550099812,
+      "minimum_seconds": 0.8867686379962834,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/167"
+    },
+    {
+      "maximum_seconds": 1.0097322710062144,
+      "median_seconds": 0.9127762250136584,
+      "minimum_seconds": 0.8934677869983716,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/168"
+    },
+    {
+      "maximum_seconds": 1.0924809950083727,
+      "median_seconds": 0.9730404920119327,
+      "minimum_seconds": 0.9669854899984784,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/17"
+    },
+    {
+      "maximum_seconds": 0.9261372199980542,
+      "median_seconds": 0.9226471419970039,
+      "minimum_seconds": 0.8977055160066811,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/170"
+    },
+    {
+      "maximum_seconds": 0.9912668100005249,
+      "median_seconds": 0.9700926630030153,
+      "minimum_seconds": 0.9047897330019623,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/171"
+    },
+    {
+      "maximum_seconds": 1.0003974400024163,
+      "median_seconds": 0.9685789749928517,
+      "minimum_seconds": 0.921436217991868,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/172"
+    },
+    {
+      "maximum_seconds": 1.0037797300028615,
+      "median_seconds": 0.9994006519991672,
+      "minimum_seconds": 0.91782788700948,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/18"
+    },
+    {
+      "maximum_seconds": 1.072050943999784,
+      "median_seconds": 0.9943729329970665,
+      "minimum_seconds": 0.9197395390074234,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/19"
+    },
+    {
+      "maximum_seconds": 1.1584980079933302,
+      "median_seconds": 1.0501134609949077,
+      "minimum_seconds": 0.9150287369993748,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/2"
+    },
+    {
+      "maximum_seconds": 1.0719935769884614,
+      "median_seconds": 1.0534714380046353,
+      "minimum_seconds": 1.0036188749945723,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/20"
+    },
+    {
+      "maximum_seconds": 1.01181838499906,
+      "median_seconds": 0.9020895620051306,
+      "minimum_seconds": 0.8862748419924174,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/222"
+    },
+    {
+      "maximum_seconds": 1.049521637003636,
+      "median_seconds": 1.0484963260096265,
+      "minimum_seconds": 1.0223769819858717,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/223"
+    },
+    {
+      "maximum_seconds": 1.0738735589984572,
+      "median_seconds": 0.9512978209968423,
+      "minimum_seconds": 0.9242844299878925,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/224"
+    },
+    {
+      "maximum_seconds": 0.9499022029922344,
+      "median_seconds": 0.9472812849999173,
+      "minimum_seconds": 0.9270991850062273,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/226"
+    },
+    {
+      "maximum_seconds": 0.936192803987069,
+      "median_seconds": 0.9287137279898161,
+      "minimum_seconds": 0.9186962009989657,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/227"
+    },
+    {
+      "maximum_seconds": 0.9516965530056041,
+      "median_seconds": 0.9362489650084171,
+      "minimum_seconds": 0.9308901690092171,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/230"
+    },
+    {
+      "maximum_seconds": 0.934397479009931,
+      "median_seconds": 0.9261179120076122,
+      "minimum_seconds": 0.9190265359939076,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/232"
+    },
+    {
+      "maximum_seconds": 0.9239342799992301,
+      "median_seconds": 0.9224710959970253,
+      "minimum_seconds": 0.9109254409995629,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/233"
+    },
+    {
+      "maximum_seconds": 0.926635192008689,
+      "median_seconds": 0.9034530210046796,
+      "minimum_seconds": 0.8870067579991883,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/234"
+    },
+    {
+      "maximum_seconds": 0.9150408979912754,
+      "median_seconds": 0.9101091609918512,
+      "minimum_seconds": 0.9100831350078806,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/235"
+    },
+    {
+      "maximum_seconds": 0.9382727540069027,
+      "median_seconds": 0.9082922630041139,
+      "minimum_seconds": 0.9054066499957116,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/237"
+    },
+    {
+      "maximum_seconds": 1.0086154869932216,
+      "median_seconds": 0.9122408639959758,
+      "minimum_seconds": 0.9052848459978122,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/238"
+    },
+    {
+      "maximum_seconds": 0.9967845509963809,
+      "median_seconds": 0.9826990519941319,
+      "minimum_seconds": 0.975832864001859,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/239"
+    },
+    {
+      "maximum_seconds": 0.9278834709984949,
+      "median_seconds": 0.9267067319888156,
+      "minimum_seconds": 0.9224918760010041,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/240"
+    },
+    {
+      "maximum_seconds": 1.0372626229946036,
+      "median_seconds": 0.9305501199996797,
+      "minimum_seconds": 0.9294242610048968,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/242"
+    },
+    {
+      "maximum_seconds": 0.9069907899975078,
+      "median_seconds": 0.8964872869983083,
+      "minimum_seconds": 0.8934994040027959,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/244"
+    },
+    {
+      "maximum_seconds": 0.9770698089996586,
+      "median_seconds": 0.9419475289905677,
+      "minimum_seconds": 0.9262500529875979,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/245"
+    },
+    {
+      "maximum_seconds": 1.1455164439976215,
+      "median_seconds": 1.099427998997271,
+      "minimum_seconds": 1.0529028579912847,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/247"
+    },
+    {
+      "maximum_seconds": 0.9815739769983338,
+      "median_seconds": 0.9531654160091421,
+      "minimum_seconds": 0.9223499159998028,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/250"
+    },
+    {
+      "maximum_seconds": 1.0661509149940684,
+      "median_seconds": 1.050684027999523,
+      "minimum_seconds": 1.038570727003389,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/251"
+    },
+    {
+      "maximum_seconds": 0.9594620160060003,
+      "median_seconds": 0.9522061440075049,
+      "minimum_seconds": 0.9486164940026356,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/252"
+    },
+    {
+      "maximum_seconds": 0.9572069779969752,
+      "median_seconds": 0.937414517000434,
+      "minimum_seconds": 0.8983287970040692,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/253"
+    },
+    {
+      "maximum_seconds": 6.3091902090091025,
+      "median_seconds": 6.032941657002084,
+      "minimum_seconds": 5.9948936739965575,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/255"
+    },
+    {
+      "maximum_seconds": 1.3563805039884755,
+      "median_seconds": 1.1843216970009962,
+      "minimum_seconds": 1.1382446299976436,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/256"
+    },
+    {
+      "maximum_seconds": 1.2339812599966535,
+      "median_seconds": 0.9352796500024851,
+      "minimum_seconds": 0.9199212199891917,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/257"
+    },
+    {
+      "maximum_seconds": 1.1438771639950573,
+      "median_seconds": 1.035371551013668,
+      "minimum_seconds": 0.9274552770075388,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/259"
+    },
+    {
+      "maximum_seconds": 1.1709266389952973,
+      "median_seconds": 1.0265746229997603,
+      "minimum_seconds": 0.966420750002726,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/260"
+    },
+    {
+      "maximum_seconds": 1.4269733449909836,
+      "median_seconds": 0.9190519519906957,
+      "minimum_seconds": 0.9156325950025348,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/261"
+    },
+    {
+      "maximum_seconds": 1.2089160250034183,
+      "median_seconds": 0.9891658519918565,
+      "minimum_seconds": 0.988638829003321,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/262"
+    },
+    {
+      "maximum_seconds": 1.0432905269990442,
+      "median_seconds": 1.0061683259991696,
+      "minimum_seconds": 0.9545650350046344,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/264"
+    },
+    {
+      "maximum_seconds": 1.2772378960071364,
+      "median_seconds": 1.0718814249994466,
+      "minimum_seconds": 0.9912972619931679,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/265"
+    },
+    {
+      "maximum_seconds": 1.0236281190009322,
+      "median_seconds": 0.9686552649945952,
+      "minimum_seconds": 0.9598182210029336,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/266"
+    },
+    {
+      "maximum_seconds": 0.9517087040003389,
+      "median_seconds": 0.942390971002169,
+      "minimum_seconds": 0.920019045996014,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/267"
+    },
+    {
+      "maximum_seconds": 0.9506441999983508,
+      "median_seconds": 0.9047487540083239,
+      "minimum_seconds": 0.9000991430075374,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/268"
+    },
+    {
+      "maximum_seconds": 0.9093463649915066,
+      "median_seconds": 0.907300150996889,
+      "minimum_seconds": 0.9057874199934304,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/269"
+    },
+    {
+      "maximum_seconds": 0.9226964909903472,
+      "median_seconds": 0.9147352680010954,
+      "minimum_seconds": 0.9019558559957659,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/270"
+    },
+    {
+      "maximum_seconds": 5.080255326000042,
+      "median_seconds": 4.974301332011237,
+      "minimum_seconds": 4.803209174002404,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/271"
+    },
+    {
+      "maximum_seconds": 0.9303649670036975,
+      "median_seconds": 0.9215571030072169,
+      "minimum_seconds": 0.9142492550017778,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/272"
+    },
+    {
+      "maximum_seconds": 1.017836973987869,
+      "median_seconds": 0.9495507789979456,
+      "minimum_seconds": 0.898249042002135,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/273"
+    },
+    {
+      "maximum_seconds": 1.2057987239968497,
+      "median_seconds": 1.0241594889957923,
+      "minimum_seconds": 0.902450701003545,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/274"
+    },
+    {
+      "maximum_seconds": 0.9893626720004249,
+      "median_seconds": 0.9283024649921572,
+      "minimum_seconds": 0.9079773249977734,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/276"
+    },
+    {
+      "maximum_seconds": 1.2485183209937532,
+      "median_seconds": 1.0428232600097544,
+      "minimum_seconds": 0.9196827159903478,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/277"
+    },
+    {
+      "maximum_seconds": 0.9879596300015692,
+      "median_seconds": 0.9214073509938316,
+      "minimum_seconds": 0.8979543519963045,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/278"
+    },
+    {
+      "maximum_seconds": 1.0345485980069498,
+      "median_seconds": 1.0299919870012673,
+      "minimum_seconds": 1.0267633360053878,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/279"
+    },
+    {
+      "maximum_seconds": 0.9467067240038887,
+      "median_seconds": 0.9323077270091744,
+      "minimum_seconds": 0.9304423069988843,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/280"
+    },
+    {
+      "maximum_seconds": 0.9617591360001825,
+      "median_seconds": 0.9580780020041857,
+      "minimum_seconds": 0.8948803230014164,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/281"
+    },
+    {
+      "maximum_seconds": 0.9332046869967598,
+      "median_seconds": 0.9296922649955377,
+      "minimum_seconds": 0.9222869450022699,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/282"
+    },
+    {
+      "maximum_seconds": 0.9316236909944564,
+      "median_seconds": 0.9088263970043045,
+      "minimum_seconds": 0.8870741199934855,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/283"
+    },
+    {
+      "maximum_seconds": 0.9276960360002704,
+      "median_seconds": 0.9183361039904412,
+      "minimum_seconds": 0.9096945459896233,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/284"
+    },
+    {
+      "maximum_seconds": 0.9154954409896163,
+      "median_seconds": 0.9037926879973384,
+      "minimum_seconds": 0.8929675359977409,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/285"
+    },
+    {
+      "maximum_seconds": 0.9197751549945679,
+      "median_seconds": 0.9182353280048119,
+      "minimum_seconds": 0.9152171700116014,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/286"
+    },
+    {
+      "maximum_seconds": 0.9260622820002027,
+      "median_seconds": 0.9192197469965322,
+      "minimum_seconds": 0.8964320510131074,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/287"
+    },
+    {
+      "maximum_seconds": 0.9306178469996667,
+      "median_seconds": 0.9084300270042149,
+      "minimum_seconds": 0.8987499159993604,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/290"
+    },
+    {
+      "maximum_seconds": 1.0020984939910704,
+      "median_seconds": 0.9024960829992779,
+      "minimum_seconds": 0.9002972189919092,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/292"
+    },
+    {
+      "maximum_seconds": 0.9264998230064521,
+      "median_seconds": 0.8997051310143434,
+      "minimum_seconds": 0.8924557139980607,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/293"
+    },
+    {
+      "maximum_seconds": 0.9191125009965617,
+      "median_seconds": 0.9053725020057755,
+      "minimum_seconds": 0.8937180649954826,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/294"
+    },
+    {
+      "maximum_seconds": 0.9744113909982843,
+      "median_seconds": 0.8941749160003383,
+      "minimum_seconds": 0.8867285759915831,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/296"
+    },
+    {
+      "maximum_seconds": 0.9951653919997625,
+      "median_seconds": 0.9064892430033069,
+      "minimum_seconds": 0.8982273040019209,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/297"
+    },
+    {
+      "maximum_seconds": 0.9291433129983488,
+      "median_seconds": 0.9154544009943493,
+      "minimum_seconds": 0.9033175540098455,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/299"
+    },
+    {
+      "maximum_seconds": 0.9063203989935573,
+      "median_seconds": 0.9003388720011571,
+      "minimum_seconds": 0.8925507259991718,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/3"
+    },
+    {
+      "maximum_seconds": 2.406920605004416,
+      "median_seconds": 2.3449729240091983,
+      "minimum_seconds": 2.341692628993769,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/300"
+    },
+    {
+      "maximum_seconds": 1.1237610039970605,
+      "median_seconds": 1.1094356819958193,
+      "minimum_seconds": 1.007458850988769,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/301"
+    },
+    {
+      "maximum_seconds": 0.9596424990013475,
+      "median_seconds": 0.9216279389947886,
+      "minimum_seconds": 0.909150823004893,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/305"
+    },
+    {
+      "maximum_seconds": 0.9304213180002989,
+      "median_seconds": 0.9195652719936334,
+      "minimum_seconds": 0.9108809030003613,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/306"
+    },
+    {
+      "maximum_seconds": 0.9550064709910657,
+      "median_seconds": 0.9386001179955201,
+      "minimum_seconds": 0.9287740690051578,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/308"
+    },
+    {
+      "maximum_seconds": 0.9441087079903809,
+      "median_seconds": 0.9158814729889855,
+      "minimum_seconds": 0.9149470359989209,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/309"
+    },
+    {
+      "maximum_seconds": 0.943158914000378,
+      "median_seconds": 0.9331268200039631,
+      "minimum_seconds": 0.8988180880114669,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/310"
+    },
+    {
+      "maximum_seconds": 0.9412118259933777,
+      "median_seconds": 0.9132925000012619,
+      "minimum_seconds": 0.9061549520120025,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/311"
+    },
+    {
+      "maximum_seconds": 0.9743207010033075,
+      "median_seconds": 0.9278490950091509,
+      "minimum_seconds": 0.9059120119927684,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/312"
+    },
+    {
+      "maximum_seconds": 0.920303453996894,
+      "median_seconds": 0.9130332669883501,
+      "minimum_seconds": 0.8964479940041201,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/388"
+    },
+    {
+      "maximum_seconds": 2.627362778992392,
+      "median_seconds": 2.571922153001651,
+      "minimum_seconds": 2.528721750990371,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/389"
+    },
+    {
+      "maximum_seconds": 0.920850269991206,
+      "median_seconds": 0.9164979820052395,
+      "minimum_seconds": 0.9117623560014181,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/390"
+    },
+    {
+      "maximum_seconds": 1.0041938909998862,
+      "median_seconds": 0.9476923490001354,
+      "minimum_seconds": 0.9090688490105094,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/391"
+    },
+    {
+      "maximum_seconds": 6.170778379004332,
+      "median_seconds": 6.128707377996761,
+      "minimum_seconds": 5.855730544004473,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/392"
+    },
+    {
+      "maximum_seconds": 1.1502841600013198,
+      "median_seconds": 0.9575585299899103,
+      "minimum_seconds": 0.9067487800057279,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/394"
+    },
+    {
+      "maximum_seconds": 0.94741857801273,
+      "median_seconds": 0.9242306889937026,
+      "minimum_seconds": 0.9193726669909665,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/395"
+    },
+    {
+      "maximum_seconds": 0.9376088720018743,
+      "median_seconds": 0.9346995389932999,
+      "minimum_seconds": 0.9155459589965176,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/397"
+    },
+    {
+      "maximum_seconds": 0.9485802650015103,
+      "median_seconds": 0.9296417500008829,
+      "minimum_seconds": 0.917642275991966,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/398"
+    },
+    {
+      "maximum_seconds": 1.4356227420066716,
+      "median_seconds": 1.155436439003097,
+      "minimum_seconds": 0.8941214749938808,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/4"
+    },
+    {
+      "maximum_seconds": 0.9392641070007812,
+      "median_seconds": 0.9335823080036789,
+      "minimum_seconds": 0.9226144249987556,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/404"
+    },
+    {
+      "maximum_seconds": 0.9763161579903681,
+      "median_seconds": 0.9352405379904667,
+      "minimum_seconds": 0.9244943469966529,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/405"
+    },
+    {
+      "maximum_seconds": 0.9257325170037802,
+      "median_seconds": 0.9098723469942342,
+      "minimum_seconds": 0.9082690229988657,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/406"
+    },
+    {
+      "maximum_seconds": 0.920617616007803,
+      "median_seconds": 0.9162153780052904,
+      "minimum_seconds": 0.9109172580065206,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/409"
+    },
+    {
+      "maximum_seconds": 0.9694107959949179,
+      "median_seconds": 0.9146961730002658,
+      "minimum_seconds": 0.9103965510003036,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/410"
+    },
+    {
+      "maximum_seconds": 0.9148121339967474,
+      "median_seconds": 0.9052668899967102,
+      "minimum_seconds": 0.9002752410015091,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/412"
+    },
+    {
+      "maximum_seconds": 0.9400710169866215,
+      "median_seconds": 0.9328578679997008,
+      "minimum_seconds": 0.9160214299918152,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/413"
+    },
+    {
+      "maximum_seconds": 0.9555249209952308,
+      "median_seconds": 0.9052844390098471,
+      "minimum_seconds": 0.8989401639992138,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/414"
+    },
+    {
+      "maximum_seconds": 0.9415564669907326,
+      "median_seconds": 0.9309077050129417,
+      "minimum_seconds": 0.918037376992288,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/415"
+    },
+    {
+      "maximum_seconds": 0.9225736579974182,
+      "median_seconds": 0.9172062459983863,
+      "minimum_seconds": 0.9089177170098992,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/418"
+    },
+    {
+      "maximum_seconds": 1.0202843720035162,
+      "median_seconds": 0.8939586910128128,
+      "minimum_seconds": 0.8893568940111436,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/419"
+    },
+    {
+      "maximum_seconds": 1.004661438986659,
+      "median_seconds": 0.919910044001881,
+      "minimum_seconds": 0.9006072409974877,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/420"
+    },
+    {
+      "maximum_seconds": 1.0888659949996509,
+      "median_seconds": 1.0530670959997224,
+      "minimum_seconds": 0.9483487690013135,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/421"
+    },
+    {
+      "maximum_seconds": 1.038520123998751,
+      "median_seconds": 0.984203473009984,
+      "minimum_seconds": 0.937485545000527,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/422"
+    },
+    {
+      "maximum_seconds": 0.9844701230031205,
+      "median_seconds": 0.9441883999970742,
+      "minimum_seconds": 0.9231607459951192,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/424"
+    },
+    {
+      "maximum_seconds": 0.9292213589942548,
+      "median_seconds": 0.9181034950015601,
+      "minimum_seconds": 0.8973589550005272,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/425"
+    },
+    {
+      "maximum_seconds": 0.9098924040008569,
+      "median_seconds": 0.8989395679964218,
+      "minimum_seconds": 0.8904717539990088,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/426"
+    },
+    {
+      "maximum_seconds": 1.1303455879969988,
+      "median_seconds": 1.0843319650011836,
+      "minimum_seconds": 0.9937854079907993,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/427"
+    },
+    {
+      "maximum_seconds": 1.0090890409919666,
+      "median_seconds": 0.954404265008634,
+      "minimum_seconds": 0.945583605003776,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/428"
+    },
+    {
+      "maximum_seconds": 0.9413498729991261,
+      "median_seconds": 0.9165455570037011,
+      "minimum_seconds": 0.9084969799878309,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/429"
+    },
+    {
+      "maximum_seconds": 0.9245738059980795,
+      "median_seconds": 0.9094226970046293,
+      "minimum_seconds": 0.907908163004322,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/430"
+    },
+    {
+      "maximum_seconds": 0.9321221389982384,
+      "median_seconds": 0.9297760259942152,
+      "minimum_seconds": 0.9276961489958921,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/432"
+    },
+    {
+      "maximum_seconds": 1.0024097349960357,
+      "median_seconds": 0.9315432669973234,
+      "minimum_seconds": 0.9299241800035816,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/433"
+    },
+    {
+      "maximum_seconds": 0.9154450700007146,
+      "median_seconds": 0.9065380389947677,
+      "minimum_seconds": 0.8940777350071585,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/435"
+    },
+    {
+      "maximum_seconds": 0.9155104130040854,
+      "median_seconds": 0.9013070740038529,
+      "minimum_seconds": 0.899303443991812,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/436"
+    },
+    {
+      "maximum_seconds": 0.933099324000068,
+      "median_seconds": 0.9097018150059739,
+      "minimum_seconds": 0.9074104630126385,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/437"
+    },
+    {
+      "maximum_seconds": 0.9892773290048353,
+      "median_seconds": 0.9557323429908138,
+      "minimum_seconds": 0.9259558199992171,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/439"
+    },
+    {
+      "maximum_seconds": 0.9428239230037434,
+      "median_seconds": 0.920691203995375,
+      "minimum_seconds": 0.9196117399987997,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/440"
+    },
+    {
+      "maximum_seconds": 1.0424514939950313,
+      "median_seconds": 0.9362198119924869,
+      "minimum_seconds": 0.916635153000243,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/441"
+    },
+    {
+      "maximum_seconds": 1.0979385919927154,
+      "median_seconds": 0.9399624680081615,
+      "minimum_seconds": 0.9295238949998748,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/445"
+    },
+    {
+      "maximum_seconds": 1.0702839029981988,
+      "median_seconds": 1.034969751999597,
+      "minimum_seconds": 0.9332104220084148,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/446"
+    },
+    {
+      "maximum_seconds": 1.0700527259905357,
+      "median_seconds": 0.990741675006575,
+      "minimum_seconds": 0.9404191630019341,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/447"
+    },
+    {
+      "maximum_seconds": 0.9387706559937214,
+      "median_seconds": 0.928987004008377,
+      "minimum_seconds": 0.8997434140037512,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/448"
+    },
+    {
+      "maximum_seconds": 0.9262027460063109,
+      "median_seconds": 0.9128491250012303,
+      "minimum_seconds": 0.8966922590043396,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/450"
+    },
+    {
+      "maximum_seconds": 0.9312286070053233,
+      "median_seconds": 0.925670850003371,
+      "minimum_seconds": 0.9230672389967367,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/451"
+    },
+    {
+      "maximum_seconds": 1.3346129279962042,
+      "median_seconds": 1.3012323550065048,
+      "minimum_seconds": 1.2951074140000856,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/453"
+    },
+    {
+      "maximum_seconds": 0.9234512830007588,
+      "median_seconds": 0.9092531889909878,
+      "minimum_seconds": 0.8961149550013943,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/454"
+    },
+    {
+      "maximum_seconds": 0.9400687960005598,
+      "median_seconds": 0.9280388180050068,
+      "minimum_seconds": 0.9002023109933361,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/455"
+    },
+    {
+      "maximum_seconds": 0.9099825090088416,
+      "median_seconds": 0.9053376669908175,
+      "minimum_seconds": 0.9001215210009832,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/456"
+    },
+    {
+      "maximum_seconds": 0.9479447589983465,
+      "median_seconds": 0.9244988150021527,
+      "minimum_seconds": 0.9155015549913514,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/457"
+    },
+    {
+      "maximum_seconds": 0.9491518700087909,
+      "median_seconds": 0.9396528789948206,
+      "minimum_seconds": 0.9163621150073595,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/458"
+    },
+    {
+      "maximum_seconds": 0.9208847890113248,
+      "median_seconds": 0.9159938599914312,
+      "minimum_seconds": 0.9159505350107793,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/459"
+    },
+    {
+      "maximum_seconds": 0.9108289629948558,
+      "median_seconds": 0.9026186239934759,
+      "minimum_seconds": 0.8962568330025533,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/460"
+    },
+    {
+      "maximum_seconds": 0.9862790530023631,
+      "median_seconds": 0.9467444360052468,
+      "minimum_seconds": 0.929311672996846,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/462"
+    },
+    {
+      "maximum_seconds": 0.9176786839962006,
+      "median_seconds": 0.908299981005257,
+      "minimum_seconds": 0.9044699420046527,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/463"
+    },
+    {
+      "maximum_seconds": 1.045349840002018,
+      "median_seconds": 0.9262099150073482,
+      "minimum_seconds": 0.9069493619899731,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/465"
+    },
+    {
+      "maximum_seconds": 1.0653895260038553,
+      "median_seconds": 0.9351381099986611,
+      "minimum_seconds": 0.9160389010066865,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/468"
+    },
+    {
+      "maximum_seconds": 1.0938826560013695,
+      "median_seconds": 1.0658260670024902,
+      "minimum_seconds": 0.9331066169979749,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/470"
+    },
+    {
+      "maximum_seconds": 1.064689573002397,
+      "median_seconds": 1.055334884003969,
+      "minimum_seconds": 1.0071440940082539,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/471"
+    },
+    {
+      "maximum_seconds": 0.951530239006388,
+      "median_seconds": 0.9410716160055017,
+      "minimum_seconds": 0.9074256390013034,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/472"
+    },
+    {
+      "maximum_seconds": 0.9296273259969894,
+      "median_seconds": 0.9139192940056091,
+      "minimum_seconds": 0.9011358610005118,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/473"
+    },
+    {
+      "maximum_seconds": 0.9762188040040201,
+      "median_seconds": 0.9103641719993902,
+      "minimum_seconds": 0.9089107900072122,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/474"
+    },
+    {
+      "maximum_seconds": 0.9325670560065191,
+      "median_seconds": 0.9061592179932632,
+      "minimum_seconds": 0.8953543190000346,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/475"
+    },
+    {
+      "maximum_seconds": 0.9009624620084651,
+      "median_seconds": 0.899211516007199,
+      "minimum_seconds": 0.8909732899919618,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/476"
+    },
+    {
+      "maximum_seconds": 0.924891292990651,
+      "median_seconds": 0.8950158210063819,
+      "minimum_seconds": 0.8931810070062056,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/477"
+    },
+    {
+      "maximum_seconds": 0.9314982719952241,
+      "median_seconds": 0.9310052200016798,
+      "minimum_seconds": 0.9090486360073555,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/478"
+    },
+    {
+      "maximum_seconds": 0.9277067070070188,
+      "median_seconds": 0.9187332939909538,
+      "minimum_seconds": 0.9094716419931501,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/479"
+    },
+    {
+      "maximum_seconds": 0.9543965260090772,
+      "median_seconds": 0.917740175005747,
+      "minimum_seconds": 0.8917007900017779,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/554"
+    },
+    {
+      "maximum_seconds": 0.9030199709959561,
+      "median_seconds": 0.9026560930069536,
+      "minimum_seconds": 0.897504549997393,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/555"
+    },
+    {
+      "maximum_seconds": 0.9246267359994818,
+      "median_seconds": 0.9100462240021443,
+      "minimum_seconds": 0.9015971990011167,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/556"
+    },
+    {
+      "maximum_seconds": 0.9090812689973973,
+      "median_seconds": 0.907308052002918,
+      "minimum_seconds": 0.8879239719972247,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/557"
+    },
+    {
+      "maximum_seconds": 1.0301030069967965,
+      "median_seconds": 0.9250034950091504,
+      "minimum_seconds": 0.9191127499943832,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/558"
+    },
+    {
+      "maximum_seconds": 0.923423038009787,
+      "median_seconds": 0.9154871750070015,
+      "minimum_seconds": 0.903360469994368,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/559"
+    },
+    {
+      "maximum_seconds": 1.1151094539964106,
+      "median_seconds": 1.0323280300071929,
+      "minimum_seconds": 0.9905792350036791,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/56"
+    },
+    {
+      "maximum_seconds": 1.0180325410037767,
+      "median_seconds": 0.9715983570058597,
+      "minimum_seconds": 0.9492752509977436,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/560"
+    },
+    {
+      "maximum_seconds": 0.9980977920058649,
+      "median_seconds": 0.9749911989929387,
+      "minimum_seconds": 0.9365487110044342,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/562"
+    },
+    {
+      "maximum_seconds": 1.0604107109975303,
+      "median_seconds": 1.0480095130042173,
+      "minimum_seconds": 0.9084330509940628,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/563"
+    },
+    {
+      "maximum_seconds": 1.0467237230041064,
+      "median_seconds": 1.0154251709900564,
+      "minimum_seconds": 1.009861889993772,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/564"
+    },
+    {
+      "maximum_seconds": 1.0170007179985987,
+      "median_seconds": 0.9597610150085529,
+      "minimum_seconds": 0.9549484460003441,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/565"
+    },
+    {
+      "maximum_seconds": 0.9240708269935567,
+      "median_seconds": 0.9222434389957925,
+      "minimum_seconds": 0.9047455079999054,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/566"
+    },
+    {
+      "maximum_seconds": 0.9889565799967386,
+      "median_seconds": 0.9389200299920049,
+      "minimum_seconds": 0.919512193009723,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/567"
+    },
+    {
+      "maximum_seconds": 0.9396138339943718,
+      "median_seconds": 0.9350153609993868,
+      "minimum_seconds": 0.9116653409873834,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/568"
+    },
+    {
+      "maximum_seconds": 1.0011596929980442,
+      "median_seconds": 0.9470486009959131,
+      "minimum_seconds": 0.9245738579920726,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/569"
+    },
+    {
+      "maximum_seconds": 0.9742906419996871,
+      "median_seconds": 0.9423482209967915,
+      "minimum_seconds": 0.9322782770032063,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/57"
+    },
+    {
+      "maximum_seconds": 0.9068360999954166,
+      "median_seconds": 0.9002104589890223,
+      "minimum_seconds": 0.8986382680013776,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/572"
+    },
+    {
+      "maximum_seconds": 0.9340436110069277,
+      "median_seconds": 0.9126306440011831,
+      "minimum_seconds": 0.9059435530070914,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/573"
+    },
+    {
+      "maximum_seconds": 0.9114554769912502,
+      "median_seconds": 0.905064457008848,
+      "minimum_seconds": 0.8921391460025916,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/576"
+    },
+    {
+      "maximum_seconds": 1.0226798789954046,
+      "median_seconds": 0.9292738520016428,
+      "minimum_seconds": 0.9267713779991027,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/577"
+    },
+    {
+      "maximum_seconds": 0.9414915930101415,
+      "median_seconds": 0.9052651720121503,
+      "minimum_seconds": 0.9005506910034455,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/578"
+    },
+    {
+      "maximum_seconds": 0.9288739929907024,
+      "median_seconds": 0.9024143560091034,
+      "minimum_seconds": 0.8967062589945272,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/579"
+    },
+    {
+      "maximum_seconds": 0.9763665820064489,
+      "median_seconds": 0.9231699669908267,
+      "minimum_seconds": 0.9103071940044174,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/58"
+    },
+    {
+      "maximum_seconds": 0.9207168800057843,
+      "median_seconds": 0.9187858540099114,
+      "minimum_seconds": 0.903018664001138,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/580"
+    },
+    {
+      "maximum_seconds": 1.0378672160004498,
+      "median_seconds": 0.9493080620013643,
+      "minimum_seconds": 0.8996194899955299,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/581"
+    },
+    {
+      "maximum_seconds": 1.9043391450104536,
+      "median_seconds": 1.825134735001484,
+      "minimum_seconds": 1.8237970539921662,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/583"
+    },
+    {
+      "maximum_seconds": 1.0245217030023923,
+      "median_seconds": 0.9322729019913822,
+      "minimum_seconds": 0.9266785189975053,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/585"
+    },
+    {
+      "maximum_seconds": 1.0589125340047758,
+      "median_seconds": 0.9222518970054807,
+      "minimum_seconds": 0.8987215860106517,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/586"
+    },
+    {
+      "maximum_seconds": 1.0527936270082137,
+      "median_seconds": 1.0317412500007777,
+      "minimum_seconds": 1.011465172006865,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/587"
+    },
+    {
+      "maximum_seconds": 1.0151137630018638,
+      "median_seconds": 0.9387189580011182,
+      "minimum_seconds": 0.9311208829894895,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/588"
+    },
+    {
+      "maximum_seconds": 2.5081703549949452,
+      "median_seconds": 2.506732399997418,
+      "minimum_seconds": 2.4638954489928437,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/589"
+    },
+    {
+      "maximum_seconds": 0.9329123289935524,
+      "median_seconds": 0.9259711380000226,
+      "minimum_seconds": 0.9201506259996677,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/59"
+    },
+    {
+      "maximum_seconds": 0.9189702129951911,
+      "median_seconds": 0.9040762129880022,
+      "minimum_seconds": 0.8966089089954039,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/590"
+    },
+    {
+      "maximum_seconds": 0.9324120589881204,
+      "median_seconds": 0.9177955760096665,
+      "minimum_seconds": 0.9171177530079149,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/591"
+    },
+    {
+      "maximum_seconds": 3.822600287006935,
+      "median_seconds": 3.7790110140049364,
+      "minimum_seconds": 3.7142716990056215,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/592"
+    },
+    {
+      "maximum_seconds": 0.9115527819958515,
+      "median_seconds": 0.9031122129963478,
+      "minimum_seconds": 0.8946298289956758,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/593"
+    },
+    {
+      "maximum_seconds": 0.9192344959883485,
+      "median_seconds": 0.903263047002838,
+      "minimum_seconds": 0.8956152870086953,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/594"
+    },
+    {
+      "maximum_seconds": 1.015933511996991,
+      "median_seconds": 0.898269060999155,
+      "minimum_seconds": 0.8941436780005461,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/596"
+    },
+    {
+      "maximum_seconds": 0.9610443909914466,
+      "median_seconds": 0.9039751060045091,
+      "minimum_seconds": 0.9019324249966303,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/597"
+    },
+    {
+      "maximum_seconds": 0.9977106820006156,
+      "median_seconds": 0.9579628229985246,
+      "minimum_seconds": 0.8951339150080457,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/598"
+    },
+    {
+      "maximum_seconds": 27.77106370399997,
+      "median_seconds": 26.502837198000634,
+      "minimum_seconds": 26.407707796999603,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/599"
+    },
+    {
+      "maximum_seconds": 1.2322929369984195,
+      "median_seconds": 0.9558253090071958,
+      "minimum_seconds": 0.9480630680045579,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/6"
+    },
+    {
+      "maximum_seconds": 1.2402271490136627,
+      "median_seconds": 1.036453694003285,
+      "minimum_seconds": 1.0152812419983093,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/600"
+    },
+    {
+      "maximum_seconds": 1.1774035910057137,
+      "median_seconds": 1.0331466019997606,
+      "minimum_seconds": 0.9225859940052032,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/602"
+    },
+    {
+      "maximum_seconds": 4.24911340700055,
+      "median_seconds": 4.196236876989133,
+      "minimum_seconds": 4.179852358007338,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/603"
+    },
+    {
+      "maximum_seconds": 1.2461714210076025,
+      "median_seconds": 1.0551037239929428,
+      "minimum_seconds": 1.0344571280002128,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/604"
+    },
+    {
+      "maximum_seconds": 1.116527895006584,
+      "median_seconds": 1.1022204809996765,
+      "minimum_seconds": 1.0199855399987428,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/605"
+    },
+    {
+      "maximum_seconds": 0.8950708620104706,
+      "median_seconds": 0.892633808995015,
+      "minimum_seconds": 0.8906478849967243,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/606"
+    },
+    {
+      "maximum_seconds": 0.909403519006446,
+      "median_seconds": 0.8917253740073647,
+      "minimum_seconds": 0.8781402530003106,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/607"
+    },
+    {
+      "maximum_seconds": 0.9607653679995565,
+      "median_seconds": 0.9558084129967028,
+      "minimum_seconds": 0.9332899010041729,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/608"
+    },
+    {
+      "maximum_seconds": 0.9761314369970933,
+      "median_seconds": 0.9469389459991362,
+      "minimum_seconds": 0.9051946709951153,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/61"
+    },
+    {
+      "maximum_seconds": 0.9215789919981034,
+      "median_seconds": 0.9022244789957767,
+      "minimum_seconds": 0.8997016960056499,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/610"
+    },
+    {
+      "maximum_seconds": 0.9158921589987585,
+      "median_seconds": 0.9132763819943648,
+      "minimum_seconds": 0.8858015949954279,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/611"
+    },
+    {
+      "maximum_seconds": 0.9081289719906636,
+      "median_seconds": 0.9065798550000181,
+      "minimum_seconds": 0.8970490679930663,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/612"
+    },
+    {
+      "maximum_seconds": 0.9186050860007526,
+      "median_seconds": 0.9113013710011728,
+      "minimum_seconds": 0.8864019809989259,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/614"
+    },
+    {
+      "maximum_seconds": 0.9843615450081415,
+      "median_seconds": 0.9297563459986122,
+      "minimum_seconds": 0.9225737300002947,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/615"
+    },
+    {
+      "maximum_seconds": 0.9434602919936879,
+      "median_seconds": 0.9160675080056535,
+      "minimum_seconds": 0.8978159719990799,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/616"
+    },
+    {
+      "maximum_seconds": 0.9408645579969743,
+      "median_seconds": 0.9304830510081956,
+      "minimum_seconds": 0.9295372720080195,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/618"
+    },
+    {
+      "maximum_seconds": 0.9143720749998465,
+      "median_seconds": 0.901178002008237,
+      "minimum_seconds": 0.9003648900106782,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/619"
+    },
+    {
+      "maximum_seconds": 1.037565769001958,
+      "median_seconds": 1.03127987300104,
+      "minimum_seconds": 0.935981582995737,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/62"
+    },
+    {
+      "maximum_seconds": 1.0467750129901106,
+      "median_seconds": 0.9373199999972712,
+      "minimum_seconds": 0.9085881210048683,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/620"
+    },
+    {
+      "maximum_seconds": 0.9224074139929144,
+      "median_seconds": 0.9113162699941313,
+      "minimum_seconds": 0.9041677689965582,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/622"
+    },
+    {
+      "maximum_seconds": 1.0398997360025533,
+      "median_seconds": 0.9472992359951604,
+      "minimum_seconds": 0.93867322501319,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/623"
+    },
+    {
+      "maximum_seconds": 0.991282114002388,
+      "median_seconds": 0.926034827993135,
+      "minimum_seconds": 0.9150393599993549,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/624"
+    },
+    {
+      "maximum_seconds": 1.021810275997268,
+      "median_seconds": 0.8996315019903705,
+      "minimum_seconds": 0.893781395003316,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/626"
+    },
+    {
+      "maximum_seconds": 1.04819158600003,
+      "median_seconds": 1.0460723440046422,
+      "minimum_seconds": 1.03719687499688,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/628"
+    },
+    {
+      "maximum_seconds": 1.0477861810068134,
+      "median_seconds": 1.0401985539938323,
+      "minimum_seconds": 0.9251002080127364,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/629"
+    },
+    {
+      "maximum_seconds": 0.9750230740028201,
+      "median_seconds": 0.9216481859912165,
+      "minimum_seconds": 0.9201991679874482,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/63"
+    },
+    {
+      "maximum_seconds": 2.072135613008868,
+      "median_seconds": 1.8530127289996017,
+      "minimum_seconds": 1.7886650480068056,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/630"
+    },
+    {
+      "maximum_seconds": 0.9767990300024394,
+      "median_seconds": 0.9319082330039237,
+      "minimum_seconds": 0.9160043219890213,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/631"
+    },
+    {
+      "maximum_seconds": 0.9181055560038658,
+      "median_seconds": 0.9109165230038343,
+      "minimum_seconds": 0.8917890610027825,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/632"
+    },
+    {
+      "maximum_seconds": 0.9447963099955814,
+      "median_seconds": 0.9355524699931266,
+      "minimum_seconds": 0.926720450996072,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/633"
+    },
+    {
+      "maximum_seconds": 0.9261301039950922,
+      "median_seconds": 0.9208866190019762,
+      "minimum_seconds": 0.9007847220054828,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/635"
+    },
+    {
+      "maximum_seconds": 0.9314777330000652,
+      "median_seconds": 0.9104000240040477,
+      "minimum_seconds": 0.9103398800070863,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/637"
+    },
+    {
+      "maximum_seconds": 0.9344860290002543,
+      "median_seconds": 0.9318915370095056,
+      "minimum_seconds": 0.9072399940050673,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/638"
+    },
+    {
+      "maximum_seconds": 0.9691703349963063,
+      "median_seconds": 0.9361914780020015,
+      "minimum_seconds": 0.9103297480032779,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/639"
+    },
+    {
+      "maximum_seconds": 0.9498708159953821,
+      "median_seconds": 0.9202361000061501,
+      "minimum_seconds": 0.9198517339973478,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/64"
+    },
+    {
+      "maximum_seconds": 0.923225790989818,
+      "median_seconds": 0.895729207986733,
+      "minimum_seconds": 0.8868288170051528,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/641"
+    },
+    {
+      "maximum_seconds": 0.933956594002666,
+      "median_seconds": 0.9129550240031676,
+      "minimum_seconds": 0.8737599680025596,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/643"
+    },
+    {
+      "maximum_seconds": 0.9025560830050381,
+      "median_seconds": 0.9022968879871769,
+      "minimum_seconds": 0.8865975530061405,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/644"
+    },
+    {
+      "maximum_seconds": 1.051792555997963,
+      "median_seconds": 0.990048163002939,
+      "minimum_seconds": 0.9312592989881523,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/65"
+    },
+    {
+      "maximum_seconds": 0.9993445000000065,
+      "median_seconds": 0.976719044992933,
+      "minimum_seconds": 0.8973962290037889,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/66"
+    },
+    {
+      "maximum_seconds": 0.9877020199928666,
+      "median_seconds": 0.9476870709913783,
+      "minimum_seconds": 0.9296219499956351,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/67"
+    },
+    {
+      "maximum_seconds": 0.9055477790097939,
+      "median_seconds": 0.9053864429879468,
+      "minimum_seconds": 0.9042499680072069,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/68"
+    },
+    {
+      "maximum_seconds": 0.992530049989,
+      "median_seconds": 0.9021541530091781,
+      "minimum_seconds": 0.9004017019906314,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/69"
+    },
+    {
+      "maximum_seconds": 0.9597547750017839,
+      "median_seconds": 0.955644215006032,
+      "minimum_seconds": 0.934032118995674,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/7"
+    },
+    {
+      "maximum_seconds": 0.9484004190017004,
+      "median_seconds": 0.8976190190005582,
+      "minimum_seconds": 0.891953697995632,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/70"
+    },
+    {
+      "maximum_seconds": 0.9642372230009641,
+      "median_seconds": 0.946368593009538,
+      "minimum_seconds": 0.9068334460025653,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/71"
+    },
+    {
+      "maximum_seconds": 1.0211302639945643,
+      "median_seconds": 0.9207236410002224,
+      "minimum_seconds": 0.8744628740096232,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/72"
+    },
+    {
+      "maximum_seconds": 0.9795273009949597,
+      "median_seconds": 0.9670317489944864,
+      "minimum_seconds": 0.925765523003065,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/720"
+    },
+    {
+      "maximum_seconds": 0.9217950090096565,
+      "median_seconds": 0.9067312480037799,
+      "minimum_seconds": 0.9036704210011521,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/721"
+    },
+    {
+      "maximum_seconds": 1.0015680659998907,
+      "median_seconds": 0.9514067260024603,
+      "minimum_seconds": 0.9168858899938641,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/722"
+    },
+    {
+      "maximum_seconds": 0.9807335420046002,
+      "median_seconds": 0.9518841870012693,
+      "minimum_seconds": 0.9218245550000574,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/723"
+    },
+    {
+      "maximum_seconds": 1.044678942009341,
+      "median_seconds": 0.9156016189954244,
+      "minimum_seconds": 0.9133113580028294,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/724"
+    },
+    {
+      "maximum_seconds": 1.0479064359969925,
+      "median_seconds": 1.004646713990951,
+      "minimum_seconds": 0.9993047030002344,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/725"
+    },
+    {
+      "maximum_seconds": 1.0132294740033103,
+      "median_seconds": 0.9488381589908386,
+      "minimum_seconds": 0.9260009930003434,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/726"
+    },
+    {
+      "maximum_seconds": 0.9302779999998165,
+      "median_seconds": 0.9255968750076136,
+      "minimum_seconds": 0.9116755849972833,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/728"
+    },
+    {
+      "maximum_seconds": 0.9715580549964216,
+      "median_seconds": 0.9452209990122356,
+      "minimum_seconds": 0.9436803450080333,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/730"
+    },
+    {
+      "maximum_seconds": 0.9610535059910035,
+      "median_seconds": 0.9320755850058049,
+      "minimum_seconds": 0.9061946139991051,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/731"
+    },
+    {
+      "maximum_seconds": 0.9248476110078627,
+      "median_seconds": 0.9098987479956122,
+      "minimum_seconds": 0.9074765989935258,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/732"
+    },
+    {
+      "maximum_seconds": 0.9286548920063069,
+      "median_seconds": 0.910155739999027,
+      "minimum_seconds": 0.9022358469956089,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/733"
+    },
+    {
+      "maximum_seconds": 0.9716516430053161,
+      "median_seconds": 0.9265669969900046,
+      "minimum_seconds": 0.9134209290059516,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/734"
+    },
+    {
+      "maximum_seconds": 0.9177135119971354,
+      "median_seconds": 0.9120485270104837,
+      "minimum_seconds": 0.9053624939988367,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/735"
+    },
+    {
+      "maximum_seconds": 0.9884590610017767,
+      "median_seconds": 0.9348744470044039,
+      "minimum_seconds": 0.90499157900922,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/736"
+    },
+    {
+      "maximum_seconds": 0.9362736270122696,
+      "median_seconds": 0.934159569995245,
+      "minimum_seconds": 0.9171985129942186,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/737"
+    },
+    {
+      "maximum_seconds": 0.9238043219957035,
+      "median_seconds": 0.9179457610007375,
+      "minimum_seconds": 0.9143749850045424,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/739"
+    },
+    {
+      "maximum_seconds": 1.044979432990658,
+      "median_seconds": 0.9661111880122917,
+      "minimum_seconds": 0.8970966699998826,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/74"
+    },
+    {
+      "maximum_seconds": 0.9034643740014872,
+      "median_seconds": 0.8967807619919768,
+      "minimum_seconds": 0.8936018380045425,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/740"
+    },
+    {
+      "maximum_seconds": 0.9921724330051802,
+      "median_seconds": 0.9198689359909622,
+      "minimum_seconds": 0.9183751400123583,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/741"
+    },
+    {
+      "maximum_seconds": 0.913948359011556,
+      "median_seconds": 0.9113131729973247,
+      "minimum_seconds": 0.8995957430015551,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/742"
+    },
+    {
+      "maximum_seconds": 1.0131064009910915,
+      "median_seconds": 0.9585974520014133,
+      "minimum_seconds": 0.9041381110000657,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/743"
+    },
+    {
+      "maximum_seconds": 1.0639277990121627,
+      "median_seconds": 0.915124057995854,
+      "minimum_seconds": 0.9080186000064714,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/744"
+    },
+    {
+      "maximum_seconds": 1.2466695579933003,
+      "median_seconds": 1.2143729679955868,
+      "minimum_seconds": 1.1274777600046946,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/745"
+    },
+    {
+      "maximum_seconds": 1.0398303019901505,
+      "median_seconds": 0.984433910009102,
+      "minimum_seconds": 0.9660745079891058,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/748"
+    },
+    {
+      "maximum_seconds": 0.9340818249911536,
+      "median_seconds": 0.932169170002453,
+      "minimum_seconds": 0.9049886869906913,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/749"
+    },
+    {
+      "maximum_seconds": 1.0936246700002812,
+      "median_seconds": 1.0615868309978396,
+      "minimum_seconds": 1.031646315997932,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/75"
+    },
+    {
+      "maximum_seconds": 0.9086202590115136,
+      "median_seconds": 0.9051829749951139,
+      "minimum_seconds": 0.8968551230063895,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/750"
+    },
+    {
+      "maximum_seconds": 0.9754191560059553,
+      "median_seconds": 0.9593265389994485,
+      "minimum_seconds": 0.9344748189905658,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/751"
+    },
+    {
+      "maximum_seconds": 0.9440919210028369,
+      "median_seconds": 0.9364062009990448,
+      "minimum_seconds": 0.9321398850006517,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/752"
+    },
+    {
+      "maximum_seconds": 0.9341675190080423,
+      "median_seconds": 0.9265293630014639,
+      "minimum_seconds": 0.9180483579984866,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/753"
+    },
+    {
+      "maximum_seconds": 0.9923321230016882,
+      "median_seconds": 0.9705859069945291,
+      "minimum_seconds": 0.9495527649996802,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/754"
+    },
+    {
+      "maximum_seconds": 0.9462694140092935,
+      "median_seconds": 0.9461397519917227,
+      "minimum_seconds": 0.9439534129924141,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/755"
+    },
+    {
+      "maximum_seconds": 0.9489900859916816,
+      "median_seconds": 0.9319863809942035,
+      "minimum_seconds": 0.9313249350088881,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/757"
+    },
+    {
+      "maximum_seconds": 0.968183657998452,
+      "median_seconds": 0.9196010900050169,
+      "minimum_seconds": 0.9053781269903993,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/758"
+    },
+    {
+      "maximum_seconds": 0.944985751004424,
+      "median_seconds": 0.9047710750019178,
+      "minimum_seconds": 0.8942465919972165,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/759"
+    },
+    {
+      "maximum_seconds": 0.9658779319870519,
+      "median_seconds": 0.9626919830043335,
+      "minimum_seconds": 0.9112112419970799,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/760"
+    },
+    {
+      "maximum_seconds": 1.050671606004471,
+      "median_seconds": 1.0043852249946212,
+      "minimum_seconds": 0.9175960599968676,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/762"
+    },
+    {
+      "maximum_seconds": 0.9376520980003988,
+      "median_seconds": 0.919133368995972,
+      "minimum_seconds": 0.9027037750056479,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/763"
+    },
+    {
+      "maximum_seconds": 1.0094844679988455,
+      "median_seconds": 1.0081235859979643,
+      "minimum_seconds": 0.9204730560013559,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/764"
+    },
+    {
+      "maximum_seconds": 1.0195661259931512,
+      "median_seconds": 0.9813097589940298,
+      "minimum_seconds": 0.921794449997833,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/765"
+    },
+    {
+      "maximum_seconds": 1.017908558002091,
+      "median_seconds": 0.9453182249999372,
+      "minimum_seconds": 0.9084250650048489,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/766"
+    },
+    {
+      "maximum_seconds": 1.071015105000697,
+      "median_seconds": 1.0571293190005235,
+      "minimum_seconds": 1.0569724079978187,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/767"
+    },
+    {
+      "maximum_seconds": 0.9757098280097125,
+      "median_seconds": 0.9640214609971736,
+      "minimum_seconds": 0.8711315270047635,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/769"
+    },
+    {
+      "maximum_seconds": 1.0619914060080191,
+      "median_seconds": 0.9849892310012365,
+      "minimum_seconds": 0.9166888740001014,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/77"
+    },
+    {
+      "maximum_seconds": 0.9864661719911965,
+      "median_seconds": 0.9425748680077959,
+      "minimum_seconds": 0.9201093050069176,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/770"
+    },
+    {
+      "maximum_seconds": 0.9581782729947008,
+      "median_seconds": 0.9115279350080527,
+      "minimum_seconds": 0.9082065900001908,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/771"
+    },
+    {
+      "maximum_seconds": 0.9215648429963039,
+      "median_seconds": 0.9139177550096065,
+      "minimum_seconds": 0.8965394869883312,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/772"
+    },
+    {
+      "maximum_seconds": 0.953997429998708,
+      "median_seconds": 0.9387754890049109,
+      "minimum_seconds": 0.9106006499932846,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/773"
+    },
+    {
+      "maximum_seconds": 0.9506999260047451,
+      "median_seconds": 0.9142932279937668,
+      "minimum_seconds": 0.908929621000425,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/775"
+    },
+    {
+      "maximum_seconds": 0.9097095109900692,
+      "median_seconds": 0.9080004160059616,
+      "minimum_seconds": 0.9069409670046298,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/777"
+    },
+    {
+      "maximum_seconds": 0.9147658060101094,
+      "median_seconds": 0.9083167019998655,
+      "minimum_seconds": 0.9066023180057527,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/778"
+    },
+    {
+      "maximum_seconds": 0.9246617229946423,
+      "median_seconds": 0.9215511819929816,
+      "minimum_seconds": 0.9141237250005361,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/780"
+    },
+    {
+      "maximum_seconds": 0.9736148600059096,
+      "median_seconds": 0.9307894289959222,
+      "minimum_seconds": 0.9085042829974554,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/781"
+    },
+    {
+      "maximum_seconds": 0.9104773579892935,
+      "median_seconds": 0.9038402849982958,
+      "minimum_seconds": 0.8997302740026498,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/782"
+    },
+    {
+      "maximum_seconds": 0.9173222139943391,
+      "median_seconds": 0.915727011000854,
+      "minimum_seconds": 0.9013351400062675,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/784"
+    },
+    {
+      "maximum_seconds": 0.9384210950083798,
+      "median_seconds": 0.9055792410072172,
+      "minimum_seconds": 0.8934357550024288,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/785"
+    },
+    {
+      "maximum_seconds": 1.0055134750000434,
+      "median_seconds": 0.9110379069898045,
+      "minimum_seconds": 0.9017632930044783,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/786"
+    },
+    {
+      "maximum_seconds": 0.9208544650027761,
+      "median_seconds": 0.8962998439965304,
+      "minimum_seconds": 0.8935262629966019,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/787"
+    },
+    {
+      "maximum_seconds": 1.0003302129916847,
+      "median_seconds": 0.9702787260030163,
+      "minimum_seconds": 0.9071449740004027,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/788"
+    },
+    {
+      "maximum_seconds": 0.9336171049944824,
+      "median_seconds": 0.9040317019971553,
+      "minimum_seconds": 0.8987698550045025,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/79"
+    },
+    {
+      "maximum_seconds": 1.0356044770014705,
+      "median_seconds": 0.9380196499987505,
+      "minimum_seconds": 0.9049916499934625,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/790"
+    },
+    {
+      "maximum_seconds": 1.067413160999422,
+      "median_seconds": 1.0569230260007316,
+      "minimum_seconds": 1.0047593330091331,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/791"
+    },
+    {
+      "maximum_seconds": 1.0473107040015748,
+      "median_seconds": 1.035523373997421,
+      "minimum_seconds": 0.9746626169944648,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/792"
+    },
+    {
+      "maximum_seconds": 0.9522836319956696,
+      "median_seconds": 0.9218210880062543,
+      "minimum_seconds": 0.8971482820052188,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/793"
+    },
+    {
+      "maximum_seconds": 0.9334912939957576,
+      "median_seconds": 0.9267344639956718,
+      "minimum_seconds": 0.922114026005147,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/794"
+    },
+    {
+      "maximum_seconds": 0.9225980640039779,
+      "median_seconds": 0.9186010299890768,
+      "minimum_seconds": 0.918175760001759,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/796"
+    },
+    {
+      "maximum_seconds": 0.9329661299998406,
+      "median_seconds": 0.9283644569950411,
+      "minimum_seconds": 0.9118969590053894,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/797"
+    },
+    {
+      "maximum_seconds": 0.9327769949886715,
+      "median_seconds": 0.9129059879924171,
+      "minimum_seconds": 0.8990265869942959,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/798"
+    },
+    {
+      "maximum_seconds": 0.9078398260026006,
+      "median_seconds": 0.9010149649984669,
+      "minimum_seconds": 0.896693664995837,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/799"
+    },
+    {
+      "maximum_seconds": 1.3130376530025387,
+      "median_seconds": 1.0352692180022132,
+      "minimum_seconds": 1.006452695990447,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/8"
+    },
+    {
+      "maximum_seconds": 0.9640614429954439,
+      "median_seconds": 0.9273862580012064,
+      "minimum_seconds": 0.8993435020092875,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/80"
+    },
+    {
+      "maximum_seconds": 0.9237425830069697,
+      "median_seconds": 0.9190420530067058,
+      "minimum_seconds": 0.9086306749959476,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/800"
+    },
+    {
+      "maximum_seconds": 0.9152517829934368,
+      "median_seconds": 0.8899991710059112,
+      "minimum_seconds": 0.8853728349931771,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/801"
+    },
+    {
+      "maximum_seconds": 0.9762513919995399,
+      "median_seconds": 0.8953551520098699,
+      "minimum_seconds": 0.8887519480049377,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/803"
+    },
+    {
+      "maximum_seconds": 0.9516238270007307,
+      "median_seconds": 0.9047084650082979,
+      "minimum_seconds": 0.8756707410066156,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/804"
+    },
+    {
+      "maximum_seconds": 0.9195238800020888,
+      "median_seconds": 0.912521514997934,
+      "minimum_seconds": 0.9003492449992336,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/805"
+    },
+    {
+      "maximum_seconds": 0.9200308869912988,
+      "median_seconds": 0.9106897419987945,
+      "minimum_seconds": 0.9038757620000979,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/806"
+    },
+    {
+      "maximum_seconds": 1.022457774990471,
+      "median_seconds": 0.9252248450065963,
+      "minimum_seconds": 0.918301783996867,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/807"
+    },
+    {
+      "maximum_seconds": 0.9211731359973783,
+      "median_seconds": 0.9087510369863594,
+      "minimum_seconds": 0.904641139000887,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/808"
+    },
+    {
+      "maximum_seconds": 1.0229918789991643,
+      "median_seconds": 0.9069916150037898,
+      "minimum_seconds": 0.8980634070030646,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/809"
+    },
+    {
+      "maximum_seconds": 1.0201186970080016,
+      "median_seconds": 0.953158936012187,
+      "minimum_seconds": 0.928848987998208,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/82"
+    },
+    {
+      "maximum_seconds": 2.5490030359942466,
+      "median_seconds": 2.3941197529929923,
+      "minimum_seconds": 2.386976018999121,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/84"
+    },
+    {
+      "maximum_seconds": 0.9268860619922634,
+      "median_seconds": 0.9260463069949765,
+      "minimum_seconds": 0.910499024001183,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/85"
+    },
+    {
+      "maximum_seconds": 0.9133228599966969,
+      "median_seconds": 0.9125800410110969,
+      "minimum_seconds": 0.9034516259998782,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/86"
+    },
+    {
+      "maximum_seconds": 1.0539829140034271,
+      "median_seconds": 0.9570118389965501,
+      "minimum_seconds": 0.9376190740003949,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/87"
+    },
+    {
+      "maximum_seconds": 1.023887987001217,
+      "median_seconds": 1.0103704409993952,
+      "minimum_seconds": 1.0006777169910492,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/88"
+    },
+    {
+      "maximum_seconds": 1.015323236992117,
+      "median_seconds": 0.9749660649977159,
+      "minimum_seconds": 0.9581666199956089,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/89"
+    },
+    {
+      "maximum_seconds": 0.9781439250073163,
+      "median_seconds": 0.970691023991094,
+      "minimum_seconds": 0.9507295899966266,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/9"
+    },
+    {
+      "maximum_seconds": 1.0237991329922806,
+      "median_seconds": 0.9915571869933046,
+      "minimum_seconds": 0.9165125099971192,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/90"
+    },
+    {
+      "maximum_seconds": 0.9505302739999024,
+      "median_seconds": 0.9341472899977816,
+      "minimum_seconds": 0.9332251340092625,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/91"
+    },
+    {
+      "maximum_seconds": 0.9570436979993246,
+      "median_seconds": 0.899726607996854,
+      "minimum_seconds": 0.8948187560017686,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/92"
+    },
+    {
+      "maximum_seconds": 1.0476738919969648,
+      "median_seconds": 0.9321196810051333,
+      "minimum_seconds": 0.9216269430035027,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/93"
+    },
+    {
+      "maximum_seconds": 1.0061106200009817,
+      "median_seconds": 0.9522824610030511,
+      "minimum_seconds": 0.9358795550069772,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/94"
+    },
+    {
+      "maximum_seconds": 1.0860551520017907,
+      "median_seconds": 1.054158358994755,
+      "minimum_seconds": 1.0531227629981004,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/95"
+    },
+    {
+      "maximum_seconds": 1.123599327998818,
+      "median_seconds": 1.108625895998557,
+      "minimum_seconds": 0.9845834939915221,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/96"
+    },
+    {
+      "maximum_seconds": 1.0162959939916618,
+      "median_seconds": 0.9459827109967591,
+      "minimum_seconds": 0.9222226129932096,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/97"
+    },
+    {
+      "maximum_seconds": 0.9243712780007627,
+      "median_seconds": 0.9169922410073923,
+      "minimum_seconds": 0.9106464520009467,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/98"
+    },
+    {
+      "maximum_seconds": 0.95150958999875,
+      "median_seconds": 0.905981348012574,
+      "minimum_seconds": 0.9042706350010121,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/99"
+    }
+  ],
+  "schema_version": "reference-timing-summary-v1",
+  "slowest_tasks": [
+    {
+      "maximum_seconds": 27.77106370399997,
+      "median_seconds": 26.502837198000634,
+      "minimum_seconds": 26.407707796999603,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/599"
+    },
+    {
+      "maximum_seconds": 6.3091902090091025,
+      "median_seconds": 6.032941657002084,
+      "minimum_seconds": 5.9948936739965575,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/255"
+    },
+    {
+      "maximum_seconds": 6.170778379004332,
+      "median_seconds": 6.128707377996761,
+      "minimum_seconds": 5.855730544004473,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/392"
+    },
+    {
+      "maximum_seconds": 5.080255326000042,
+      "median_seconds": 4.974301332011237,
+      "minimum_seconds": 4.803209174002404,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/271"
+    },
+    {
+      "maximum_seconds": 4.5389420129940845,
+      "median_seconds": 4.325849878005101,
+      "minimum_seconds": 4.272435423001298,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/123"
+    },
+    {
+      "maximum_seconds": 4.24911340700055,
+      "median_seconds": 4.196236876989133,
+      "minimum_seconds": 4.179852358007338,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/603"
+    },
+    {
+      "maximum_seconds": 3.822600287006935,
+      "median_seconds": 3.7790110140049364,
+      "minimum_seconds": 3.7142716990056215,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/592"
+    },
+    {
+      "maximum_seconds": 2.627362778992392,
+      "median_seconds": 2.571922153001651,
+      "minimum_seconds": 2.528721750990371,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/389"
+    },
+    {
+      "maximum_seconds": 2.5490030359942466,
+      "median_seconds": 2.3941197529929923,
+      "minimum_seconds": 2.386976018999121,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/84"
+    },
+    {
+      "maximum_seconds": 2.5081703549949452,
+      "median_seconds": 2.506732399997418,
+      "minimum_seconds": 2.4638954489928437,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/589"
+    },
+    {
+      "maximum_seconds": 2.406920605004416,
+      "median_seconds": 2.3449729240091983,
+      "minimum_seconds": 2.341692628993769,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/300"
+    },
+    {
+      "maximum_seconds": 2.072135613008868,
+      "median_seconds": 1.8530127289996017,
+      "minimum_seconds": 1.7886650480068056,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/630"
+    },
+    {
+      "maximum_seconds": 1.9043391450104536,
+      "median_seconds": 1.825134735001484,
+      "minimum_seconds": 1.8237970539921662,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/583"
+    },
+    {
+      "maximum_seconds": 1.4527690499962773,
+      "median_seconds": 0.9757955630047945,
+      "minimum_seconds": 0.9069167169946013,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/126"
+    },
+    {
+      "maximum_seconds": 1.4356227420066716,
+      "median_seconds": 1.155436439003097,
+      "minimum_seconds": 0.8941214749938808,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/4"
+    },
+    {
+      "maximum_seconds": 1.4269733449909836,
+      "median_seconds": 0.9190519519906957,
+      "minimum_seconds": 0.9156325950025348,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/261"
+    },
+    {
+      "maximum_seconds": 1.4189280830032658,
+      "median_seconds": 1.3844652290135855,
+      "minimum_seconds": 1.37851085200964,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/162"
+    },
+    {
+      "maximum_seconds": 1.3563805039884755,
+      "median_seconds": 1.1843216970009962,
+      "minimum_seconds": 1.1382446299976436,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/256"
+    },
+    {
+      "maximum_seconds": 1.3346129279962042,
+      "median_seconds": 1.3012323550065048,
+      "minimum_seconds": 1.2951074140000856,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/453"
+    },
+    {
+      "maximum_seconds": 1.3130376530025387,
+      "median_seconds": 1.0352692180022132,
+      "minimum_seconds": 1.006452695990447,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/8"
+    },
+    {
+      "maximum_seconds": 1.2968940110004041,
+      "median_seconds": 0.9540188569953898,
+      "minimum_seconds": 0.9365606690116692,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/11"
+    },
+    {
+      "maximum_seconds": 1.2772378960071364,
+      "median_seconds": 1.0718814249994466,
+      "minimum_seconds": 0.9912972619931679,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/265"
+    },
+    {
+      "maximum_seconds": 1.2485183209937532,
+      "median_seconds": 1.0428232600097544,
+      "minimum_seconds": 0.9196827159903478,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/277"
+    },
+    {
+      "maximum_seconds": 1.2466695579933003,
+      "median_seconds": 1.2143729679955868,
+      "minimum_seconds": 1.1274777600046946,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/745"
+    },
+    {
+      "maximum_seconds": 1.2461714210076025,
+      "median_seconds": 1.0551037239929428,
+      "minimum_seconds": 1.0344571280002128,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/604"
+    },
+    {
+      "maximum_seconds": 1.2402271490136627,
+      "median_seconds": 1.036453694003285,
+      "minimum_seconds": 1.0152812419983093,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/600"
+    },
+    {
+      "maximum_seconds": 1.2339812599966535,
+      "median_seconds": 0.9352796500024851,
+      "minimum_seconds": 0.9199212199891917,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/257"
+    },
+    {
+      "maximum_seconds": 1.2322929369984195,
+      "median_seconds": 0.9558253090071958,
+      "minimum_seconds": 0.9480630680045579,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/6"
+    },
+    {
+      "maximum_seconds": 1.2089160250034183,
+      "median_seconds": 0.9891658519918565,
+      "minimum_seconds": 0.988638829003321,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/262"
+    },
+    {
+      "maximum_seconds": 1.2057987239968497,
+      "median_seconds": 1.0241594889957923,
+      "minimum_seconds": 0.902450701003545,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/274"
+    },
+    {
+      "maximum_seconds": 1.1774035910057137,
+      "median_seconds": 1.0331466019997606,
+      "minimum_seconds": 0.9225859940052032,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/602"
+    },
+    {
+      "maximum_seconds": 1.1709266389952973,
+      "median_seconds": 1.0265746229997603,
+      "minimum_seconds": 0.966420750002726,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/260"
+    },
+    {
+      "maximum_seconds": 1.1584980079933302,
+      "median_seconds": 1.0501134609949077,
+      "minimum_seconds": 0.9150287369993748,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/2"
+    },
+    {
+      "maximum_seconds": 1.1502841600013198,
+      "median_seconds": 0.9575585299899103,
+      "minimum_seconds": 0.9067487800057279,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/394"
+    },
+    {
+      "maximum_seconds": 1.1455164439976215,
+      "median_seconds": 1.099427998997271,
+      "minimum_seconds": 1.0529028579912847,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/247"
+    },
+    {
+      "maximum_seconds": 1.1438771639950573,
+      "median_seconds": 1.035371551013668,
+      "minimum_seconds": 0.9274552770075388,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/259"
+    },
+    {
+      "maximum_seconds": 1.1303455879969988,
+      "median_seconds": 1.0843319650011836,
+      "minimum_seconds": 0.9937854079907993,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/427"
+    },
+    {
+      "maximum_seconds": 1.128914711996913,
+      "median_seconds": 0.9906283680029446,
+      "minimum_seconds": 0.9297501719993306,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/133"
+    },
+    {
+      "maximum_seconds": 1.1237610039970605,
+      "median_seconds": 1.1094356819958193,
+      "minimum_seconds": 1.007458850988769,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/301"
+    },
+    {
+      "maximum_seconds": 1.123599327998818,
+      "median_seconds": 1.108625895998557,
+      "minimum_seconds": 0.9845834939915221,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/96"
+    },
+    {
+      "maximum_seconds": 1.116527895006584,
+      "median_seconds": 1.1022204809996765,
+      "minimum_seconds": 1.0199855399987428,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/605"
+    },
+    {
+      "maximum_seconds": 1.1151094539964106,
+      "median_seconds": 1.0323280300071929,
+      "minimum_seconds": 0.9905792350036791,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/56"
+    },
+    {
+      "maximum_seconds": 1.0979385919927154,
+      "median_seconds": 0.9399624680081615,
+      "minimum_seconds": 0.9295238949998748,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/445"
+    },
+    {
+      "maximum_seconds": 1.0938826560013695,
+      "median_seconds": 1.0658260670024902,
+      "minimum_seconds": 0.9331066169979749,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/470"
+    },
+    {
+      "maximum_seconds": 1.0936246700002812,
+      "median_seconds": 1.0615868309978396,
+      "minimum_seconds": 1.031646315997932,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/75"
+    },
+    {
+      "maximum_seconds": 1.0924809950083727,
+      "median_seconds": 0.9730404920119327,
+      "minimum_seconds": 0.9669854899984784,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/17"
+    },
+    {
+      "maximum_seconds": 1.0888659949996509,
+      "median_seconds": 1.0530670959997224,
+      "minimum_seconds": 0.9483487690013135,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/421"
+    },
+    {
+      "maximum_seconds": 1.0860551520017907,
+      "median_seconds": 1.054158358994755,
+      "minimum_seconds": 1.0531227629981004,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/95"
+    },
+    {
+      "maximum_seconds": 1.0738735589984572,
+      "median_seconds": 0.9512978209968423,
+      "minimum_seconds": 0.9242844299878925,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/224"
+    },
+    {
+      "maximum_seconds": 1.072050943999784,
+      "median_seconds": 0.9943729329970665,
+      "minimum_seconds": 0.9197395390074234,
+      "observations": 3,
+      "passing_observations": 3,
+      "upstream_task_id": "Mbpp/19"
+    }
+  ],
+  "timeout_policy": "not-selected-from-audit-data-yet"
+}

@@ -1,0 +1,17 @@
+{
+  "attempt_id": "vllm-primary-smoke-six-models-20260804-r1",
+  "configuration_sha256": "d136c5af178ace0480209be85e1c6725d24742e92208e1864c6a9cbfa324d09e",
+  "configuration_version": "primary-inference-2026-08-04-r3",
+  "result_sha256": {
+    "deepseek-coder-v2-lite-instruct": "b6735bc616c0475c8febf8d831d4a9b1cef3bba5cb82d5a6103dbe7e2c3d1462",
+    "devstral-small-2-24b-instruct": "865b27131286212822e9c302a9197e0787d159919d58cff95a9c236902f26e1b",
+    "gemma-4-31b-it-qat-w4a16": "1daa6c8050f698d6e2efbfdd53ebc2ac530b6fceb87224422c30158c391086e0",
+    "qwen2.5-coder-14b-instruct": "7f16b8c181f5b0e8d33eee4baf3a7a629d8b28820a5e1e7cc7abf076c5946e75",
+    "qwen2.5-coder-7b-instruct": "f035e4323531bc7ea70f8e251c57ca5347db63dba139b2bcd1fd1f1257f6549f",
+    "qwen3-coder-30b-a3b-instruct-fp8": "320297210a5124ff5f65952ff4969b7e50cd2e7e464a95adf66975eafe4e5d91"
+  },
+  "schema_version": "vllm-primary-smoke-validation-v1",
+  "summary_sha256": "a12728be4f3f341c678a699f0dcb749746146d5ad15a30b7fa08e37290c6f225",
+  "validated_models": 6,
+  "validation_result": "passed"
+}
