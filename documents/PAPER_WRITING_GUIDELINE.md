@@ -61,13 +61,17 @@ Use the following procedure whenever the Background is drafted or materially rev
 * Do not use `\paragraph{...}` headings merely to divide a sequence of methodological details. Use a clear topic sentence to establish the role of each paragraph.
 * Use a `\subsubsection{...}` only when the material forms a genuinely distinct unit that readers need to locate independently.
 
-## Writing the Methodology Section
+## Writing the Study Design Section
 
 * Open the section with two or three sentences that state the controlled study design and the scope of the section.
 * Organize the main account around Research Questions, Self-Refinement Protocols, Models and Benchmarks, and Experimental Setting. Adjust these subsections only when doing so makes a substantive methodological distinction clearer.
 * Avoid fragmenting the section into many narrow subsections. Use short descriptive paragraphs or structured lists within the main subsections when details need separation.
 * For each Research Question, first explain why the question matters, then identify at a high level the experiment or comparison used to answer it. Leave detailed metrics and procedures to the later methodological account.
 * Describe each protocol stage as an observable prompt and model call, and distinguish a stage from its artifact and from a derived protocol outcome.
+* When stage composition is central to the contribution, use an overview figure to show the Shared-Initial Design, artifact flow, cumulative stage sequences, and any selection path. Do not reduce the main design to a table of stage names and inputs.
+* For each central stage, explain why it is separated, what information it receives, what artifact or candidate it must produce, what it must not do, and how adding it changes the comparison being measured.
+* Present the frozen prompt templates close to the corresponding stage explanation. Reproduce stage-specific instruction text exactly, identify every inserted input field and output contract, and clearly mark any display-only labels or factoring of repeated boilerplate.
+* Explain Revision Planning as the operation that translates a prior Critique into an actionable edit strategy. State why it is placed after Critique Generation, why a plan-only sequence is not treated as the same operation, and that its measured effect includes the call, artifact, and token cost.
 * Present the selected models and benchmarks in separate concise tables. Follow each table with the selection rationale, the intended coverage or comparison role, and any adopted exception that changes the final experimental scope.
 * In Experimental Setting, report the procedure that was actually executed, including phase-wise execution and artifact reuse when protocols were not run independently end to end.
 * Provide the hardware, software, inference parameters, evaluation environment, timeout policy, output contracts, and exception-handling rules needed to understand and reproduce the study.
