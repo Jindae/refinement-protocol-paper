@@ -1,0 +1,13 @@
+Review the initial candidate for potential functional problems relative to the task specification.
+
+Use only the supplied task specification and initial candidate. Describe the potential problems and relevant fault locations. Do not provide a complete revised solution or a completed revision plan. You may quote focused code snippets, including fenced code blocks, when useful for the critique. If you find no functional problem, recommend preserving the candidate.
+
+<task_specification>
+{{task_specification}}
+</task_specification>
+
+<initial_candidate>
+{{initial_candidate}}
+</initial_candidate>
+
+Return only the critique.

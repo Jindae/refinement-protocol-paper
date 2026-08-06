@@ -116,42 +116,36 @@ Every Revision call receives the Task Specification and exact Initial Candidate;
 All three templates permit the model to retain the candidate when no functional change is needed and require exactly one complete fenced Python block as output.
 No stage receives tests or execution feedback.
 
-Listing~\ref{lst:stage-prompts} reproduces the stage-specific instruction text from the frozen prompt templates.
-The templates inserted each named input inside a correspondingly named XML-style block, and the candidate-producing templates shared the response-format contract shown below.
-The field headers in the listing identify these inserted blocks and are not additional prompt text.
+For complete reproducibility, Listings~\ref{lst:prompt-direct-generation} through~\ref{lst:prompt-plan-revision} reproduce all seven frozen templates used in Direct Generation and refinement.
+Each listing is included directly from its checked prompt file without normalization, placeholder substitution, reordered text, or deduplication of repeated instructions.
 
-\begin{lstlisting}[style=prompt,float=htbp,caption={Stage-specific text of the frozen refinement prompts.},label={lst:stage-prompts}]
-[D | inputs: task_specification, initial_candidate]
-Decide whether the initial candidate should be preserved exactly or refined to better satisfy the task specification.
-Base the decision only on the supplied task specification and initial candidate. Do not provide a critique, explanation, revision plan, or code.
-Return exactly one uppercase word: PRESERVE or REFINE.
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen Direct Generation prompt.},label={lst:prompt-direct-generation}]{prompts/v3/direct_generation.txt}
+\end{minipage}
 
-[C | inputs: task_specification, initial_candidate]
-Review the initial candidate for potential functional problems relative to the task specification.
-Use only the supplied task specification and initial candidate. Describe the potential problems and relevant fault locations. Do not provide a complete revised solution or a completed revision plan. You may quote focused code snippets, including fenced code blocks, when useful for the critique. If you find no functional problem, recommend preserving the candidate.
-Return only the critique.
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen Refinement-Need Decision prompt.},label={lst:prompt-decision}]{prompts/v3/refinement_need_decision.txt}
+\end{minipage}
 
-[P | inputs: task_specification, initial_candidate, critique]
-Create an actionable revision plan for the initial candidate, using the supplied critique as guidance.
-Use only the supplied task specification, initial candidate, and critique. Describe the changes and relevant fault locations. Do not provide a complete revised solution. You may quote focused code snippets, including fenced code blocks, when useful for the plan.
-Return only the revision plan.
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen Critique Generation prompt.},label={lst:prompt-critique}]{prompts/v3/critique_generation.txt}
+\end{minipage}
 
-[R | inputs: task_specification, initial_candidate]
-Review and, if needed, revise the initial candidate so that it satisfies the task specification. You may preserve its behavior or source when no change is needed.
-Use only the supplied task specification and initial candidate. Do not assume access to tests, execution results, diagnostics, or external feedback.
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen Revision Planning prompt.},label={lst:prompt-planning}]{prompts/v3/revision_planning.txt}
+\end{minipage}
 
-[CR revision | inputs: task_specification, initial_candidate, critique]
-Review and, if needed, revise the initial candidate so that it satisfies the task specification, using the supplied critique as guidance. You may preserve its behavior or source when no change is needed.
-Use only the supplied task specification, initial candidate, and critique. Do not assume access to tests, execution results, diagnostics, or external feedback.
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen Direct Revision prompt.},label={lst:prompt-direct-revision}]{prompts/v3/direct_revision.txt}
+\end{minipage}
 
-[CPR revision | inputs: task_specification, initial_candidate, critique, revision_plan]
-Review and, if needed, revise the initial candidate so that it satisfies the task specification, using the supplied critique and revision plan as guidance. You may preserve its behavior or source when no change is needed.
-Use only the supplied task specification, initial candidate, critique, and revision plan. Do not assume access to tests, execution results, diagnostics, or external feedback.
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen Critique-Conditioned Revision prompt.},label={lst:prompt-critique-revision}]{prompts/v3/critique_conditioned_revision.txt}
+\end{minipage}
 
-[Shared candidate response contract]
-RESPONSE FORMAT: Put the complete Python solution inside exactly one complete fenced Python code block beginning with ```python. Any text outside that single block will be ignored. Do not use any other fenced blocks.
-Return the complete Python source code using the response format above.
-\end{lstlisting}
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen Critique-and-Plan-Conditioned Revision prompt.},label={lst:prompt-plan-revision}]{prompts/v3/plan_conditioned_revision.txt}
+\end{minipage}
 
 Refinement-Need Decision is independent of the intermediate refinement artifacts.
 It receives only the Task Specification and Initial Candidate and returns \texttt{PRESERVE} or \texttt{REFINE}, without generating a critique, plan, or code.
