@@ -1,0 +1,17 @@
+Create an actionable revision plan for the initial candidate, using the supplied critique as guidance.
+
+Use only the supplied task specification, initial candidate, and critique. Describe the changes and relevant fault locations. Do not provide a complete revised solution. You may quote focused code snippets, including fenced code blocks, when useful for the plan.
+
+<task_specification>
+{{task_specification}}
+</task_specification>
+
+<initial_candidate>
+{{initial_candidate}}
+</initial_candidate>
+
+<critique>
+{{critique}}
+</critique>
+
+Return only the revision plan.

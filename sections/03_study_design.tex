@@ -1,0 +1,300 @@
+\section{Study Design}
+
+We designed a controlled study to isolate how the composition of inference-time Self-Refinement affects code correctness and token consumption.
+For each model and task, all variants used the same self-generated initial candidate and no execution feedback.
+
+\subsection{Research Questions}
+
+\researchquestion{RQ1}{How does the composition of Self-Refinement affect final code correctness?}
+An explicit critique or revision plan may help a model review its candidate, but each additional step is useful only if it leads to a better final program.
+We isolate these contributions by successively comparing revision alone, revision guided by a self-generated critique, and revision guided by both a critique and an explicit plan while holding the initial candidate fixed.
+
+\researchquestion{RQ2}{How do alternative refinement approaches balance repairs of initially incorrect candidates and regressions of initially correct candidates?}
+A net change in pass rate can conceal whether refinement repairs many failures while also damaging programs that were already correct.
+We therefore compare the initial and final programs for each task and measure how often refinement repairs a failure, introduces a regression, or preserves the initial correctness outcome.
+
+\researchquestion{RQ3}{How does the value of selectively applying refinement vary across model-benchmark combinations with different initial pass rates?}
+Selective refinement can protect candidates that do not need revision, but an incorrect preservation decision can also forgo a possible repair.
+We examine how the model's decision to preserve or revise each initial program changes correctness and token use across model-benchmark combinations with different initial pass rates.
+
+\researchquestion{RQ4}{Do the correctness effects of additional refinement steps justify their token costs?}
+Critique, planning, and selection require additional inference even when they do not improve the final program.
+We compare the resulting correctness changes with added token use at the candidate and benchmark levels, including the tokens avoided when refinement is not applied.
+
+\subsection{Self-Refinement Protocols}
+
+For each model-task pair, Direct Generation produced one Initial Candidate from the Task Specification.
+The candidate was stored once and reused as the exact input to every refinement variant, so differences between variants did not arise from different initial generations.
+We refer to this control as the Shared-Initial Design.
+Benchmark execution was reserved for evaluation and provided no feedback to the model.
+
+We decomposed refinement into four observable Refinement Stages: Refinement-Need Decision (\texttt{D}), Critique Generation (\texttt{C}), Revision Planning (\texttt{P}), and Code Revision (\texttt{R}).
+Each stage was a separate prompt and model call with a stored output artifact, rather than an inferred internal reasoning step.
+This separation lets us add one explicit operation at a time, reuse the same upstream artifact in downstream variants, and attribute token consumption to the calls that produced it.
+
+The three Always-Refine Protocols are named by their execution order.
+Direct Revision (\texttt{R}) performs Code Revision without an upstream artifact, Critique-Conditioned Revision (\texttt{CR}) supplies a stored critique artifact to Code Revision, and Critique-and-Plan-Conditioned Revision (\texttt{CPR}) inserts Revision Planning between Critique Generation and Code Revision.
+Figure~\ref{fig:protocol-overview} summarizes the common generation step, the cumulative Stage Compositions, and the independent Decision used for selective refinement.
+
+\begin{figure}[H]
+\centering
+\resizebox{0.98\columnwidth}{!}{%
+\begin{tikzpicture}[
+    stage/.style={draw, rounded corners=2pt, fill=blue!8, align=center, minimum height=0.72cm, inner xsep=8pt, font=\small\bfseries},
+    artifact/.style={draw, dashed, rounded corners=2pt, fill=black!3, align=center, minimum height=0.72cm, inner xsep=8pt, font=\small},
+    outcome/.style={draw, rounded corners=2pt, fill=green!8, align=center, minimum height=0.72cm, inner xsep=8pt, font=\small},
+    flow/.style={->, >=latex, thick},
+    reuse/.style={->, >=latex, dashed, thick},
+    label/.style={font=\small\ttfamily\bfseries}
+]
+\node[artifact] (task) at (0,4.2) {Task Specification};
+\node[stage] (generation) at (3.2,4.2) {Direct\\Generation};
+\node[artifact] (initial) at (6.4,4.2) {Initial Candidate};
+\draw[flow] (task) -- (generation);
+\draw[flow] (generation) -- (initial);
+
+\node[label] at (0,2.6) {R};
+\node[artifact] (input-r) at (2.0,2.6) {$T + I$};
+\node[stage] (r-direct) at (5.0,2.6) {Code\\Revision};
+\node[outcome] (r-candidate) at (8.2,2.6) {\texttt{R} Revised\\Candidate};
+\draw[flow] (input-r) -- (r-direct);
+\draw[flow] (r-direct) -- (r-candidate);
+
+\node[label] at (0,1.0) {CR};
+\node[artifact] (input-cr) at (2.0,1.0) {$T + I$};
+\node[stage] (critique) at (5.0,1.0) {Critique\\Generation};
+\node[artifact] (critique-artifact) at (8.2,1.0) {Critique\\Artifact};
+\node[stage] (r-critique) at (11.4,1.0) {Code\\Revision};
+\node[outcome] (cr-candidate) at (14.6,1.0) {\texttt{CR} Revised\\Candidate};
+\draw[flow] (input-cr) -- (critique);
+\draw[flow] (critique) -- (critique-artifact);
+\draw[flow] (critique-artifact) -- (r-critique);
+\draw[flow] (r-critique) -- (cr-candidate);
+
+\node[label] at (0,-0.8) {CPR};
+\node[stage] (planning) at (5.0,-0.8) {Revision\\Planning};
+\node[artifact] (plan-artifact) at (8.2,-0.8) {Revision\\Plan};
+\node[stage] (r-plan) at (11.4,-0.8) {Code\\Revision};
+\node[outcome] (cpr-candidate) at (14.6,-0.8) {\texttt{CPR} Revised\\Candidate};
+\draw[reuse] (critique-artifact) -- (planning);
+\draw[flow] (planning) -- (plan-artifact);
+\draw[flow] (plan-artifact) -- (r-plan);
+\draw[flow] (r-plan) -- (cpr-candidate);
+
+\node[label] at (0,-2.7) {D};
+\node[artifact] (input-d) at (2.0,-2.7) {$T + I$};
+\node[stage] (decision) at (5.0,-2.7) {Refinement-Need\\Decision};
+\node[artifact] (decision-artifact) at (8.2,-2.7) {\texttt{PRESERVE}\\or \texttt{REFINE}};
+\node[outcome] (selection) at (12.5,-2.7) {Final Candidate\\\texttt{PRESERVE}: exact Initial Candidate\\\texttt{REFINE}: matched Revised Candidate};
+\draw[flow] (input-d) -- (decision);
+\draw[flow] (decision) -- (decision-artifact);
+\draw[flow] (decision-artifact) -- (selection);
+\end{tikzpicture}%
+}
+\caption{Overview of the Shared-Initial Design and protocol composition. $T + I$ denotes the Task Specification and exact Initial Candidate. Solid arrows denote stage execution and artifact flow; the dashed arrow denotes reuse of the same stored Critique in Revision Planning. Code Revision additionally receives the artifact or artifacts shown on its path. The same Decision is combined with each Always-Refine outcome to derive \texttt{DR}, \texttt{DCR}, and \texttt{DCPR}.}
+\label{fig:protocol-overview}
+\end{figure}
+\unskip
+
+Direct Revision provides the least structured refinement condition.
+Its single call must inspect the Task Specification, decide whether the Initial Candidate has a functional problem, and produce the complete Revised Candidate.
+It therefore serves as the reference point for asking whether externalizing intermediate work changes the outcome, rather than as a condition with no review.
+
+Critique Generation separates diagnosis from code production.
+Given only the Task Specification and Initial Candidate, the model was asked to identify potential functional mismatches and relevant fault locations, or to recommend preservation when it found no problem.
+The prompt prohibited a complete revised solution and a completed revision plan, so the resulting critique artifact records what may be wrong without asking the same call to implement the correction.
+Code Revision in \texttt{CR} then receives this stored artifact as guidance.
+
+Revision Planning tests whether an additional translation from diagnosis to an actionable edit strategy benefits revision.
+A critique may identify a defect without specifying which behavior should change, which parts should remain intact, or how multiple changes should be ordered.
+The Planning call therefore receives the Task Specification, Initial Candidate, and stored critique artifact and is asked to state the changes and relevant locations without producing a complete solution.
+We place Planning only after Critique Generation because a plan generated without a critique would combine defect identification and planning in one call and would not isolate the same intermediate operation.
+This stage may also propagate an incorrect critique or add cost without improving the code; accordingly, the \texttt{CPR} versus \texttt{CR} comparison measures the net effect of the Planning call, its artifact, and its token consumption rather than the intrinsic quality of plans in isolation.
+
+Code Revision is the only Refinement Stage that produces executable code.
+Every Revision call receives the Task Specification and exact Initial Candidate; \texttt{CR} additionally receives the critique artifact, and \texttt{CPR} receives both the critique artifact and revision plan.
+All three templates permit the model to retain the candidate when no functional change is needed and require exactly one complete fenced Python block as output.
+No stage receives tests or execution feedback.
+
+For complete reproducibility, Listings~\ref{lst:prompt-direct-generation} through~\ref{lst:prompt-plan-revision} reproduce all seven frozen templates used in Direct Generation and refinement.
+Each listing is included directly from its checked prompt file without normalization, placeholder substitution, reordered text, or deduplication of repeated instructions.
+
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen Direct Generation prompt.},label={lst:prompt-direct-generation}]{prompts/v3/direct_generation.txt}
+\end{minipage}
+
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen Refinement-Need Decision prompt.},label={lst:prompt-decision}]{prompts/v3/refinement_need_decision.txt}
+\end{minipage}
+
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen Critique Generation prompt.},label={lst:prompt-critique}]{prompts/v3/critique_generation.txt}
+\end{minipage}
+
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen Revision Planning prompt.},label={lst:prompt-planning}]{prompts/v3/revision_planning.txt}
+\end{minipage}
+
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen Direct Revision prompt.},label={lst:prompt-direct-revision}]{prompts/v3/direct_revision.txt}
+\end{minipage}
+
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen Critique-Conditioned Revision prompt.},label={lst:prompt-critique-revision}]{prompts/v3/critique_conditioned_revision.txt}
+\end{minipage}
+
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen Critique-and-Plan-Conditioned Revision prompt.},label={lst:prompt-plan-revision}]{prompts/v3/plan_conditioned_revision.txt}
+\end{minipage}
+
+Refinement-Need Decision is independent of the intermediate refinement artifacts.
+It receives only the Task Specification and Initial Candidate and returns \texttt{PRESERVE} or \texttt{REFINE}, without generating a critique, plan, or code.
+When the Decision is \texttt{PRESERVE}, the Final Candidate is the exact stored Initial Candidate; when it is \texttt{REFINE}, the Final Candidate is the Revised Candidate produced by the matched \texttt{R}, \texttt{CR}, or \texttt{CPR} sequence.
+This construction yields Decision-Conditioned Direct Revision (\texttt{DR}), Decision-Conditioned Critique-Conditioned Revision (\texttt{DCR}), and Decision-Conditioned Critique-and-Plan-Conditioned Revision (\texttt{DCPR}) without additional revision calls.
+The same Decision was reused for all three outcomes and received neither the later intermediate artifacts nor the identity of the sequence whose outcome it selected.
+
+The incremental comparisons concern complete Stage Compositions.
+Thus, \texttt{CR} versus \texttt{R} measures the combined effect of the Critique Generation call, its artifact, and its token cost, while \texttt{CPR} versus \texttt{CR} measures the corresponding combined effect of Revision Planning.
+We do not interpret either contrast as an independent evaluation of critique or plan correctness.
+
+\subsection{Models}
+
+\begin{table}[H]
+\caption{Open-weight models evaluated in the study and their characteristics.}
+\label{tab:models}
+\centering
+\begingroup
+\scriptsize
+\renewcommand{\arraystretch}{1.12}
+
+\begin{threeparttable}
+
+\begin{tabularx}{0.98\columnwidth}{
+    >{\raggedright\arraybackslash}p{0.28\columnwidth}
+    >{\raggedright\arraybackslash}X
+    >{\centering\arraybackslash}p{0.20\columnwidth}
+    >{\centering\arraybackslash}p{0.16\columnwidth}
+}
+\toprule
+\textbf{Model}\tnote{a} &
+\textbf{Model category} &
+\textbf{Parameters}\tnote{b} &
+\textbf{Precision} \\
+\midrule
+Qwen2.5-Coder-7B & Code-specialized, dense & 7.6B & BF16 \\
+Qwen2.5-Coder-14B & Code-specialized, dense & 14.7B & BF16 \\
+DeepSeek-Coder-V2-Lite & Code-specialized, MoE & 16B / 2.4B active & BF16 \\
+Devstral-Small-2-24B & Software-engineering-specialized, dense & 24B & FP8 \\
+Qwen3-Coder-30B-A3B & Code-specialized, MoE & 30.5B / 3.3B active & FP8 \\
+Gemma-4-31B-QAT-W4A16 & General-purpose, dense & 31B & QAT W4A16 \\
+\bottomrule
+\end{tabularx}
+
+\begin{tablenotes}[flushleft]
+\footnotesize
+\item[a]
+The exact checkpoints were
+\texttt{Qwen/Qwen2.5-Coder-\allowbreak 7B-Instruct},
+\texttt{Qwen/Qwen2.5-Coder-\allowbreak 14B-Instruct},
+\texttt{deepseek-ai/DeepSeek-Coder-\allowbreak V2-Lite-Instruct},
+\texttt{mistralai/Devstral-Small-\allowbreak 2-24B-Instruct-2512},
+\texttt{Qwen/Qwen3-Coder-\allowbreak 30B-A3B-Instruct-FP8}, and
+\texttt{google/gemma-4-\allowbreak 31B-it-qat-w4a16-ct}.
+\item[b]
+For mixture-of-experts models, total and active parameter counts are shown.
+\end{tablenotes}
+
+\end{threeparttable}
+\endgroup
+\end{table}
+\unskip
+
+We selected six publicly available checkpoints that could be served within the same two-GPU workstation budget while covering multiple model families, parameter scales, and dense and mixture-of-experts architectures.
+The panel consists primarily of code-specialized models and includes Gemma 4 as a general-purpose control.
+The two Qwen2.5 models provide a within-family scale comparison, while DeepSeek-Coder-V2-Lite, Devstral, and Qwen3-Coder broaden the architecture and family coverage.
+We used the official compressed checkpoints for Devstral, Qwen3-Coder, and Gemma 4 to fit the common hardware budget, and all comparisons within a model used the same checkpoint and precision.
+
+\subsection{Benchmarks}
+
+\begin{table}[H]
+\caption{Python code-generation benchmarks evaluated in the study.}
+\label{tab:benchmarks}
+\centering
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.15}
+
+\begin{threeparttable}
+
+\begin{tabularx}{0.96\columnwidth}{
+    @{\hspace{5pt}}
+    >{\raggedright\arraybackslash}p{0.32\columnwidth}
+    >{\centering\arraybackslash}p{0.20\columnwidth}
+    >{\raggedright\arraybackslash}X
+    @{\hspace{5pt}}
+}
+\toprule
+\textbf{Benchmark} &
+\textbf{Tasks analyzed} &
+\textbf{Task setting} \\
+\midrule
+HumanEval+ v0.1.10 & 163/164\tnote{a} & Function completion from signatures and docstrings \\
+MBPP+ v0.2.0 & 378/378 & Short problem-to-code generation with examples \\
+BigCodeBench-Instruct v0.1.4 & 1,136/1,140\tnote{b} & Instruction-to-code with diverse library usage \\
+\bottomrule
+\end{tabularx}
+
+\begin{tablenotes}[flushleft]
+\footnotesize
+\item[a]
+\texttt{HumanEval/32} was excluded because the pinned canonical solution was incompatible with the EvalPlus special oracle and success bookkeeping.
+\item[b]
+\texttt{BigCodeBench/101}, \texttt{/590}, \texttt{/1005}, and \texttt{/1012} were excluded because they required live external content that could not be reproduced with outcome-neutral offline resources.
+\end{tablenotes}
+
+\end{threeparttable}
+\endgroup
+\end{table}
+\unskip
+
+We selected HumanEval+, MBPP+, and BigCodeBench-Instruct to cover complementary Python task settings rather than treating the benchmarks as fixed difficulty categories.
+HumanEval+ and MBPP+ provide function-level tasks with different specification styles, whereas BigCodeBench-Instruct adds broader library use and compositional requirements.
+Except for the five exclusions fixed before model inference, we used every task in the pinned releases, yielding 1,677 tasks per model and 10,062 model-task pairs.
+Initial Pass Rate was treated as an observed characteristic of each of the 18 model-benchmark combinations.
+
+\subsection{Experimental Setting}
+
+To reduce model-loading and duplicate-call costs, we executed the experiment by model-resident phase rather than running each task through every protocol end to end.
+For each checkpoint, we first completed Direct Generation for all 1,677 tasks, then generated all \texttt{D} decisions, \texttt{R} candidates, \texttt{C} artifacts, \texttt{CR} candidates, \texttt{P} artifacts, and \texttt{CPR} candidates in dependency order.
+The stored Critique was reused by \texttt{CR} and \texttt{P}, the stored Plan was reused by \texttt{CPR}, and one Decision was reused to derive \texttt{DR}, \texttt{DCR}, and \texttt{DCPR}.
+Immutable artifacts were checkpointed at phase boundaries so completed logical calls could be resumed without regeneration.
+
+All inference ran on an Ubuntu 22.04 server with two 24~GiB NVIDIA GeForce RTX 4090 GPUs.
+We used vLLM 0.26.0 with tensor parallelism of two, a batch size of 32, a 16,384-token context limit, and GPU memory utilization of 0.85.
+Prompts used each checkpoint's tokenizer and chat template, automatic prompt truncation was disabled, and every rendered prompt was required to fit the common context limit together with its output allowance.
+Generation used batch-invariant greedy decoding with one output, temperature 0, top-$p$ 1, seed 0, and all penalties disabled.
+Maximum output lengths were 4,096 tokens for candidate generation, 2,048 for Critique and Plan, and 64 for Decision.
+
+We applied a strict output contract to every generated candidate.
+The response had to contain exactly one complete fenced Python block; otherwise, no candidate was extracted or repaired.
+Across 70,386 executed model calls, eight Direct Generation responses and ten revision responses violated this contract and were retained as \texttt{malformed\_candidate}; the eight malformed Initial Candidates blocked their 48 dependent calls.
+These cases remained in the study scope and counted as zero only for end-to-end success, while functional transitions were left unavailable because no candidate was executed.
+
+Decision responses were parsed only when the complete trimmed response was \texttt{PRESERVE} or \texttt{REFINE}.
+Among 202 non-exact responses, 156 differed only by one terminal period and were normalized deterministically, while 46 unambiguous explanations were coded before candidate evaluation under a fixed execution-blind rubric.
+All 202 responses were resolved, their original status and token counts were retained, and exact-parsed Decisions were analyzed separately as a sensitivity check.
+
+We evaluated Initial and Final Candidates in processes separated from model inference, and a candidate passed only if it satisfied the benchmark's full test suite.
+HumanEval+ and MBPP+ used EvalPlus 0.3.1 in the Python 3.12 environment also used for orchestration and analysis.
+BigCodeBench-Instruct used a separately pinned Python 3.10.12 environment compatible with its official dependency range.
+Candidate execution was isolated from the host process namespace and external network, and EvalPlus candidates had an 8~GiB process-memory limit.
+
+We fixed task-level timeouts before model inference by running each official reference solution three times in its final evaluator environment.
+The default primary limit was 10 seconds; \texttt{Mbpp/599} used 60 seconds, and 15 BigCodeBench tasks used limits from 30 to 240 seconds.
+After the complete primary batch, a provisional timeout was retried once using the larger of 120 seconds and 1.5 times its primary limit; \texttt{HumanEval/38}, \texttt{/50}, and \texttt{/53} used a pre-specified 180-second confirmation limit.
+A candidate was assigned final \texttt{TIMEOUT} only when both attempts timed out.
+
+The analysis paired every evaluable Initial Candidate with the Final Candidate selected by each protocol.
+We reported Initial and Final Pass Rates and decomposed their difference into Repair, Correct-to-Incorrect Regression, Functional Preservation, and Unrepaired Failure.
+Protocol comparisons used a task-level paired bootstrap with 10,000 resamples, a fixed seed of 20260804, and 95\% confidence intervals.
+Token cost was computed from the calls required by each protocol; a Decision-Conditioned protocol included only the Decision cost after \texttt{PRESERVE} and added the corresponding Always-Refine cost after \texttt{REFINE}.
