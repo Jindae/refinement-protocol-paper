@@ -31,6 +31,19 @@
 * Group citations only when every cited source supports the same preceding claim at the same level of specificity.
 * When different sources support different parts of a comparison, write separately attributable clauses or sentences so that the source-to-claim mapping remains clear.
 
+## Auditing Background Literature
+
+Use the following procedure whenever the Background is drafted or materially revised.
+
+1. Inventory every citation together with the exact clause or sentence it is intended to support. Treat method descriptions, experimental conditions, findings, limitations, and comparisons as separate claims even when they appear in one sentence.
+2. Verify claims against the primary paper from an official venue or author-provided manuscript. Do not rely on a title, search snippet, or secondary summary. For studies discussed in detail, inspect the relevant method, experimental setting, results, and conclusion sections rather than relying only on the abstract. For a one-sentence reference, the abstract is sufficient only when it explicitly supports every stated detail; otherwise inspect the relevant section of the paper.
+3. Check each description along the dimensions that can change its interpretation: the proposed mechanism, source of feedback, training-time versus inference-time use, availability of execution or external signals, task and evaluation setting, comparison budget, and scope of the reported result. Include only dimensions that are relevant to the Background argument.
+4. Preserve evidential qualifiers. Distinguish a statistically supported main result from an exploratory or secondary observation, and distinguish the authors' finding from our interpretation of its relevance. Do not generalize a result beyond the models, tasks, feedback condition, or evaluation design actually studied.
+5. Give studies discussed early or in depth a correspondingly careful account of their setup, principal result, and boundary relative to this work. For later one-sentence references, state the distinctive mechanism or research scope that makes the study relevant; avoid a generic paraphrase that could apply to many papers.
+6. When a source supports only part of a sentence, narrow the claim or split the sentence and place the citation after the supported clause. Correct inaccurate prose rather than merely moving citations. Do not merge properties of several papers into a composite description that no individual source supports.
+7. After source-level verification, reread the Background in order to confirm that comparisons use already introduced concepts, adjacent sentences do not silently extend a cited claim, and the literature narrative remains conservative and relevant to the study's research gap.
+8. Finish with a mechanical citation and build check: identify grouped citation commands and retain them only when all sources support the same claim, confirm that every citation key resolves, run `git diff --check`, and compile the paper to detect undefined citations or LaTeX errors.
+
 ## Information Order and Abbreviations
 
 * Introduce information in the order needed by a reader who does not already know the study. Do not rely on concepts, stage names, protocol names, abbreviations, or distinctions that are defined only later.
