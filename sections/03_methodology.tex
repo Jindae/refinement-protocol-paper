@@ -1,1 +1,155 @@
 \section{Methodology}
+
+We designed a controlled study to isolate how the composition of inference-time Self-Refinement protocols affects code correctness and token consumption.
+All protocols used a Shared-Initial Design, in which the same model revised the same Self-Generated Initial Candidate without access to tests, execution results, compiler diagnostics, runtime traces, or external verifier feedback.
+
+\subsection{Research Questions}
+
+\researchquestion{RQ1}{How does the stage composition of Self-Refinement affect final code correctness?}
+Explicit Critique Generation and Revision Planning may structure a model's review, but each additional stage is useful only if it produces a better Final Candidate.
+We isolated their incremental effects through paired comparisons of Direct Generation with Direct Revision (\texttt{R}), \texttt{R} with Critique-Conditioned Revision (\texttt{CR}), and \texttt{CR} with Critique-and-Plan-Conditioned Revision (\texttt{CPR}) on the same Initial Candidates.
+
+\researchquestion{RQ2}{How do alternative refinement protocols balance repairs of initially incorrect candidates and regressions of initially correct candidates?}
+Final Pass Rate alone can conceal whether a protocol repairs many failures while also damaging correct programs.
+We therefore classified every evaluable initial-to-final pair as Repair, Correct-to-Incorrect Regression, Functional Preservation, or Unrepaired Failure and compared these paired transitions across protocols.
+
+\researchquestion{RQ3}{How does the value of Decision-Conditioned Refinement vary across model-benchmark combinations with different Initial Pass Rates?}
+A preservation decision has different consequences when most Initial Candidates are already correct than when many remain repairable, creating a tradeoff between preventing regressions and missing repairs.
+We applied one independently generated Refinement-Need Decision to each Always-Refine protocol and related the resulting correctness and token-cost differences to the Initial Pass Rate of each of the 18 model-benchmark combinations.
+
+\researchquestion{RQ4}{Do the correctness effects of additional refinement stages justify their token costs?}
+Critique, planning, and decision calls can improve a candidate or avoid an unnecessary revision, but they also add input and output tokens.
+We compared Protocol Token Cost with final correctness at both candidate and benchmark levels, including avoided refinement tokens, net token savings, and correctness-cost Pareto relationships within each model.
+
+\subsection{Self-Refinement Protocols}
+
+For each model-task pair, Direct Generation produced one Initial Candidate from the Task Specification.
+The candidate was stored once and reused as the exact input to all subsequent Refinement Stages, so protocol contrasts were not confounded by different initial generations.
+Benchmark tests were reserved for post-hoc evaluation and were never included in a model prompt.
+
+The protocols were composed from four observable stages, each implemented as a separate prompt and model call:
+
+\begin{enumerate}
+    \item \textbf{Refinement-Need Decision (D).} Given the Task Specification and Initial Candidate, the model returned \texttt{PRESERVE} when the candidate should be retained exactly or \texttt{REFINE} when functional revision was needed.
+    \item \textbf{Critique Generation (C).} The model identified potential functional mismatches, missing conditions, and relevant fault locations, or recommended preservation when it found no problem.
+    \item \textbf{Revision Planning (P).} Given the same candidate and its stored critique artifact, the model converted the critique into an actionable set of changes while identifying behavior that should remain intact.
+    \item \textbf{Code Revision (R).} The model returned a complete Revised Candidate using the Task Specification, Initial Candidate, and the intermediate artifacts available under the protocol.
+\end{enumerate}
+
+Critique Generation and Revision Planning were instructed not to provide a complete revised program, which kept diagnosis, planning, and code production as distinct calls.
+Conversely, every Code Revision prompt permitted the model to retain the Initial Candidate when no functional change was needed.
+
+Table~\ref{tab:protocols} summarizes the Stage Composition of the baseline and three Always-Refine protocols.
+\texttt{R} revises the candidate directly, \texttt{CR} adds an explicit critique before revision, and \texttt{CPR} further adds a revision plan between critique and revision.
+
+\begin{table}[H]
+\vspace*{1.5cm}
+\caption{Protocol composition and the information supplied to the final Code Revision call.}
+\label{tab:protocols}
+\begin{tabularx}{\textwidth}{p{0.18\textwidth}p{0.23\textwidth}L}
+\toprule
+Protocol & Composition after Direct Generation & Final-candidate construction \\
+\midrule
+Direct Generation & None & Use the Initial Candidate without refinement. \\
+\texttt{R} & $R$ & Revise from the Task Specification and Initial Candidate. \\
+\texttt{CR} & $C \rightarrow R$ & Revise from the Initial Candidate and stored critique artifact. \\
+\texttt{CPR} & $C \rightarrow P \rightarrow R$ & Revise from the Initial Candidate, stored critique artifact, and revision plan. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Decision-Conditioned Refinement combined the Decision with each corresponding Always-Refine result.
+If the Decision was \texttt{PRESERVE}, the Final Candidate was the exact stored Initial Candidate; if it was \texttt{REFINE}, the Final Candidate was the Revised Candidate from \texttt{R}, \texttt{CR}, or \texttt{CPR}.
+This construction yielded Decision-Conditioned Direct Revision (\texttt{DR}), Decision-Conditioned Critique-Conditioned Revision (\texttt{DCR}), and Decision-Conditioned Critique-and-Plan-Conditioned Revision (\texttt{DCPR}) without additional revision calls.
+The Decision was not shown the protocol name, critique, plan, or any execution evidence, and its output was not passed into the refinement prompts.
+
+\subsection{Models and Benchmarks}
+
+We selected publicly available open-weight checkpoints that could be served under one two-GPU workstation budget while covering different model families, sizes, and dense and mixture-of-experts architectures.
+The panel emphasized code-specialized instruction models and included Gemma 4 as a general-purpose control; all within-model protocol comparisons used an unchanged checkpoint and precision.
+Table~\ref{tab:models} lists the exact checkpoints and their roles.
+
+\begin{table}[htbp]
+\vspace*{1.5cm}
+\caption{Open-weight models used in the study.}
+\label{tab:models}
+\begin{tabularx}{\textwidth}{p{0.29\textwidth}p{0.22\textwidth}p{0.12\textwidth}L}
+\toprule
+Model and checkpoint & Architecture and size & Precision & Role \\
+\midrule
+Qwen2.5-Coder-7B\newline{\scriptsize\nolinkurl{Qwen/Qwen2.5-Coder-7B-Instruct}} & Code-specialized dense, approximately 7.6B & BF16 & Smaller code-specialized model. \\
+Qwen2.5-Coder-14B\newline{\scriptsize\nolinkurl{Qwen/Qwen2.5-Coder-14B-Instruct}} & Code-specialized dense, 14.7B & BF16 & Within-family scale comparison. \\
+DeepSeek-Coder-V2-Lite\newline{\scriptsize\nolinkurl{deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct}} & Code-specialized MoE, 16B total and 2.4B active & BF16 & Efficient MoE model from a different family. \\
+Devstral-Small-2-24B\newline{\scriptsize\nolinkurl{mistralai/Devstral-Small-2-24B-Instruct-2512}} & Software-engineering-specialized dense, 24B & Official FP8 & Larger dense code model. \\
+Qwen3-Coder-30B-A3B\newline{\scriptsize\nolinkurl{Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8}} & Code-specialized MoE, 30.5B total and 3.3B active & Official FP8 & Larger code-specialized MoE model. \\
+Gemma-4-31B-QAT-W4A16\newline{\scriptsize\nolinkurl{google/gemma-4-31B-it-qat-w4a16-ct}} & General-purpose dense, 31B & Official QAT W4A16 & General-purpose instruct control. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The differing precisions reflect the official locally deployable checkpoints that fit the common hardware budget, rather than a protocol-level treatment.
+We therefore interpret raw score and token differences primarily within a model, not as precision-independent rankings across models or as equivalent compute across tokenizers.
+A planned StarCoder2-15B-Instruct model was removed before the primary experiment after three pilots showed repeated failures to follow the candidate-fence and categorical-Decision contracts.
+
+We chose three Python code-generation benchmarks to vary specification style, library use, and task composition without assigning them a priori difficulty labels.
+Except for exclusions fixed before model inference for evaluator compatibility or offline reproducibility, we used every task in the pinned releases, as summarized in Table~\ref{tab:benchmarks}.
+
+\begin{table}[htbp]
+\caption{Benchmarks and task scope.}
+\label{tab:benchmarks}
+\begin{tabularx}{\textwidth}{p{0.23\textwidth}p{0.12\textwidth}p{0.27\textwidth}L}
+\toprule
+Benchmark & Tasks used & Task format & Evaluation \\
+\midrule
+HumanEval+ v0.1.10 & 163 of 164 & Function signatures and docstrings & EvalPlus 0.3.1 augmented tests. \\
+MBPP+ v0.2.0 & 378 of 378 & Natural-language problems with examples & EvalPlus 0.3.1 augmented tests. \\
+BigCodeBench-Instruct v0.1.4 & 1,136 of 1,140 & Natural-language instructions with diverse library and compositional requirements & BigCodeBench 0.2.5 unit tests. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+We excluded \texttt{HumanEval/32} because its pinned canonical solution was incompatible with the EvalPlus special oracle and success bookkeeping.
+We also excluded \texttt{BigCodeBench/101}, \texttt{/590}, \texttt{/1005}, and \texttt{/1012} because they required live external content that could not be reproduced with outcome-neutral offline resources.
+The resulting scope contained 1,677 tasks per model and 10,062 model-task pairs across the six models.
+The Initial Pass Rate of each model-benchmark combination was treated as an observed continuous characteristic rather than using fixed easy, medium, and hard benchmark labels.
+
+\subsection{Experimental Setting}
+
+\paragraph{Phase-wise inference and artifact reuse.}
+We executed the experiment by model-resident phase rather than running one task through every protocol end to end.
+For each checkpoint, the model remained loaded while we processed all 1,677 tasks in the following order: Direct Generation, Decision, Direct Revision, Critique Generation, Critique-Conditioned Revision, Revision Planning, and Plan-Conditioned Revision.
+Phase boundaries checkpointed immutable artifacts, allowing completed logical calls to be resumed without regeneration.
+The same critique artifact was reused by \texttt{CR} and Revision Planning, the same plan was reused by \texttt{CPR}, and one Decision was reused to derive \texttt{DR}, \texttt{DCR}, and \texttt{DCPR}.
+This schedule reduced model-loading and duplicate-call costs while preserving the dependencies and inputs of the conceptual protocols.
+
+\paragraph{Inference environment.}
+Inference ran on an Ubuntu 22.04 server with two NVIDIA GeForce RTX 4090 GPUs, each with 24~GiB of memory.
+We used vLLM 0.26.0 with tensor parallelism of two, a batch size of 32, a 16,384-token context limit, and GPU memory utilization set to 0.85.
+All prompts used the checkpoint's tokenizer and chat template as direct token-ID inputs, automatic prompt truncation was disabled, and the rendered prompt plus output allowance was required to fit the common context limit.
+Generation used the PyTorch-native sampler with batch-invariant execution, one output, greedy decoding (temperature 0, top-$p$ 1, top-$k$ 0), seed 0, and no frequency, presence, or repetition penalties.
+Maximum output lengths were 4,096 tokens for Direct Generation and revision calls, 2,048 for Critique Generation and Revision Planning, and 64 for the Decision.
+
+\paragraph{Output contracts and observed exceptions.}
+Candidate prompts required exactly one complete fenced Python block; text outside that block was ignored, whereas responses with no complete block, multiple blocks, or an incomplete block were not repaired or heuristically extracted.
+Across 70,386 executed model calls, eight Direct Generation responses and ten revision responses violated this contract and were retained as \texttt{malformed\_candidate}; the eight malformed Initial Candidates blocked their 48 dependent calls.
+These cases remained in the study scope and counted as zero only for the end-to-end success measure, while functional transitions were left unevaluated because no candidate was executed.
+For Decisions, the primary parser accepted only a complete response equal to \texttt{PRESERVE} or \texttt{REFINE} after trimming surrounding whitespace.
+Of 202 non-exact responses, 156 differed only by one terminal period and were normalized deterministically, while 46 directionally unambiguous explanations were coded before candidate evaluation under a fixed, execution-blind rubric; all were resolved, and the original invalid responses and token counts were retained.
+We additionally analyze exact-parsed Decisions alone to assess sensitivity to this resolution procedure.
+
+\paragraph{Candidate evaluation.}
+Initial and Final Candidates were evaluated in processes separated from model inference, and a candidate passed only if it satisfied the benchmark's full test suite.
+The orchestration, analysis, and EvalPlus environments used Python 3.12, whereas BigCodeBench execution used a separately pinned Python 3.10.12 environment for compatibility with its official dependency range.
+Candidate execution was isolated from the host process namespace and external network; pinned local resources and narrowly scoped offline fixtures supported reproducible BigCodeBench tasks without exposing execution results to later model calls.
+EvalPlus candidates were additionally subject to an 8~GiB process-memory limit.
+
+Before model inference, we ran each official reference solution three times in its final evaluator environment to fix task-level timeouts independently of generated outputs.
+The default primary wall-time limit was 10 seconds; the audit assigned a 60-second limit to \texttt{Mbpp/599} and limits from 30 to 240 seconds to 15 BigCodeBench tasks, with no HumanEval+ primary overrides.
+After the complete primary evaluation batch, a provisional timeout was retried exactly once using the larger of 120 seconds and 1.5 times its primary limit; \texttt{HumanEval/38}, \texttt{/50}, and \texttt{/53} used a pre-specified 180-second confirmation limit to accommodate EvalPlus's internal bounds.
+We assigned final \texttt{TIMEOUT} only when both attempts timed out, and an independently observed assertion or exception took precedence as functional \texttt{FAIL}.
+
+\paragraph{Outcome and cost analysis.}
+We computed Initial and Final Pass Rates and decomposed each evaluable paired outcome into Repair, Correct-to-Incorrect Regression, Functional Preservation, or Unrepaired Failure.
+Protocol comparisons used a task-level paired bootstrap with 10,000 resamples, a fixed seed of 20260804, and 95\% confidence intervals.
+Token accounting retained input and output tokens for every call and summed only the stages required by the protocol: \texttt{R} used its revision call, \texttt{CR} used critique plus critique-conditioned revision, and \texttt{CPR} used critique, plan, and plan-conditioned revision.
+For a Decision-Conditioned protocol, cost consisted of the Decision alone after \texttt{PRESERVE}, or the Decision plus the corresponding Always-Refine cost after \texttt{REFINE}.
