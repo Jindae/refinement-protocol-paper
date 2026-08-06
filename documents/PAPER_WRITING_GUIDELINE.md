@@ -24,6 +24,13 @@
 * Use terms that clearly and precisely describe the relevant concept, process, or result.
 * Refer to the project's Glossary document when selecting terminology.
 
+## Citation Placement
+
+* Place each citation immediately after the specific method, finding, or clause that it supports.
+* When one sentence discusses multiple papers, attach each citation to its corresponding method or claim rather than collecting all citations at the end of the sentence.
+* Group citations only when every cited source supports the same preceding claim at the same level of specificity.
+* When different sources support different parts of a comparison, write separately attributable clauses or sentences so that the source-to-claim mapping remains clear.
+
 ## Information Order and Abbreviations
 
 * Introduce information in the order needed by a reader who does not already know the study. Do not rely on concepts, stage names, protocol names, abbreviations, or distinctions that are defined only later.
