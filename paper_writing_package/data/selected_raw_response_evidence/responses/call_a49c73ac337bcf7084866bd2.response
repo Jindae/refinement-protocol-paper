@@ -1,0 +1,20 @@
+```
+import matplotlib
+import numpy as np
+# Constants
+FUNCTIONS = [np.sin, np.cos, np.tan]
+
+def task_func(ax, func_index):
+    if not isinstance(ax, matplotlib.axes._axes.Axes):
+        raise ValueError("The input ax is not an Axes object.")
+    
+    theta = np.linspace(0, 2 * np.pi, 1000)
+    r = FUNCTIONS[func_index](theta)
+    
+    ax.plot(theta, r, label=FUNCTIONS[func_index].__name__)
+    ax.set_rticks(np.arange(0, 1.1, 0.25) * 45)  # Set radial ticks at 45-degree intervals
+    ax.set_rlabel_position(0)  # Move radial labels to the center
+    ax.legend()
+    
+    return ax
+```

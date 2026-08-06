@@ -230,6 +230,13 @@ After the status becomes `completed`, run:
 
 Generated data, model weights, benchmark caches, and secrets are ignored by Git. Placeholder files retain the intended directory topology.
 
+Each prompt version directory is a complete seven-stage snapshot. In particular,
+`prompts/v4/` contains the full role-separated `study-v0.3.0` set, including
+byte-identical copies of the three unchanged v3 templates. See
+[`prompts/README.md`](prompts/README.md) for the version history, stage inputs,
+and the distinction between the self-contained v4 snapshot and immutable frozen
+execution provenance.
+
 For copy-and-paste pilot and primary execution commands, monitoring, independent
 validation, and failure-resume procedures, follow
 [`EXPERIMENT_RUNBOOK.md`](EXPERIMENT_RUNBOOK.md). Do not skip its pilot review
@@ -244,30 +251,33 @@ input/output token counts plus the backend `stop` or `length` finish reason.
 Malformed output and inference infrastructure failures remain distinct from
 functional benchmark `FAIL`.
 
-`ProtocolCampaignRunner` in `src/self_refinement/protocols/runner.py` consumes
-one already-loaded resident backend and executes Direct, Decision, `R`, shared
-Critique, `CR`, shared Plan, and `CPR` as seven all-benchmark phases. Its scope
-requires all three benchmark counts, it checkpoints model calls and artifacts
-per task, reconstructs a missing artifact from an already completed immutable
-raw response, and reuses completed work on resume. `DR`, `DCR`, and `DCPR` are
-then derived from the stored Decision and candidates without backend calls.
-`scripts/run_model_campaign.py` provides the durable outer lifecycle. The main
-Python 3.12 process exports a hash-checked public-only scope and creates typed
-provenance records, then one detached parent invokes four sequential vLLM
-workers. Each worker loads one checkpoint once, runs all seven phases, writes
-batch-level atomic progress, and exits before the next checkpoint loads. Inspect
-the frozen inputs without loading weights with:
+`ProtocolCampaignRunner` in `src/self_refinement/protocols/runner.py` retains the
+seven-phase v0.2.0 reproduction path: Direct, Decision, Direct Revision,
+Critique, Critique-Conditioned Revision, Planning, and Plan-Conditioned
+Revision. The paper-facing v0.3.0 follow-up instead reuses exact validated
+Direct/Decision/`R` artifacts and runs four independently restartable phases
+through `scripts/run_role_separated_campaign.py`. Critique determines whether a
+functional problem exists and diagnoses root cause/location; Planning converts
+that stored diagnosis into minimal changes; CR acts on Critique; and CPR
+implements Plan without receiving Critique directly. Decision is absent from
+all four prompts and is applied only when deriving D-protocol final candidate
+selections.
+
+Both runners checkpoint model calls and artifacts per task, reconstruct a
+missing artifact only from its already completed immutable raw response, and
+reuse validated completed work on resume. `DR`, `DCR`, and `DCPR` are derived
+from stored Decision and candidate records without backend calls. Inspect the
+active role-separated frozen inputs without loading weights with:
 
 ```bash
-.venv/bin/python scripts/run_model_campaign.py --preflight
+.venv/bin/python scripts/run_role_separated_campaign.py --preflight
 ```
 
-The committed full-scope configuration is deliberately gated while the prompt
-set is a pilot-review draft, so `--start` refuses to launch it. After a pilot is
-explicitly frozen, a new enabled configuration must be committed before using
-`--start`; active jobs expose `--status` and compact `--count` views. A failed
-attempt resumes the same immutable registry only through an explicit new
-attempt and `--resume-run-id`.
+The active sequence exposes `--status` and compact `--count` views. Each of C,
+CR, P, and CPR has its own durable attempt and phase-only retry boundary; the
+supervisor advances only after the preceding phase validates. The historical
+seven-phase commands and exact resume procedure remain documented separately in
+`EXPERIMENT_RUNBOOK.md` for v0.2.0 reproduction.
 
 ## Validation
 

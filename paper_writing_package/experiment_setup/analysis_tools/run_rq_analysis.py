@@ -19,11 +19,17 @@ def main() -> int:
     parser.add_argument("--dataset-dir", type=Path, required=True)
     parser.add_argument("--rq", choices=("rq1", "rq2", "rq3", "rq4"), required=True)
     parser.add_argument("--analysis-id", required=True)
+    parser.add_argument(
+        "--allow-provisional",
+        action="store_true",
+        help="explicitly allow non-paper-facing metrics from a provisional processed snapshot",
+    )
     arguments = parser.parse_args()
     output = run_rq_analysis(
         dataset_dir=arguments.dataset_dir.resolve(),
         rq=arguments.rq,
         analysis_id=arguments.analysis_id,
+        allow_provisional=arguments.allow_provisional,
     )
     print(output)
     return 0

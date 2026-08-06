@@ -1,6 +1,6 @@
 schema_version = "paper-writing-package-profile-v1"
-profile_version = "paper-writing-pre-results-2026-08-06-r2"
-package_stage = "validated_inference_pre_evaluation_results"
+profile_version = "paper-writing-v03-progress-2026-08-07-r3"
+package_stage = "validated_role_separated_inference_progress_pre_results"
 content_mode = "authoring_compact"
 
 readable_files = [
@@ -26,7 +26,7 @@ readable_files = [
 
 readable_trees = [
   "analysis_tools",
-  "prompts/v3",
+  "prompts/v4",
   "schemas",
 ]
 
@@ -35,11 +35,16 @@ adopted_configuration_files = [
   "configs/benchmarks/bigcodebench.toml",
   "configs/benchmarks/evalplus.toml",
   "configs/evaluation/timeouts.toml",
-  "configs/experiments/model_campaign_six_models.toml",
-  "configs/experiments/primary_scope_v2.toml",
+  "configs/experiments/primary_scope_v3.toml",
+  "configs/experiments/role_separated_campaign.toml",
   "configs/inference/primary_six_models.toml",
   "configs/models/checkpoints_v2.toml",
-  "configs/prompts/primary_frozen.toml",
+  "configs/prompts/role_separated_frozen.toml",
+]
+
+implementation_files = [
+  "scripts/run_role_separated_campaign.py",
+  "src/self_refinement/protocols/role_separated.py",
 ]
 
 accepted_reference_audits = [
@@ -48,7 +53,6 @@ accepted_reference_audits = [
   "runs/logs/reference-timing-audit/bigcodebench_instruct/timing-bigcodebench-20260803-r2-v3",
 ]
 
-# Benchmark release bytes and complete reference observations belong in the replication package.
 benchmark_source_files = []
 
 preparation_evidence_files = [
@@ -72,38 +76,63 @@ selected_decision_ids = [
   "DEC-20260803-09",
   "DEC-20260803-11",
   "DEC-20260803-12",
-  "DEC-20260803-13",
   "DEC-20260803-15",
   "DEC-20260803-16",
   "DEC-20260803-17",
   "DEC-20260803-19",
-  "DEC-20260803-20",
   "DEC-20260803-21",
   "DEC-20260804-25",
   "DEC-20260804-26",
   "DEC-20260804-28",
+  "DEC-20260804-29",
   "DEC-20260804-30",
   "DEC-20260804-31",
   "DEC-20260804-32",
   "DEC-20260806-33",
   "DEC-20260806-34",
-  "DEC-20260806-35",
   "DEC-20260806-36",
+  "DEC-20260806-37",
+  "DEC-20260806-40",
 ]
 
 selected_issue_ids = [
+  "ISSUE-20260806-19",
+  "ISSUE-20260806-17",
   "ISSUE-20260806-14",
   "ISSUE-20260804-12",
-  "ISSUE-20260803-09",
   "ISSUE-20260803-03",
   "ISSUE-20260803-02",
-  "ISSUE-20260803-01",
 ]
+
+[composite_inference]
+role_run_id = "run_1dd46dd4a0ae265ab7a184a9"
+sequence_attempt_id = "role-sequence-primary-20260806-r1"
+included_phase_attempt_ids = [
+  "role-phase-primary-20260806-r1-01-shared_critique",
+  "role-phase-primary-20260806-r1-02-cr_revision",
+]
+source_included_stages = [
+  "direct_generation",
+  "refinement_need_decision",
+  "direct_revision",
+]
+role_included_stages = [
+  "critique_generation",
+  "critique_conditioned_revision",
+]
+source_candidate_protocols = ["direct", "r"]
+role_candidate_protocols = ["cr"]
+derived_protocols = ["dr"]
 
 [availability]
 validated_primary_inference_raw = false
 validated_primary_inference_processed_artifacts = true
 validated_inference_call_inventory = true
+validated_role_separated_partial_inference = true
+validated_role_separated_critique = true
+validated_role_separated_cr = true
+validated_role_separated_plan = false
+validated_role_separated_cpr = false
 selected_model_format_exception_raw = true
 validated_decision_resolution = true
 accepted_reference_timing_raw = false

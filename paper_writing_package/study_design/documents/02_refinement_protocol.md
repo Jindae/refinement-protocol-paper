@@ -17,8 +17,11 @@ Direct Generation
 Initial Candidate
         |
         v
-Decision -> Critique -> Plan -> Revision
-   D          C          P        R
+Decision (stored once; used only for derived selection)
+
+Initial Candidate -> Direct Revision                         (R)
+Initial Candidate -> Critique -> Critique-based Revision    (CR)
+Initial Candidate -> Critique -> Plan -> Plan-based Revision (CPR)
 ```
 
 `D`, `C`, `P`, `R`은 모델 내부의 숨겨진 reasoning 단계를 의미하지 않는다.
@@ -84,19 +87,21 @@ evaluation, compiler/runtime diagnostic, timeout 및 이후 refinement 결과는
 
 ## 4. Critique Generation (C)
 
-**Critique Generation**은 task specification과 initial candidate를 검토하여 잠재적인 기능적 문제를 자연어로 기술하는 stage다.
+**Critique Generation**은 task specification과 initial candidate를 검토하여 기능적 문제가
+있는지 판단하고, 발견한 문제의 root cause와 관련 코드 위치를 자연어로 식별하는 stage다.
+오류의 존재를 전제하지 않으며, 기능 문제가 없다고 판단하면 그 사실을 명시한다.
 
 Critique는 다음 내용에 집중한다.
 
-- Task specification에서 요구하는 동작과 candidate가 구현한 동작 사이의 잠재적 불일치
-- 누락된 조건 또는 잘못 처리될 수 있는 edge case
-- 수정이 필요하다고 판단되는 이유
-- 문제가 발견되지 않은 경우 initial candidate를 유지하라는 recommendation
+- Task specification과 candidate 동작 사이의 기능적 불일치
+- 각 문제의 root cause와 관련 코드 위치
+- 문제가 발견되지 않았다는 명시적 진술
 
-Critique Generation은 완성된 revised solution 전체를 생성하지 않는다. Fault localization과
-설명을 위해 관련 코드 일부를 인용하거나 code fence를 사용하는 것은 허용한다.
-또한 구체적인 edit sequence를 완성된 revision plan 형태로 작성하지 않는다.
-이 제한은 Critique와 Revision Planning의 역할을 구분하기 위한 것이다.
+Critique prompt의 핵심 지시는 문제의 원인과 위치를 분석하는 것이다. 관련 코드 일부나
+code fence가 포함되어도 artifact를 거부하지 않으며, 모델이 부수적으로 수정 방향을
+언급해도 parser가 삭제하거나 invalid 처리하지 않는다. 역할 분리는 장문의 금지 목록이
+아니라 후속 입력 경계로 보장한다. Revision Planning은 critique를 받아 수정 방법을
+구체화하고, Plan-Conditioned Revision은 critique 원문이 아니라 plan만 받는다.
 
 Critique artifact는 Code Revision 또는 Revision Planning의 입력으로 사용한다.
 연구에서는 critique 자체에 독립적인 correctness label을 부여하지 않는다.
@@ -116,6 +121,10 @@ Plan은 다음을 포함할 수 있다.
 Plan은 완성된 revised solution 전체를 직접 생성하지 않는다. 변경 위치와 방법을 명확히
 하기 위한 focused code snippet 또는 code fence는 허용한다.
 Revision Planning은 candidate를 처음부터 다시 검토하는 단계가 아니라, critique artifact의 내용을 실행 가능한 수정 방향으로 구체화하는 단계다.
+따라서 Critique가 기능 문제를 식별하면 Planning은 그 진단을 입력으로 받아 해결 방법을
+계획하고, Critique가 기능 문제가 없다고 하면 Planning도 변경이 필요 없다고 기록한다.
+Planning prompt는 Critique의 진단이 맞는지 독립적으로 재판정하거나 새로운 결함을 탐색하는
+두 번째 Critique를 요구하지 않는다.
 
 본 연구에서 Plan은 Critique 이후에만 사용한다.
 Critique 없이 바로 Plan을 생성하는 별도 protocol은 정의하지 않는다.
@@ -123,13 +132,24 @@ Critique가 없는 Plan은 결함 식별과 수정 계획을 하나의 call에 �
 
 ## 6. Code Revision (R)
 
-**Code Revision**은 task specification, initial candidate, 그리고 protocol에서 제공하는 critique artifact와 revision plan을 입력으로 받아 revised candidate를 생성하는 stage다.
+**Code Revision**은 task specification, initial candidate, 그리고 해당 protocol이 직접
+제공하는 하나의 intermediate artifact를 입력으로 받아 revised candidate를 생성하는 stage다.
 
 Revision의 입력은 protocol에 따라 달라진다.
 
 - `R`: task specification, initial candidate
 - `CR`: task specification, initial candidate, critique
-- `CPR`: task specification, initial candidate, critique, plan
+- `CPR`: task specification, initial candidate, plan
+
+Revision의 책임도 입력 경로에 따라 다르다.
+
+- Direct Revision인 `R`은 선행 분석 artifact가 없으므로 initial candidate를 직접 검토하고,
+  필요한 경우에만 수정한다.
+- `CR`의 Revision은 Critique가 식별한 기능 문제를 해결한다. Critique가 기능 문제가 없다고
+  하면 initial candidate를 변경 없이 다시 출력하며, 오류 존재 여부를 독립적으로 다시
+  검토하라는 지시를 받지 않는다.
+- `CPR`의 Revision은 supplied Plan을 구현한다. Plan이 변경 불필요를 나타내면 initial
+  candidate를 변경 없이 다시 출력하며, Critique를 보거나 분석·계획을 다시 수행하지 않는다.
 
 모든 Revision stage는 동일한 출력 요구사항을 사용한다.
 모델은 최종적으로 평가 가능한 revised code를 정확히 하나의 완전한 `python` fence 안에
@@ -137,8 +157,10 @@ Revision의 입력은 protocol에 따라 달라진다.
 불완전 fence, unfenced code에는 candidate를 선택하는 추측이나 구문 수정을 적용하지 않는다.
 이 규칙을 충족하지 못해 candidate artifact가 만들어지지 않은 결과는 정제·보고 단계에서
 `malformed_candidate`로 부른다. 완전한 단일 fence에서 추출된 코드는 문법·실행·논리 오류가
-있더라도 그대로 candidate이며 evaluator가 판정한다.
-Critique나 plan이 수정을 제안하더라도, 모델은 candidate가 이미 적절하다고 판단하면 initial candidate를 변경하지 않을 수 있다.
+있더라도 그대로 candidate이며 evaluator가 판정한다. Conditioned Revision의 no-change
+경로는 선행 Critique 또는 Plan이 변경 불필요를 나타낼 때 적용한다. 모델이 지시를 벗어나
+선행 artifact를 재판정하거나 다른 역할의 내용을 생성해도 raw response를 수정하지 않으며,
+그 결과는 해당 protocol의 실제 동작으로 남긴다.
 
 ## 7. Always-Refine Protocol
 
@@ -158,7 +180,8 @@ Initial Candidate -> Revision -> Final Candidate
 Initial Candidate -> Critique -> Revision -> Final Candidate
 ```
 
-별도의 Critique Generation call을 수행하고, critique artifact를 Code Revision에 전달한다.
+별도의 Critique Generation call을 수행하고, root cause와 위치를 담은 critique artifact를
+Code Revision에 직접 전달한다.
 
 ### CPR: Critique-and-Plan-Conditioned Revision
 
@@ -166,10 +189,15 @@ Initial Candidate -> Critique -> Revision -> Final Candidate
 Initial Candidate -> Critique -> Plan -> Revision -> Final Candidate
 ```
 
-Critique 이후 별도의 Revision Planning call을 수행하고, critique와 plan을 모두 Revision에 전달한다.
+Critique 이후 별도의 Revision Planning call을 수행한다. Planning은 critique의 진단을
+구체적이고 최소한의 수정 방법으로 변환한다. 마지막 Revision에는 plan만 직접 전달하며
+critique 원문은 전달하지 않는다. CPR candidate가 critique record를 lineage로 보존하는 것은
+plan을 통한 간접 provenance를 나타내며 prompt input을 뜻하지 않는다.
 
-`R`, `CR`, `CPR`은 stage를 차례로 추가하는 구조다.
-`CR`은 `R`에 Critique Generation을 추가하고, `CPR`은 `CR`에 Revision Planning을 추가한다.
+`R`, `CR`, `CPR`은 동일 initial candidate에서 revision을 유도하는 정보 경로를 비교한다.
+`CR`은 별도 진단을 Revision에 직접 제공하고, `CPR`은 그 진단을 Planning이 매개한 뒤
+plan만 Revision에 제공한다. 따라서 `CR`과 `CPR`의 차이는 call 하나뿐 아니라 revision에
+전달되는 artifact의 역할 분리까지 포함한다.
 
 ## 8. Decision-Conditioned Refinement
 
@@ -188,7 +216,11 @@ final candidate를 사용한다. `UNRESOLVED`이면 해당 세 Decision-conditio
 
 Decision 결과는 Critique Generation, Revision Planning, Code Revision prompt에 전달하지 않는다.
 Decision은 initial candidate를 보존할지, 대응하는 Always-Refine Protocol의 revised candidate를 사용할지만 결정한다.
-따라서 Always-Refine Protocol과 Decision-Conditioned Refinement의 차이는 candidate별 refinement 실행 여부에 있다.
+논리적인 protocol 적용에서는 `PRESERVE`가 후속 refinement calls를 생략하고 `REFINE`이
+대응 경로를 실행한다. 그러나 본 실험의 물리적 데이터 수집에서는 모든 Always-Refine
+candidate를 생성한 뒤 Decision-conditioned final candidate를 파생한다. 이는 `PRESERVE`
+사례에서도 발생했을 repair 또는 regression을 관찰하기 위한 것이며, Decision을 후속 prompt
+입력으로 사용하는 것과는 다르다.
 
 ## 9. Protocol의 해석 범위
 
@@ -197,4 +229,11 @@ Decision은 initial candidate를 보존할지, 대응하는 Always-Refine Protoc
 Critique artifact의 의미적 정확성이나 모델의 critique 능력을 독립적으로 평가하는 것으로 해석하지 않는다.
 
 마찬가지로 `CPR`과 `CR`의 차이는 Revision Planning을 추가한 전체 protocol의 효과다.
+이 비교는 Planning artifact의 독립적인 의미 정확도를 측정하지 않으며, Critique의 진단을
+Planning이 변환하고 Revision이 실행하는 전체 정보 경로의 결과다. Upstream artifact의
+오진, 역할 미준수 또는 no-change 판단도 downstream 결과와 분리해 임의로 교정하지 않는다.
 Decision-Conditioned Refinement의 효과는 Decision의 classification accuracy만이 아니라, prevented regression, missed repair, 생략한 refinement calls를 포함한다.
+
+`study-v0.2.0`에서 사용한 broad Critique 및 Critique+Plan 동시 CPR 입력은 참고용 선행
+실행으로 보존한다. 현재 paper-facing 설계인 `study-v0.3.0`은 위 역할 분리 계약을 사용하며,
+두 버전의 CR/CPR 결과를 하나의 protocol estimate로 혼합하지 않는다.

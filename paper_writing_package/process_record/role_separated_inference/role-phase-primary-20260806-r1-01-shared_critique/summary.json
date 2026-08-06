@@ -1,0 +1,34 @@
+{
+  "attempt_id": "role-phase-primary-20260806-r1-01-shared_critique",
+  "git_commit": "4902b6b8eeb0abce544a4e98141abc94a8101610",
+  "model_results": [
+    "/data/refinement-protocol/runs/logs/role-separated-phase/role-phase-primary-20260806-r1-01-shared_critique/results/qwen2.5-coder-7b-instruct.json",
+    "/data/refinement-protocol/runs/logs/role-separated-phase/role-phase-primary-20260806-r1-01-shared_critique/results/qwen2.5-coder-14b-instruct.json",
+    "/data/refinement-protocol/runs/logs/role-separated-phase/role-phase-primary-20260806-r1-01-shared_critique/results/deepseek-coder-v2-lite-instruct.json",
+    "/data/refinement-protocol/runs/logs/role-separated-phase/role-phase-primary-20260806-r1-01-shared_critique/results/devstral-small-2-24b-instruct.json",
+    "/data/refinement-protocol/runs/logs/role-separated-phase/role-phase-primary-20260806-r1-01-shared_critique/results/qwen3-coder-30b-a3b-instruct-fp8.json",
+    "/data/refinement-protocol/runs/logs/role-separated-phase/role-phase-primary-20260806-r1-01-shared_critique/results/gemma-4-31b-it-qat-w4a16.json"
+  ],
+  "models": [
+    "qwen2.5-coder-7b-instruct",
+    "qwen2.5-coder-14b-instruct",
+    "deepseek-coder-v2-lite-instruct",
+    "devstral-small-2-24b-instruct",
+    "qwen3-coder-30b-a3b-instruct-fp8",
+    "gemma-4-31b-it-qat-w4a16"
+  ],
+  "phase": "shared_critique",
+  "run_id": "run_1dd46dd4a0ae265ab7a184a9",
+  "schema_version": "role-separated-phase-summary-v1",
+  "stage": "critique_generation",
+  "task_count": 1677,
+  "totals": {
+    "blocked": 8,
+    "completed": 10054,
+    "failed": 0,
+    "reused": 0,
+    "terminal": 10062,
+    "total": 10062
+  },
+  "validation_result": "passed"
+}

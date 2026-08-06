@@ -8,6 +8,11 @@ Intermediate artifact의 정확성을 직접 평가하지 않고, 주요 outcome
 실험의 기본 단위는 하나의 model-task pair다.
 각 모델은 각 task에 대해 자신의 initial candidate를 생성하며, 해당 candidate는 모든 protocol에서 동일하게 재사용된다.
 
+현재 paper-facing protocol 실행은 `study-v0.3.0`이다. `study-v0.2.0`의 전체 실행은 prompt
+역할 중복을 발견하게 한 참고용 결과 및 재현 근거로 보존한다. 새 버전은 검증된 v0.2.0의
+exact Initial Candidate, Direct Revision, Decision과 그 평가를 재사용하며, Critique,
+Critique-Conditioned Revision, Revision Planning, Plan-Conditioned Revision만 새로 호출한다.
+
 ## 2. 실험 대상 Protocol
 
 ### 2.1 Baseline
@@ -28,6 +33,20 @@ Intermediate artifact의 정확성을 직접 평가하지 않고, 주요 outcome
 
 `DR`, `DCR`, `DCPR`을 위한 별도의 revision generation은 수행하지 않는다.
 하나의 Decision output과 이미 생성한 revised candidate를 결합하여 final outcome과 Protocol Token Cost를 구성한다.
+
+### 2.4 Role responsibility and no-change contract
+
+| Stage | Primary responsibility | No-change behavior | Not a primary responsibility or direct input |
+|---|---|---|---|
+| Direct Revision | Initial candidate를 직접 검토하고 필요한 경우 수정 | 변경이 필요 없으면 source 또는 동작 보존 | Critique, Plan, Decision |
+| Critique Generation | 기능 문제 존재 여부와 발견된 문제의 root cause/location 진단 | 문제가 없음을 명시 | Decision, 수정 계획 수립, code implementation |
+| Revision Planning | Stored Critique를 최소 변경과 보존할 동작으로 변환 | Critique가 문제없다고 하면 변경 불필요 명시 | Decision, 독립적인 재검토, code implementation |
+| Critique-Conditioned Revision | Stored Critique가 식별한 문제를 code에 반영 | Critique가 문제없다고 하면 exact initial source 재출력 | Decision, 별도 Planning call |
+| Plan-Conditioned Revision | Stored Plan을 code에 구현 | Plan이 변경 불필요라고 하면 exact initial source 재출력 | Decision, Critique 원문, 독립적인 review/planning |
+
+이 표는 모델 응답의 특정 단어를 사후 삭제하거나 역할을 위반한 text artifact를 자동
+거부하는 content filter가 아니다. 역할은 prompt의 primary instruction과 직접 입력 경계로
+정의하며, 모델의 실제 미준수는 raw response와 finish reason을 포함해 그대로 보존한다.
 
 ## 3. Model-Task Pair별 논리적 의존 순서
 
@@ -68,31 +87,40 @@ prompt-visible task specification, exact initial candidate, raw Decision respons
 ### Step 4. Direct Revision
 
 Task specification과 exact initial candidate를 입력으로 제공하여 `R` candidate를 생성한다.
+선행 분석 artifact가 없으므로 모델이 candidate를 검토하고 필요한 경우 수정하며, 변경이
+필요 없으면 기존 source 또는 동작을 보존할 수 있다.
 Output code와 token usage를 저장한다.
 
 ### Step 5. Critique Generation
 
 Task specification과 exact initial candidate를 입력으로 제공하여 critique를 생성한다.
-Critique prompt는 완성된 revised solution과 completed revision plan을 생성하지 않도록
-제한한다. Fault localization 또는 설명에 필요한 focused code snippet과 code fence는
-허용한다.
+Critique prompt는 기능 문제의 존재 여부, root cause와 관련 코드 위치에 집중하며 오류가
+없으면 그 사실을 명시하도록 한다. Code snippet,
+code fence 또는 부수적인 수정 언급이 있어도 text artifact를 삭제·거부하지 않는다.
 생성된 critique와 token usage를 저장한다.
 
 ### Step 6. Critique-Conditioned Revision
 
 Task specification, exact initial candidate, stored critique를 입력으로 제공하여 `CR` candidate를 생성한다.
+Revision은 Critique가 식별한 문제를 반영하며, Critique가 기능 문제를 식별하지 않으면
+exact initial candidate를 다시 출력하도록 요구한다. 새로운 독립 review나 Planning은
+요구하지 않는다.
 Output code와 token usage를 저장한다.
 
 ### Step 7. Revision Planning
 
 Task specification, exact initial candidate, stored critique를 입력으로 제공하여 revision plan을 생성한다.
-Plan prompt는 완성된 revised solution 전체를 생성하지 않도록 제한하되, 변경 위치와
-방법을 설명하는 focused code snippet과 code fence는 허용한다.
+Plan prompt는 critique가 식별한 문제를 해결할 구체적이고 최소한의 변경과 유지해야 할
+기존 동작을 기술한다. Critique가 문제없다고 하면 변경 불필요를 기록하며, candidate를
+독립적으로 다시 진단하지 않는다. 완전한 revised code가 아니라 revision plan을 반환하도록 요구한다.
 생성된 plan과 token usage를 저장한다.
 
 ### Step 8. Plan-Conditioned Revision
 
-Task specification, exact initial candidate, stored critique, stored plan을 입력으로 제공하여 `CPR` candidate를 생성한다.
+Task specification, exact initial candidate, stored plan을 입력으로 제공하여 `CPR` candidate를
+생성한다. Stored critique는 plan의 lineage로 추적하지만 이 Revision call에는 직접 제공하지 않는다.
+Revision은 supplied Plan을 구현하고, Plan이 변경 불필요를 나타내면 exact initial candidate를
+다시 출력하도록 요구한다. 별도 review나 Planning은 요구하지 않는다.
 Output code와 token usage를 저장한다.
 
 ### Step 9. Final Evaluation
@@ -134,48 +162,48 @@ output, special oracle 및 canonical solution은 수정하지 않고, 실행 wra
 두 evaluation attempt의 raw output, configuration, elapsed time, status와 lineage를 모두 저장하며, candidate별 결과나 일시적 server load를 보고 limit을 추가 조정하거나 세 번째 실행을 수행하지 않는다.
 Reference timing과 timeout 결과를 포함한 benchmark execution 정보는 model prompt 또는 이후 refinement call에 전달하지 않는다.
 
-## 4. Model-Resident Phase Schedule과 Artifact Reuse
+## 4. Versioned Phase Schedule과 Artifact Reuse
 
-GPU model-loading overhead를 줄이기 위해 모델을 최외곽 실행 단위로 사용한다. 한 exact
-checkpoint를 한 번 로드한 정상적인 model campaign 안에서 다음 phase를 순서대로
-진행한 뒤 모델을 내리고 다음 모델로 이동한다.
+`study-v0.2.0`의 재현 경로는 한 모델을 상주시켜 일곱 phase를 모두 수행하는 기존
+model-resident schedule을 그대로 보존한다. 현재 `study-v0.3.0` follow-up은 이미 검증된
+Initial Candidate, Decision, Direct Revision을 재사용하므로 다음 네 phase만 새로 수행한다.
 
-1. 전체 benchmark scope의 Direct Generation
-2. 저장된 exact initial candidates에 대한 전체 Refinement-Need Decision
-3. 전체 Direct Revision
-4. 전체 Critique Generation
-5. stored critique를 사용한 전체 Critique-Conditioned Revision
-6. 동일한 stored critique를 사용한 전체 Revision Planning
-7. stored critique와 plan을 사용한 전체 Plan-Conditioned Revision
-8. 모든 모델에서 parse되지 않은 Decision을 한 번에 검토하는 blinded adjudication 단계
+1. 전체 Critique Generation (`shared_critique`)
+2. stored critique를 직접 사용하는 전체 Critique-Conditioned Revision (`cr_revision`)
+3. 같은 stored critique를 수정 방법으로 변환하는 전체 Revision Planning (`shared_plan`)
+4. stored plan만 직접 사용하는 전체 Plan-Conditioned Revision (`cpr_revision`)
 
 여기서 “전체”는 HumanEval+ 163개, MBPP+ 378개, BigCodeBench-Instruct 1,136개를
 합친 1,677개 included task를 의미한다. 각 phase는 세 benchmark를 하나의 background
-session에서 연속 처리하며 benchmark 하나가 끝났다는 이유로 중간 실행을 종료하거나
-사용자 확인을 기다리지 않는다. Phase 경계에서는 immutable task artifacts와 progress를
-checkpoint하지만 정상 경로에서는 모델을 reload하지 않는다.
+phase attempt에서 연속 처리하며 benchmark 하나가 끝났다는 이유로 중간 실행을 종료하거나
+사용자 확인을 기다리지 않는다. 네 phase는 각각 독립 status, log, summary, validation과
+재실행 경계를 갖는다. Supervisor는 검증된 phase만 다음 phase로 자동 연결하고 실패 시
+중단한다. 이 restart isolation을 위해 phase 사이의 model reload 비용은 의도적으로 수용한다.
 
 Benchmark evaluation은 inference campaign과 분리한다. Candidate 결과를 다음 model-call
 phase의 입력이나 진행 결정에 사용하지 않으며, 한 model/protocol의 세 benchmark 범위가
 완료된 뒤 completeness를 검증하고 함께 분석한다. 구체적인 background status, count,
 resume와 failure 규칙은 repository-level `EXPERIMENT_EXECUTION_GUIDELINES.md`를 따른다.
-Candidate evaluation은 8번 단계가 완료되어 모든 invalid Decision이 `PRESERVE`, `REFINE`,
-또는 `UNRESOLVED`로 명시되기 전에는 시작하지 않는다.
+새 CR/CPR evaluation은 네 phase와 lineage validation이 완료된 뒤 별도 campaign으로 수행한다.
 
 ### 4.1 Independent model calls
 
-각 model-task pair에서 refinement와 관련하여 독립적으로 수행하는 call은 다음 여섯 개다.
+전체 연구 construct에는 Direct Generation, Refinement-Need Decision, Direct Revision,
+Critique Generation, Critique-Conditioned Revision, Revision Planning, Plan-Conditioned
+Revision의 일곱 독립 model-call 종류가 있다. v0.3.0 replacement execution에서 새로 수행하는
+call은 다음 네 개다.
 
-1. Refinement-Need Decision
-2. Direct Revision
-3. Critique Generation
-4. Critique-Conditioned Revision
-5. Revision Planning
-6. Plan-Conditioned Revision
+1. Critique Generation
+2. Critique-Conditioned Revision
+3. Revision Planning
+4. Plan-Conditioned Revision
 
 Critique는 `CR`과 Revision Planning에서 재사용한다.
 Revision Plan은 `CPR`에서 재사용한다.
 Decision은 `DR`, `DCR`, `DCPR` 구성에 공통으로 사용한다.
+Initial Candidate, Decision, Direct Revision은 source run
+`run_c99d3b1d562acc3e80026e48`에서 exact record/hash로 참조한다. 새 raw response나 source
+record로 복사해 가장하지 않으며 새 run manifest가 source run을 parent로 기록한다.
 
 이 구조는 각 protocol을 처음부터 독립적으로 실행하는 경우 발생하는 중복 call을 제거한다.
 동일한 critique artifact와 revision plan을 재사용하므로 protocol 비교에 artifact별 sampling 차이가 추가되지 않는다.

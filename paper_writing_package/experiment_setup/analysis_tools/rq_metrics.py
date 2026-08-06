@@ -273,11 +273,79 @@ def _resolved_decision_rows(rows: list[dict[str, Any]], sensitivity: str) -> lis
     return [row for row in rows if row.get("decision_source") in allowed]
 
 
+def _repair_regression_decomposition(
+    always_rows: list[dict[str, Any]], decision_rows: list[dict[str, Any]]
+) -> dict[str, Any]:
+    always_by_task = {str(row["task_record_id"]): row for row in always_rows}
+    complete: list[tuple[int, int, int]] = []
+    for decision in decision_rows:
+        always = always_by_task.get(str(decision["task_record_id"]))
+        if always is None:
+            continue
+        initial = _functional(decision.get("initial_functional_outcome"))
+        always_final = _functional(always.get("final_functional_outcome"))
+        decision_final = _functional(decision.get("final_functional_outcome"))
+        if initial is not None and always_final is not None and decision_final is not None:
+            complete.append((initial, always_final, decision_final))
+
+    initially_incorrect = [values for values in complete if values[0] == 0]
+    initially_correct = [values for values in complete if values[0] == 1]
+    always_repairs = sum(always_final == 1 for _, always_final, _ in initially_incorrect)
+    decision_repairs = sum(decision_final == 1 for _, _, decision_final in initially_incorrect)
+    always_regressions = sum(always_final == 0 for _, always_final, _ in initially_correct)
+    decision_regressions = sum(decision_final == 0 for _, _, decision_final in initially_correct)
+    lost_repairs = always_repairs - decision_repairs
+    prevented_regressions = always_regressions - decision_regressions
+    if lost_repairs < 0 or prevented_regressions < 0:
+        raise AnalysisError(
+            "Decision-conditioned candidate selection violated always-refine outcome nesting"
+        )
+    incorrect_count = len(initially_incorrect)
+    correct_count = len(initially_correct)
+    return {
+        "common_functional_transition_tasks": len(complete),
+        "excluded_from_functional_transition_comparison": len(decision_rows) - len(complete),
+        "initially_incorrect_common": incorrect_count,
+        "always_refine_repairs": always_repairs,
+        "decision_conditioned_repairs": decision_repairs,
+        "always_refine_repair_rate": (
+            always_repairs / incorrect_count if incorrect_count else None
+        ),
+        "decision_conditioned_repair_rate": (
+            decision_repairs / incorrect_count if incorrect_count else None
+        ),
+        "repair_rate_difference": (
+            (decision_repairs - always_repairs) / incorrect_count if incorrect_count else None
+        ),
+        "lost_repairs": lost_repairs,
+        "initially_correct_common": correct_count,
+        "always_refine_regressions": always_regressions,
+        "decision_conditioned_regressions": decision_regressions,
+        "always_refine_regression_rate": (
+            always_regressions / correct_count if correct_count else None
+        ),
+        "decision_conditioned_regression_rate": (
+            decision_regressions / correct_count if correct_count else None
+        ),
+        "regression_rate_difference": (
+            (decision_regressions - always_regressions) / correct_count if correct_count else None
+        ),
+        "prevented_regressions": prevented_regressions,
+        "always_refine_net_gain_count": always_repairs - always_regressions,
+        "decision_conditioned_net_gain_count": decision_repairs - decision_regressions,
+        "net_correct_difference_count": prevented_regressions - lost_repairs,
+        "net_correct_difference_rate": (
+            (prevented_regressions - lost_repairs) / len(complete) if complete else None
+        ),
+    }
+
+
 def compute_rq3(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
     contrast_pairs = [
         tuple(str(value).split(":", maxsplit=1)) for value in _config()["rq3"]["contrasts"]
     ]
     summary_rows: list[dict[str, Any]] = []
+    decomposition_rows: list[dict[str, Any]] = []
     relationship_rows: list[dict[str, Any]] = []
     grouped = _group(rows, ("model_id", "benchmark_id"))
     for sensitivity in _config()["rq3"]["decision_sensitivity"]:
@@ -376,6 +444,16 @@ def compute_rq3(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
                     **contrast,
                 }
                 summary_rows.append(row)
+                decomposition_rows.append(
+                    {
+                        "sensitivity": sensitivity,
+                        "model_id": model_id,
+                        "benchmark_id": benchmark_id,
+                        "always_refine_protocol": always_protocol,
+                        "decision_protocol": decision_protocol,
+                        **_repair_regression_decomposition(always, derived),
+                    }
+                )
                 relationship_rows.append(
                     {
                         "sensitivity": sensitivity,
@@ -415,6 +493,7 @@ def compute_rq3(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
                 )
     return {
         "decision_contrast_summary": summary_rows,
+        "repair_regression_decomposition": decomposition_rows,
         "combination_relationships": relationship_rows,
         "descriptive_correlations": correlations,
     }
@@ -681,11 +760,20 @@ def _csv_fields(rows: list[dict[str, Any]]) -> list[str]:
     return fields
 
 
-def _report(rq: str, dataset_id: str, tables: dict[str, list[dict[str, Any]]]) -> str:
+def _report(
+    rq: str,
+    dataset_id: str,
+    tables: dict[str, list[dict[str, Any]]],
+    *,
+    result_status: str,
+    pending_confirmation_count: int,
+) -> str:
     lines = [
         f"# {rq.upper()} generated review report",
         "",
         f"Processed dataset: `{dataset_id}`",
+        "",
+        f"Result status: `{result_status}`",
         "",
         "This report is generated mechanically from the frozen processed dataset. "
         "It does not convert timeout or evaluation-infrastructure outcomes into functional "
@@ -694,6 +782,15 @@ def _report(rq: str, dataset_id: str, tables: dict[str, list[dict[str, Any]]]) -
         "## Output tables",
         "",
     ]
+    if result_status == "provisional":
+        lines.extend(
+            [
+                "This is a non-paper-facing progress snapshot. "
+                f"{pending_confirmation_count} timeout confirmations were pending at capture; "
+                "all metrics and denominators may change after terminal evaluation.",
+                "",
+            ]
+        )
     for name, rows in tables.items():
         lines.append(f"- `{name}.csv`: {len(rows)} rows")
     lines.extend(
@@ -718,7 +815,12 @@ def _path_reference(path: Path) -> tuple[str, bool]:
 
 
 def run_rq_analysis(
-    *, dataset_dir: Path, rq: str, analysis_id: str, output_root: Path = RESULTS_ROOT
+    *,
+    dataset_dir: Path,
+    rq: str,
+    analysis_id: str,
+    output_root: Path = RESULTS_ROOT,
+    allow_provisional: bool = False,
 ) -> Path:
     rq = rq.lower()
     if rq not in RQ_VALUES:
@@ -727,6 +829,11 @@ def run_rq_analysis(
         raise AnalysisError("analysis ID must be a lowercase, hyphenated identifier")
     validate_processed_dataset(dataset_dir)
     dataset_manifest = read_json(dataset_dir / "manifest.json")
+    result_status = str(dataset_manifest.get("result_status", "final"))
+    if result_status == "provisional" and not allow_provisional:
+        raise AnalysisError(
+            "provisional processed data require explicit allow_provisional acknowledgement"
+        )
     outcomes = read_jsonl(dataset_dir / "outcomes.jsonl")
     stage_calls = read_jsonl(dataset_dir / "stage_calls.jsonl")
     if rq == "rq1":
@@ -748,12 +855,21 @@ def run_rq_analysis(
         "rq": rq,
         "analysis_id": analysis_id,
         "dataset_id": dataset_manifest["dataset_id"],
+        "result_status": result_status,
+        "paper_facing": result_status == "final",
+        "pending_confirmation_count": int(dataset_manifest.get("pending_confirmation_count", 0)),
         "tables": tables,
     }
     write_json(target / "metrics.json", metrics)
     write_once(
         target / "report.md",
-        _report(rq, str(dataset_manifest["dataset_id"]), tables).encode("utf-8"),
+        _report(
+            rq,
+            str(dataset_manifest["dataset_id"]),
+            tables,
+            result_status=result_status,
+            pending_confirmation_count=int(dataset_manifest.get("pending_confirmation_count", 0)),
+        ).encode("utf-8"),
     )
     files = sorted(path for path in target.iterdir() if path.is_file())
     processed_manifest_path, processed_manifest_portable = _path_reference(
@@ -764,6 +880,9 @@ def run_rq_analysis(
         "analysis_id": analysis_id,
         "rq": rq,
         "dataset_id": dataset_manifest["dataset_id"],
+        "result_status": result_status,
+        "paper_facing": result_status == "final",
+        "pending_confirmation_count": int(dataset_manifest.get("pending_confirmation_count", 0)),
         "processed_manifest_path": processed_manifest_path,
         "processed_manifest_portable": processed_manifest_portable,
         "processed_manifest_sha256": sha256_file(dataset_dir / "manifest.json"),
@@ -794,6 +913,14 @@ def validate_rq_output(output_dir: Path, *, write_report: bool = False) -> dict[
         "analysis_id"
     ):
         raise AnalysisError("RQ metrics identity differs from its manifest")
+    processed = read_json(processed_manifest)
+    result_status = str(processed.get("result_status", "final"))
+    if manifest.get("result_status", "final") != result_status:
+        raise AnalysisError("RQ output result status differs from processed data")
+    if metrics.get("result_status", "final") != result_status:
+        raise AnalysisError("RQ metrics result status differs from processed data")
+    if manifest.get("paper_facing", result_status == "final") is not (result_status == "final"):
+        raise AnalysisError("RQ output paper-facing flag is inconsistent")
     report = {
         "schema_version": "rq-analysis-validation-v1",
         "validation_result": "passed",
@@ -802,6 +929,14 @@ def validate_rq_output(output_dir: Path, *, write_report: bool = False) -> dict[
         "dataset_id": manifest["dataset_id"],
         "manifest_sha256": sha256_file(output_dir / "manifest.json"),
         "file_count": len(manifest["files"]),
+        "result_status": result_status,
+        "paper_facing": result_status == "final",
+        "pending_confirmation_count": int(processed.get("pending_confirmation_count", 0)),
+        "validation_scope": (
+            "terminal_rq_output_integrity"
+            if result_status == "final"
+            else "provisional_rq_output_integrity"
+        ),
     }
     if write_report:
         write_json(output_dir / "validation.json", report)

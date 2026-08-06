@@ -2,16 +2,18 @@
 
 ## 1. 통합 결과
 
-두 보고서에서 제목과 출판본 중복을 제거하면 44개의 고유 후보가 남는다.
+두 보고서에서 제목과 출판본 중복을 제거한 기존 44개 후보에 Decision 분리와
+selective refinement를 직접 다루는 ART, GLoRe, DeCRIM을 추가하면 47개의 고유 후보가
+남는다.
 이 중 SelfRACG는 initial candidate의 검토, 수정, 보존, 또는 선택을 다루지 않는 retrieval-augmented code generation 연구이므로 현재 연구의 Background에서는 제외했다.
-나머지 43편은 `references.bib`에 수록했다.
+나머지 46편을 현재 문헌 지도에 유지한다.
 
-43편을 현재 연구와의 관련성에 따라 다시 분류하면 다음과 같다.
+46편을 현재 연구와의 관련성에 따라 다시 분류하면 다음과 같다.
 
 | 분류 | 수 | 용도 |
 |---|---:|---|
-| 핵심 문헌 | 13 | Background의 주요 논지와 research gap을 직접 뒷받침 |
-| 보조 문헌 | 18 | execution-guided refinement, stage decomposition, verification, agent workflow의 범위를 설명할 때 선택적으로 사용 |
+| 핵심 문헌 | 15 | Background의 주요 논지와 research gap을 직접 뒷받침 |
+| 보조 문헌 | 19 | execution-guided refinement, stage decomposition, verification, agent workflow의 범위를 설명할 때 선택적으로 사용 |
 | 주변 문헌 | 12 | 전체 문헌 지도에는 포함하지만 현재 논문의 Background에서는 원칙적으로 생략 |
 | 제외 | 1 | 현재 연구와의 연결이 약하여 bibliography에서도 제외 |
 
@@ -24,6 +26,9 @@
 |---|---|---|
 | CodeChat-Eval | 제목에서 `Large Language Models`가 `LLMs`로 축약됨 | 공식 제목은 *CodeChat-Eval: Evaluating Large Language Models in Multi-Turn Code Refinement Dialogues* |
 | ReChisel | 출판 venue 미확정 preprint로 기재 | DAC 2025 출판본 확인, DOI `10.1109/DAC63849.2025.11132940` |
+| ART | 기존 코드 중심 문헌 지도에서 누락됨 | NAACL 2024 출판본을 확인했다. 학습된 Asker가 refinement 필요성을 별도 판단하고 필요한 사례만 Refine으로 보내며, 이후 Truster가 initial과 refined output을 선택한다. GSM8K와 StrategyQA를 평가하고 code generation은 평가하지 않는다 (`shridhar-etal-2024-art`; [ACL Anthology](https://aclanthology.org/2024.naacl-long.327/)) |
+| GLoRe | 기존 코드 중심 문헌 지도에서 누락됨 | refinement를 when, where, how로 명시적으로 분해한다. ORM이 when, SORM이 where, global/local refiner가 how를 담당하며 GSM8K와 SVAMP 수학 추론을 평가한다 (`havrilla2024glore`; [arXiv](https://arxiv.org/abs/2402.10963)) |
+| DeCRIM | 기존 코드 중심 문헌 지도에서 누락됨 | Critic이 multi-constraint response의 refinement 필요성과 위치를 판단한 뒤 Refiner가 수정한다. RealInstruct와 IFEval instruction following을 평가하고 code generation은 별도 평가하지 않는다 (`palmeira-ferraz-etal-2024-llm`; [ACL Anthology](https://aclanthology.org/2024.findings-emnlp.458/)) |
 | ReVISE | code benchmark 포함 여부가 불명확하게 기술됨 | MBPP 실험을 포함함. 다만 주된 실험과 논지는 일반 reasoning 및 학습된 intrinsic verification에 있음 |
 | CRITIC | code refinement 문헌처럼 분류될 여지가 있음 | code interpreter를 사용하지만 주요 code-related task는 mathematical program synthesis에 가까움. 일반적인 자연어-to-code refinement의 핵심 근거로 사용하지 않는 편이 안전함 |
 | RefineCoder | inference-time candidate refinement와 가까운 것으로 분류됨 | external critic과 LLM-as-a-judge를 이용해 training data와 model series를 개선하는 연구임. 현재 protocol의 직접 선행연구로 보기 어려움 |
@@ -31,8 +36,8 @@
 | RethinkMCTS | code revision 연구로 분류될 여지가 있음 | execution feedback으로 pre-generation reasoning thought를 수정하는 search framework이며, 생성된 initial code의 post-hoc revision과는 다름 |
 | Efficient Hallucination Detection | selective refinement 방법처럼 기술됨 | detector와 dataset이 핵심이며, detector를 사용한 end-to-end preserve/refine protocol은 직접 평가하지 않음 |
 
-기존 `references.bib`에서 이미 반영한 출판 상태도 유지했다.
-SCoRe는 ICLR 2025, Teaching Large Language Models to Self-Debug는 ICLR 2024, OpenCodeInterpreter는 Findings of ACL 2024, InterCode는 NeurIPS 2023, TraceCoder는 ICSE 2026, CYCLE은 PACMPL 8(OOPSLA1) 출판본을 사용했다.
+기존 문헌 메타데이터에 반영한 출판 상태도 유지한다.
+SCoRe는 ICLR 2025, Teaching Large Language Models to Self-Debug는 ICLR 2024, OpenCodeInterpreter는 Findings of ACL 2024, InterCode는 NeurIPS 2023, TraceCoder는 ICSE 2026, CYCLE은 PACMPL 8(OOPSLA1) 출판본을 사용한다.
 
 ## 3. Background에서 사용할 핵심 연구 흐름
 
@@ -40,6 +45,10 @@ SCoRe는 ICLR 2025, Teaching Large Language Models to Self-Debug는 ICLR 2024, O
 
 Self-Refine은 동일 모델이 output을 생성하고, natural-language self-feedback을 만든 뒤, 그 feedback을 사용해 output을 수정하는 일반 프레임워크를 제시했다 (`madaan2023selfrefine`).
 현재 연구의 `CR`과 가장 가까운 개념적 출발점이지만, code task에 대한 shared-initial functional transition이나 critique stage의 독립적인 증분 효과가 중심은 아니다.
+Self-Refine의 feedback은 actionable suggestion을 포함할 수 있으므로 Critique 뒤에 별도
+Planning을 두는 현재 CPR의 역할 분리를 그대로 정당화하지는 않는다. 이 때문에 현재
+설계는 Critique를 root-cause/location, Planning을 change method, Revision을 code execution으로
+명시하고 CPR Revision에는 plan만 직접 전달한다.
 
 후속 연구는 self-correction을 prompting만의 문제가 아니라 학습 문제로 다뤘다.
 SCoRe는 external evaluator feedback 없이 multi-turn self-correction을 강화학습으로 학습하고 HumanEval을 포함해 평가했다 (`kumar2025score`).
@@ -66,6 +75,37 @@ Self-generated tests도 실행 후 얻은 결과를 모델에 제공한다면 �
 
 ### 3.3 Regression, preservation, and selective refinement
 
+Decision을 revision과 분리하는 construct는 현재 연구만의 임의적인 stage 구성이 아니다.
+ART는 학습된 소형 Asker가 initial output의 refinement 필요성을 별도 판단하고, 필요하다고
+판정한 사례만 Refine stage로 보낸다 (`shridhar-etal-2024-art`). 필요하지 않으면 initial
+output을 반환하며, refinement 뒤에는 별도 Truster가 initial과 refined output을 다시
+선택한다. 이는 Decision과 Revision을 물리적으로 분리한 가장 직접적인 system-level
+선례다. 다만 GSM8K와 StrategyQA를 대상으로 하며, Asker의 subquestions가 refinement
+입력에 전달되고 post-refinement selection도 수행하므로 현재의 독립 binary Decision과는
+다르다.
+
+GLoRe는 refinement 문제를 when, where, how로 명시적으로 분해한다
+(`havrilla2024glore`). 학습된 ORM이 final-answer correctness를 평가하는 when 기능을,
+SORM이 첫 오류 위치를 찾는 where 기능을, global/local refinement model이 how 기능을
+담당한다. 이 연구는 수정 필요성 판단과 수정 내용 생성을 서로 다른 기능으로 취급해야
+한다는 construct-level 근거를 제공한다. 그러나 main evaluation에서는 draft마다 global과
+local refinement를 생성한 뒤 ORM이 draft를 포함한 세 후보를 rerank한다. 따라서 GLoRe의
+when은 현재 연구처럼 refinement call을 사전에 생략하는 execution gate라기보다 refinement
+수용과 candidate selection에 가깝다. 실험도 GSM8K와 SVAMP 수학 추론에 한정된다.
+
+DeCRIM도 Critic이 각 instruction constraint를 검사하여 when과 where를 결정한 뒤 Refiner가
+수정하는 구조를 사용한다 (`palmeira-ferraz-etal-2024-llm`). 이는 Decision-like assessment와
+Revision의 stage separation을 뒷받침하지만, 일반 instruction following을 대상으로 하며
+상세 critique가 revision에 직접 전달된다.
+
+Self-Refine의 일반 algorithm에도 feedback call 뒤의 조건부 분기가 있다
+(`madaan2023selfrefine`). Feedback에서 task-specific stop indicator를 추출할 수 있고, stop
+condition이 충족되면 다음 Refine call을 실행하지 않는다. 그러나 이 feedback call은
+수정 필요성만 판정하는 독립 Decision이 아니라 actionable critique도 함께 생성하며, stop하지
+않을 때 그 전체 feedback이 Refine prompt에 전달된다. 또한 이 연구의 code tasks는 code
+optimization과 readability improvement이며, 자연어 명세로 standalone function의 functional
+correctness를 평가하는 conventional code generation과는 다르다.
+
 CoCoS는 repair와 regression을 직접 분리해 보고하므로 현재 연구의 transition analysis와 가장 가까운 선행연구다 (`cho-etal-2025-self`).
 그러나 CoCoS의 목적은 correction-preserving model training이며, 별도 model call로 구현된 Critique Generation, Revision Planning, Refinement-Need Decision의 효과를 비교하지 않는다.
 
@@ -76,16 +116,68 @@ Are LLMs Reliable Code Reviewers?는 requirement conformance 판단에서 correc
 이 결과는 Refinement-Need Decision이 initially correct candidate에 불필요한 refinement를 적용할 위험을 설명하는 데 유용하다.
 다만 이 연구의 outcome은 review judgment의 false rejection이며, revised code의 correct-to-incorrect transition과 동일하지 않다.
 
-ReVISE는 learned refine-or-stop mechanism을 사용하며 (`pmlr-v267-lee25ab`), RubricRefine은 pre-execution rubric으로 tool-use code를 검사하고 수정한다 (`levine2026rubricrefine`).
+Conventional code generation에서 가장 가까운 직접 선례는 ReVISE다. ReVISE는 모델이
+`[eos]` 또는 `[refine]`을 예측해 refinement를 종료하거나 계속하도록 학습하고 MBPP에서
+평가한다 (`pmlr-v267-lee25ab`). 첫 curriculum stage는 correct trajectory 뒤에서 `[eos]`를,
+incorrect trajectory 뒤에서 `[refine]`을 선호하도록 SFT와 DPO loss를 함께 최적화한다.
+두 번째 stage는 같은 objective를 사용해 incorrect trajectory 뒤의
+`[refine] + correct trajectory` 생성을 학습한다. 추론 시에는 동일 모델이 initial trajectory
+뒤에서 두 control token 중 하나를 다음 토큰으로 예측하고, `[refine]`이면 그 토큰에 조건화해
+수정 trajectory를 계속 생성한다. 따라서 verification과 correction은 curriculum과 control
+token 수준에서는 분리되지만 독립 model call이나 독립 prompt로 분리되지 않는다. ReVISE의
+보고 성능에는 이 두 학습 stage와 verification-confidence-aware voting이 함께 포함되므로,
+이를 selective execution 또는 Decision만의 효과로 해석할 수 없다.
+
+RubricRefine은 pre-execution rubric으로 code-mode tool-use candidate를 검사하여 최고 점수면
+종료하고 그렇지 않으면 수정한다 (`levine2026rubricrefine`). 넓은 의미에서는 code를
+선택적으로 수정하지만, 자연어 명세에서 standalone function을 생성하는 conventional code
+generation보다 agentic tool-use contract 검증에 가깝다.
+
 CodeT와 LEVER는 candidate를 수정하지 않고 generated tests 또는 execution-aware verifier로 여러 candidates를 선택한다 (`chen2023codet`, `pmlr-v202-ni23b`).
-이 연구들은 selective computation과 candidate preservation의 인접 근거지만, 현재 연구의 exact preservation을 수행하는 standalone Decision과는 다르다.
+이 연구들은 selective computation과 candidate preservation의 인접 근거지만 refinement
+필요성을 판단한 뒤 하나의 initial candidate를 수정하는 protocol은 아니다.
+
+이 차이는 다음처럼 정리한다.
+
+| 연구 | 판단과 수정의 실행 경계 | 판단 출력 및 후속 사용 | 실제 refinement-call gating | 현재 연구와의 핵심 차이 |
+|---|---|---|---|---|
+| Self-Refine | Feedback과 Refine이 별도 prompt/call | stop indicator와 actionable feedback; 계속할 때 feedback을 Refine에 전달 | Framework 수준에서 가능 | Decision과 Critique가 결합됨 |
+| ART | 학습된 Asker와 base-LLM Refine이 별도 모델/stage | Yes/No 판단과 subquestions; subquestions를 Refine에 전달 | Yes | 수학·QA, 학습된 Asker, 후속 Truster 사용 |
+| DeCRIM | Critic과 Refiner가 별도 model call | constraint별 만족 여부와 자연어 feedback; feedback을 Refiner에 전달 | Yes | instruction following, Decision과 Critique가 결합됨 |
+| GLoRe | ORM/SORM/refiner가 기능적으로 분리 | ORM score와 error location; refinement 생성 후 candidate reranking | Main evaluation에서는 No | 수학 추론, learned verifier와 post-generation selection |
+| ReVISE | 한 모델의 연속 generation 안에서 control token으로 구분 | `[eos]` 또는 `[refine]`; `[refine]`이 correction continuation을 직접 조건화 | 별도 call 관점에서는 No | SFT+DPO 기반 integrated mechanism |
+| 현재 연구 | Decision과 각 refinement stage가 별도 prompt/call | `PRESERVE` 또는 `REFINE`; Decision 내용은 C/P/Revision에 전달하지 않음 | Protocol-implied execution은 Yes; 실험 수집은 No | training-free standalone Decision의 효과를 shared-initial counterfactual로 분석 |
+
+따라서 “Decision call로 후속 refinement 실행 여부를 정한다”는 system pattern 자체는 code
+generation 밖에서 더 명시적인 선례를 찾을 수 있다. 다만 기존 사례는 대체로 판단과 critique를
+한 artifact에 결합해 그 내용을 refiner에 전달하거나, learned verifier와 post-generation
+selection을 사용한다. 현재 연구처럼 binary Decision을 독립 call로 관찰하면서 그 내용을
+후속 refinement에 전달하지 않고, 동일 initial candidate의 always-refine 결과까지 물리적으로
+수집해 Decision의 counterfactual consequence를 분석하는 설계와는 구분된다.
+현재 실험에서 `REFINE`만 실제 생성하는 것은 아니다. `R`, `CR`, `CPR` candidate는 모든
+valid initial candidate에 대해 물리적으로 수집하고, 저장된 Decision으로 `DR`, `DCR`,
+`DCPR`을 사후 파생한다. `PRESERVE`일 때 refinement call을 생략한다는 설명은 배포 가능한
+Decision-conditioned protocol과 protocol-implied token cost를 뜻한다. 이 counterfactual
+수집이 있어야 `PRESERVE`가 prevented regression인지 missed repair인지 직접 구분할 수 있다.
+
+따라서 관련 근거는 세 층으로 구분한다. ART, GLoRe, DeCRIM은 일반 reasoning과 instruction
+following에서 Decision-like assessment를 Revision과 분리한 구조적 선례를 제공한다.
+ReVISE는 conventional code generation에서 refine-or-stop을 적용한 가장 가까운 직접
+선례이고, RubricRefine은 code-mode tool use의 인접 선례다. 현재 연구는 selective
+refinement 자체의 최초 제안을 주장하지 않는다. 대신 standalone Decision을 관찰 가능한
+별도 call로 구현하고, shared initial candidate에서 그 Decision이 만든 prevented regression,
+missed repair, exact preservation, token saving을 여러 refinement path에 걸쳐 분리해
+측정한다.
 
 ### 3.4 Stage composition and cost
 
 기존 연구는 critique, explanation, planning, localization, repair를 여러 형태로 분리한다.
-Code Reffix는 reflection generation과 reflection-guided repair를 별도 task로 평가하고 (`di-etal-2026-code`), CodeReviewQA는 code review comprehension을 change type recognition, localization, solution identification으로 분해한다 (`lin-etal-2025-codereviewqa`).
+Code Reffix는 broad reflection generation과 reflection-guided repair를 별도 task로 평가하고 (`di-etal-2026-code`), CodeReviewQA는 code review comprehension을 change type recognition, localization, solution identification으로 분해한다 (`lin-etal-2025-codereviewqa`).
 COAST는 debugging을 localization, identification, repair 등의 능력으로 나누어 학습 데이터를 구성한다 (`yang-etal-2025-coast`).
 이들은 intermediate stage를 구분할 필요성을 뒷받침하지만, natural-language specification에서 모델이 생성한 initial candidate를 shared-initial design으로 수정하는 실험은 아니다.
+따라서 Critique와 Plan의 구체적 분리는 본 연구가 책임져야 하는 construct choice이며,
+v0.2.0의 broad Critique+Plan 중첩 결과는 참고용으로 남기고 결과 확인 뒤 소급해 최종
+설계로 정당화하지 않는다. 수정된 prompt bytes와 입력 경계는 v0.3.0 outcome 생성 전에 고정한다.
 
 추가 computation의 가치가 항상 보장되는 것도 아니다.
 Is Self-Repair a Silver Bullet for Code Generation?은 repair call의 배분과 independent resampling을 비교하여 반복 repair가 항상 더 효율적이지 않음을 보였다 (`olausson2024selfrepair`).
@@ -97,11 +189,13 @@ AgentCoder와 RepairAgent는 token 또는 monetary cost를 보고하지만, mult
 
 | Citation key | 핵심 기여 | 현재 연구와의 연결 | 중요한 차이 |
 |---|---|---|---|
+| `shridhar-etal-2024-art` | 별도 Asker가 refinement 필요성을 판단하고 필요한 사례만 Refine으로 보낸 뒤 Truster가 결과 선택 | Decision과 Revision을 물리적으로 분리한 가장 직접적인 구조적 선례 | 수학·QA, 학습된 별도 모델, subquestion 전달, post-refinement selection |
+| `havrilla2024glore` | refinement를 when, where, how로 분해하고 각각 ORM, SORM, refiner로 구현 | Decision을 Critique/Revision과 다른 기능으로 정의하는 construct 근거 | 수학 추론; main evaluation은 사전 gate가 아니라 refinement 생성 후 reranking |
 | `madaan2023selfrefine` | same-model feedback followed by revision | `CR`의 개념적 출발점 | code-specific paired transition과 stage ablation이 중심이 아님 |
 | `cho-etal-2025-self` | small models의 feedback-free correction, repair와 regression 분리 | preservation과 transition analysis에 가장 가까움 | training-based이며 `R/CR/CPR` 비교와 standalone Decision 없음 |
 | `kumar2025score` | external-feedback-free self-correction training | intrinsic self-correction의 대표 연구 | proprietary trained models, explicit critique와 plan 없음 |
 | `jiang-etal-2026-reflexicoder` | execution-free reflection and correction trajectory | open-weight feedback-free code correction | stages가 separate calls가 아니라 하나의 learned trajectory |
-| `pmlr-v267-lee25ab` | intrinsic verification을 통한 refine-or-stop | Refinement-Need Decision의 개념적 인접 연구 | training-based integrated token, 주요 분석은 reasoning 중심 |
+| `pmlr-v267-lee25ab` | SFT+DPO curriculum으로 intrinsic verification과 correction을 학습하고 MBPP 평가 | conventional code generation의 가장 가까운 Decision 선례 | `[eos]`/`[refine]`이 한 generation에 통합되며 standalone call과 Decision-only effect 분석이 아님 |
 | `yu-etal-2025-training` | downstream refinement utility로 critic 학습 | Critique Generation의 효용과 직접 연결 | general framework이며 code는 여러 task 중 하나 |
 | `zhang2026scope` | structured subgoal critique for code revision | critique content와 revision 연결 | 2026 preprint, trained critic과 execution-based reward 사용 |
 | `chen2024selfdebug` | explanation 및 execution-guided iterative debugging | explanation과 revision을 분리한 대표 연구 | 주요 code conditions가 execution feedback 사용 |
@@ -126,6 +220,7 @@ AgentCoder와 RepairAgent는 token 또는 monetary cost를 보고하지만, mult
 
 ### Critique, review, and stage decomposition
 
+- `palmeira-ferraz-etal-2024-llm`: Critic이 multi-constraint response의 refinement 필요성과 위치를 판단한 뒤 Refiner가 수정하는 instruction-following pipeline.
 - `di-etal-2026-code`: reflection generation과 repair를 분리한 benchmark.
 - `lin-etal-2025-codereviewqa`: review comprehension을 recognition, localization, solution identification으로 분해.
 - `yang-etal-2025-coast`: debugging 능력을 여러 stage로 분해한 data synthesis와 training.
@@ -142,7 +237,7 @@ AgentCoder와 RepairAgent는 token 또는 monetary cost를 보고하지만, mult
 
 ## 6. 주변 문헌과 사용 제한
 
-다음 논문은 `references.bib`에는 포함했지만, 현재 Background가 길어지는 것을 막기 위해 특별한 논지가 없는 한 인용하지 않는 편이 적절하다.
+다음 논문은 문헌 지도에는 포함하지만, 현재 Background가 길어지는 것을 막기 위해 특별한 논지가 없는 한 인용하지 않는 편이 적절하다.
 
 | Citation key | 제한 이유 |
 |---|---|
@@ -171,6 +266,7 @@ Initial candidate의 review, preservation, revision과 직접 연결되지 않�
 - self-correction을 위한 training
 - code editing 중 functional regression
 - correct code의 false rejection
+- refinement 필요성 판단과 revision의 기능적 분리
 - learned refine-or-stop behavior와 candidate verification
 - multi-stage agents와 additional inference cost
 
@@ -185,7 +281,12 @@ Initial candidate의 review, preservation, revision과 직접 연결되지 않�
 7. 각 stage의 token consumption과 final correctness를 함께 비교한다.
 
 따라서 현재 연구의 공백은 "code self-refinement 연구가 없다"는 것이 아니다.
-더 정확한 주장은, 기존 연구가 feedback source, training method, agent architecture, 또는 final performance 개선에 주로 초점을 두었으며, execution feedback이 없는 local code generation에서 explicit refinement stage를 하나씩 추가했을 때의 correctness와 token-cost 효과를 shared-initial design으로 분리한 근거가 제한적이라는 것이다.
+Decision과 Revision의 분리 역시 현재 연구가 처음 제안하는 construct가 아니다.
+더 정확한 주장은, 기존 연구가 general reasoning 또는 instruction following에서 이러한
+분리를 사용했거나, ReVISE처럼 code generation에서 학습된 integrated refine-or-stop
+mechanism의 전체 성능을 보고했다는 것이다. Standalone Decision의 효과를 execution
+feedback 없는 local code generation에서 shared-initial counterfactual로 분리하여 prevented
+regression, missed repair, exact preservation, token saving까지 함께 분석한 근거는 제한적이다.
 
 ## 8. 권장 Background 구성
 
@@ -193,8 +294,8 @@ Initial candidate의 review, preservation, revision과 직접 연결되지 않�
 
 1. **Self-refinement의 기본 구조**: Self-Refine을 중심으로 same-model critique와 revision을 정의하고, SCoRe, CoCoS, ReflexiCoder를 이용해 feedback-free self-correction과 training-based approaches를 소개한다.
 2. **Code refinement에서 execution feedback의 역할**: Teaching Large Language Models to Self-Debug, CYCLE, OpenCodeInterpreter, Revisit Self-Debugging을 묶어 execution-guided 계열을 설명하고 현재 연구의 input boundary를 명확히 한다.
-3. **Regression과 selective refinement**: CoCoS, CodeChat-Eval, Are LLMs Reliable Code Reviewers?, ReVISE를 이용해 repair뿐 아니라 preservation과 refinement decision이 필요함을 설명한다.
-4. **Research gap**: 기존 연구가 `R/CR/CPR`, shared initial candidate, Decision consequences, stage token cost를 함께 비교하지 않았다는 제한된 공백을 제시한다.
+3. **Decision 분리와 selective refinement**: ART와 GLoRe로 whether-to-refine와 how-to-refine의 기능적 분리 근거를 제시하고, DeCRIM을 일반 instruction-following 사례로 짧게 보완한다. ReVISE는 MBPP를 평가한 가장 가까운 conventional code-generation 선례로 구분하고, RubricRefine은 code-mode tool-use 인접 사례로만 기술한다. CoCoS, CodeChat-Eval, Are LLMs Reliable Code Reviewers?는 preservation과 regression 위험의 근거로 연결한다.
+4. **Research gap**: Decision 분리 자체의 신규성을 주장하지 않는다. 기존 연구가 standalone Decision의 candidate-level consequences를 `R/CR/CPR`, shared initial candidate, prevented regression, missed repair, exact preservation, stage token cost와 함께 비교하지 않았다는 제한된 공백을 제시한다.
 
 Self-Repair와 Feedback Over Form은 cost paragraph나 research gap 마지막 문단에서 한두 문장으로 추가할 수 있다.
 나머지 보조 문헌은 모든 연구를 나열하기보다 특정 주장에 필요한 경우에만 선택적으로 인용하는 편이 안전하다.

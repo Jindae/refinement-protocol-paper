@@ -1,0 +1,16 @@
+{
+  "command": [
+    "/data/refinement-protocol/.venv/bin/python",
+    "/data/refinement-protocol/scripts/run_role_separated_campaign.py",
+    "--phase-worker",
+    "--attempt-directory",
+    "/data/refinement-protocol/runs/logs/role-separated-phase/role-phase-primary-20260806-r1-02-cr_revision",
+    "--campaign-configuration",
+    "/data/refinement-protocol/configs/experiments/role_separated_campaign.toml",
+    "--run-id",
+    "run_1dd46dd4a0ae265ab7a184a9",
+    "--phase",
+    "cr_revision"
+  ],
+  "cwd": "/data/refinement-protocol"
+}

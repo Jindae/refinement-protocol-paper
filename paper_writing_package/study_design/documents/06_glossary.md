@@ -44,9 +44,9 @@
 |---|---:|---|---|
 | **Refinement-Need Decision** | `D` | Initial candidate를 그대로 보존할지 refinement를 수행할지 결정하는 stage | `PRESERVE` or `REFINE` |
 | **Non-Exact Decision Direction Reading** | - | Strict exact parser가 거부한 Decision 설명문을 benchmark 평가 전에 평가결과 없이 고정 rubric으로 읽어 방향을 기록하는 별도 비-model-call 절차 | `PRESERVE`, `REFINE`, or `UNRESOLVED` |
-| **Critique Generation** | `C` | Task specification과 initial candidate를 검토하여 잠재적인 기능적 문제를 자연어로 기술하는 stage | Critique artifact |
-| **Revision Planning** | `P` | Critique artifact를 바탕으로 candidate 수정 계획을 작성하는 stage | Revision plan |
-| **Code Revision** | `R` | Task specification, initial candidate, protocol에서 제공하는 critique와 plan을 이용해 revised candidate를 생성하는 stage | Revised candidate |
+| **Critique Generation** | `C` | 기능 문제 존재 여부를 판단하고 발견한 문제의 root cause와 관련 위치를 식별하는 stage | Critique artifact 또는 명시적 no-problem statement |
+| **Revision Planning** | `P` | Critique의 진단을 구체적이고 최소한의 수정 방법 및 보존 조건으로 변환하는 stage | Revision plan 또는 명시적 no-change statement |
+| **Code Revision** | `R` | Direct에서는 자체 review 후 필요시 수정하고, CR에서는 Critique를 반영하며, CPR에서는 Plan을 구현하여 revised candidate를 생성하는 stage | Revised candidate |
 
 ### Stage Terminology Notes
 
@@ -56,6 +56,13 @@
 - Stage를 의미할 때 **Code Revision**, 산출물을 의미할 때 **revised candidate**를 사용한다.
 - `gate`, `gating`, `decision gate`는 사용하지 않는다.
 - Revision Planning은 Critique Generation 이후에만 수행한다.
+- Revision Planning은 Critique를 독립적으로 다시 판정하지 않는다. Critique가 no-problem을
+  나타내면 no-change plan을 생성한다.
+- Critique-Conditioned Revision은 Critique가 no-problem을 나타낼 때, Plan-Conditioned
+  Revision은 Plan이 no-change를 나타낼 때 exact initial source를 다시 출력하도록 요구한다.
+- Plan-Conditioned Revision은 revision plan만 직접 입력받는다. Critique record linkage는
+  plan을 통한 간접 provenance이며 직접 prompt input을 뜻하지 않는다.
+- Decision은 C, P 또는 어느 Code Revision prompt에도 전달하지 않는다.
 
 ## 5. Protocols
 
@@ -64,7 +71,7 @@
 | **Always-Refine Protocol** | - | 모든 initial candidate에 `R`, `CR`, 또는 `CPR`의 stage sequence를 실행하는 방식 |
 | **Direct Revision** | `R` | Initial candidate에서 바로 Code Revision을 수행 |
 | **Critique-Conditioned Revision** | `CR` | Critique Generation 후 critique artifact를 이용해 Code Revision 수행 |
-| **Critique-and-Plan-Conditioned Revision** | `CPR` | Critique Generation과 Revision Planning 후 critique artifact와 revision plan을 이용해 Code Revision 수행 |
+| **Critique-and-Plan-Conditioned Revision** | `CPR` | Critique Generation과 Revision Planning 후 revision plan만 직접 이용해 Code Revision 수행 |
 | **Decision-Conditioned Refinement** | - | Refinement-Need Decision이 `PRESERVE`이면 initial candidate를 사용하고, `REFINE`이면 대응하는 Always-Refine Protocol의 revised candidate를 사용하는 방식 |
 | **Decision-Conditioned Direct Revision** | `DR` | `PRESERVE`이면 initial candidate, `REFINE`이면 `R` candidate 사용 |
 | **Decision-Conditioned Critique-Conditioned Revision** | `DCR` | `PRESERVE`이면 initial candidate, `REFINE`이면 `CR` candidate 사용 |
@@ -74,7 +81,9 @@
 
 - `DR`, `DCR`, `DCPR`을 위해 별도의 revised candidate를 생성하지 않는다.
 - 각 outcome은 하나의 Decision 결과와 대응하는 Always-Refine Protocol의 revised candidate를 결합하여 구성한다.
-- `R`, `CR`, `CPR`은 stage를 하나씩 추가하여 비교한다.
+- `R`, `CR`, `CPR`은 누적 call composition을 비교하지만, `CPR` Revision의 직접 입력은
+  Critique가 아니라 Plan으로 대체된다. 따라서 `CR`-`CPR` 차이는 call count와 입력 경계를
+  함께 포함한다.
 
 ## 6. Outcome Transitions
 

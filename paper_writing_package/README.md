@@ -1,33 +1,29 @@
-# Paper-writing package snapshot: paper-writing-pre-results-20260806-r2
+# Paper-writing package snapshot: paper-writing-v03-progress-20260807-r3
 
-This is an internal authoring snapshot for study `study-v0.2.0`, created before terminal primary
-candidate-evaluation results exist. It is deliberately not a complete raw-data or replication
-archive.
+This is an internal authoring snapshot for paper-facing study `study-v0.3.0`. It combines only the
+validated evidence currently eligible for that study and is not a replication archive.
 
 ## Included evidence
 
-- adopted study/method/analysis documents, prompts, configurations, environment locks, and selected
-  implementation evidence;
-- 70,386 model-call provenance and token rows in one CSV, each linked to the
-  immutable working-registry call record and raw-response SHA-256;
-- strictly parsed model artifacts consolidated by type into JSONL rather than hundreds of thousands
-  of individual files;
-- raw response bytes only for 220 model-format exceptions where the
-  original response itself is necessary to inspect the failure;
-- complete validated non-exact Decision direction records and the D-protocol candidate selections
-  constructed from them;
-- accepted reference-timing summaries and the frozen timeout configuration, but not every timing
-  observation file;
-- selected adopted decisions and relevant known issues, not the complete working chronology.
+- exact validated v0.2.0 Direct Generation, Refinement-Need Decision, and Direct Revision evidence
+  reused by v0.3.0;
+- validated v0.3.0 phases: shared_critique, cr_revision;
+- 50,278 selected model-call provenance/token rows linked to immutable call and
+  raw-response SHA-256 values;
+- paper-facing parsed candidates and intermediate artifacts consolidated as JSONL;
+- raw response bytes only for 225 selected model-format exceptions;
+- complete non-exact Decision direction records, with only paper-facing `DR` candidate selections;
+- adopted study documents, v4 prompts, configurations, analysis code, calibration summaries, and
+  completed-phase validation evidence.
 
 ## Excluded boundary
 
-Complete ordinary raw model responses, benchmark release bytes, the full repository archive, full
-reference-observation trees, active candidate-evaluation raw data, processed outcome data, RQ
-results, tables, and figures are excluded. Their immutable source identifiers and hashes remain
-traceable from this package. Candidate evaluation attempt `evaluation-full-candidates-20260806-r1` was
-`running` at export and is not a result in this snapshot.
+The following v0.3.0 phases were not validated at export and are excluded: shared_plan, cpr_revision. Historical
+v0.2.0 Critique, Planning, `CR`, `CPR`, `DCR`, and `DCPR` artifacts are also excluded because they
+are not paper-facing under the role-separated design. Candidate evaluation attempt
+`evaluation-full-candidates-20260806-r1` is `completed` but has not passed the
+required independent validation, so evaluation records and outcomes are excluded. Provisional
+processed data, RQ outputs, tables, and figures are excluded.
 
-The JSONL model artifacts are inference outputs after strict parsing; they are not the later
-outcome-processed RQ dataset. Nothing in this pre-results snapshot supports a paper-facing empirical
-result claim.
+The package supports method writing, provenance review, and qualitative inspection of validated
+inference evidence. It does not yet support a paper-facing empirical result claim.

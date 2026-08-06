@@ -97,8 +97,27 @@ def write_json(path: Path, value: Any) -> None:
 
 
 def write_jsonl(path: Path, rows: Iterable[Mapping[str, Any]]) -> None:
-    content = b"".join(canonical_json_bytes(dict(row)) + b"\n" for row in rows)
-    write_once(path, content)
+    """Atomically stream JSONL without duplicating full-scope outputs in memory."""
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if path.exists():
+        raise AnalysisError(f"refusing to overwrite derived artifact: {path}")
+    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "wb") as handle:
+            for row in rows:
+                handle.write(canonical_json_bytes(dict(row)))
+                handle.write(b"\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.chmod(temporary, 0o444)
+        try:
+            os.link(temporary, path)
+        except FileExistsError:
+            raise AnalysisError(f"concurrent derived-artifact conflict: {path}") from None
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 def read_json(path: Path) -> dict[str, Any]:

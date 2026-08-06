@@ -6,6 +6,7 @@ import re
 import tomllib
 from collections import Counter, defaultdict
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -25,18 +26,27 @@ from self_refinement.adjudication.decisions import (
     AdjudicationStatus,
     DecisionAdjudicationRecord,
 )
+from self_refinement.evaluation.timeouts import (
+    DEFAULT_TIMEOUT_POLICY_PATH,
+    load_timeout_policy,
+    resolve_evaluation_attempts,
+)
+from self_refinement.identifiers import evaluation_resolution_id
 from self_refinement.schemas.models import (
     CandidateRecord,
     CritiqueArtifact,
     DecisionArtifact,
     DecisionValue,
     DerivedProtocolOutcome,
+    EvaluationAttemptStage,
+    EvaluationRecord,
     EvaluationResolutionRecord,
     EvaluationStatus,
     ModelCallRecord,
     ModelCallStatus,
     ModelConfiguration,
     Protocol,
+    Provenance,
     RevisionPlanArtifact,
     RunManifest,
     RunStatus,
@@ -48,6 +58,7 @@ from self_refinement.storage.registry import LocalRunRegistry
 REGISTRY_ROOT = PROJECT_ROOT / "runs" / "registry"
 LOG_ROOT = PROJECT_ROOT / "runs" / "logs"
 PROCESSED_ROOT = PROJECT_ROOT / "data" / "processed"
+INTERIM_ROOT = PROJECT_ROOT / "data" / "interim"
 CONFIG_PATH = Path(__file__).with_name("analysis_config.toml")
 PROTOCOL_ORDER = (
     Protocol.DIRECT,
@@ -84,6 +95,16 @@ class ValidatedRun:
     manifest_path: Path
 
 
+@dataclass(frozen=True)
+class ProvisionalEvaluationSnapshot:
+    registry: LocalRunRegistry
+    manifest: RunManifest
+    manifest_path: Path
+    resolutions: tuple[EvaluationResolutionRecord, ...]
+    record_index: tuple[dict[str, Any], ...]
+    metadata: dict[str, Any]
+
+
 def _config() -> dict[str, Any]:
     with CONFIG_PATH.open("rb") as handle:
         return tomllib.load(handle)
@@ -117,28 +138,38 @@ def _validated_attempt(job_kind: str, id_field: str, run_id: str, manifest_recor
     return sorted(matches, key=lambda path: path.as_posix())[-1]
 
 
-def validate_source_runs(
-    inference_run_id: str, evaluation_run_id: str
-) -> tuple[ValidatedRun, ValidatedRun]:
+def _validated_inference_run(inference_run_id: str) -> ValidatedRun:
     inference_registry = LocalRunRegistry(REGISTRY_ROOT / inference_run_id)
-    evaluation_registry = LocalRunRegistry(REGISTRY_ROOT / evaluation_run_id)
     inference_manifest, inference_manifest_path = _latest_manifest(
         inference_registry, inference_run_id
     )
+    inference_validation = _validated_attempt(
+        "model-campaign", "run_id", inference_run_id, inference_manifest.record_id
+    )
+    return ValidatedRun(
+        inference_registry,
+        inference_manifest,
+        inference_validation,
+        inference_manifest_path,
+    )
+
+
+def validate_source_runs(
+    inference_run_id: str, evaluation_run_id: str
+) -> tuple[ValidatedRun, ValidatedRun]:
+    inference = _validated_inference_run(inference_run_id)
+    evaluation_registry = LocalRunRegistry(REGISTRY_ROOT / evaluation_run_id)
     evaluation_manifest, evaluation_manifest_path = _latest_manifest(
         evaluation_registry, evaluation_run_id
     )
     if evaluation_manifest.parent_run_id != inference_run_id:
         raise AnalysisError("evaluation run is not a child of the supplied inference run")
-    if evaluation_manifest.provenance.study_version != inference_manifest.provenance.study_version:
+    if evaluation_manifest.provenance.study_version != inference.manifest.provenance.study_version:
         raise AnalysisError("inference and evaluation study versions differ")
-    if evaluation_manifest.models != inference_manifest.models:
+    if evaluation_manifest.models != inference.manifest.models:
         raise AnalysisError("inference and evaluation model scopes differ")
-    if evaluation_manifest.benchmarks != inference_manifest.benchmarks:
+    if evaluation_manifest.benchmarks != inference.manifest.benchmarks:
         raise AnalysisError("inference and evaluation benchmark scopes differ")
-    inference_validation = _validated_attempt(
-        "model-campaign", "run_id", inference_run_id, inference_manifest.record_id
-    )
     evaluation_validation = _validated_attempt(
         "evaluation-campaign",
         "evaluation_run_id",
@@ -146,18 +177,165 @@ def validate_source_runs(
         evaluation_manifest.record_id,
     )
     return (
-        ValidatedRun(
-            inference_registry,
-            inference_manifest,
-            inference_validation,
-            inference_manifest_path,
-        ),
+        inference,
         ValidatedRun(
             evaluation_registry,
             evaluation_manifest,
             evaluation_validation,
             evaluation_manifest_path,
         ),
+    )
+
+
+def _provisional_evaluation_snapshot(
+    *,
+    inference: ValidatedRun,
+    evaluation_run_id: str,
+    attempt_id: str,
+) -> ProvisionalEvaluationSnapshot:
+    attempt = LOG_ROOT / "evaluation-campaign" / attempt_id
+    status_path = attempt / "status.json"
+    status_before = read_json(status_path)
+    if status_before.get("evaluation_run_id") != evaluation_run_id:
+        raise AnalysisError("provisional evaluation attempt belongs to another evaluation run")
+    if status_before.get("source_run_id") != inference.manifest.run_id:
+        raise AnalysisError("provisional evaluation attempt belongs to another inference run")
+    if status_before.get("state") != "running" or status_before.get("phase") != "confirmation":
+        raise AnalysisError("provisional analysis requires an active confirmation phase")
+    preflight = status_before.get("preflight")
+    if not isinstance(preflight, dict) or preflight.get("validation_result") != "passed":
+        raise AnalysisError("provisional evaluation attempt lacks a passed preflight")
+    if preflight.get("timeout_policy_sha256") != sha256_file(DEFAULT_TIMEOUT_POLICY_PATH):
+        raise AnalysisError("active evaluation uses a different timeout-policy hash")
+
+    registry = LocalRunRegistry(REGISTRY_ROOT / evaluation_run_id)
+    manifest = registry.latest_run_manifest(evaluation_run_id)
+    if manifest is None:
+        raise AnalysisError("provisional evaluation run has no manifest")
+    manifest_path = registry.records_root / RunManifest.RECORD_TYPE / f"{manifest.record_id}.json"
+    if manifest.status is not RunStatus.IN_PROGRESS:
+        raise AnalysisError("provisional evaluation manifest is not in progress")
+    if manifest.parent_run_id != inference.manifest.run_id:
+        raise AnalysisError("provisional evaluation manifest has the wrong parent run")
+    if manifest.provenance.study_version != inference.manifest.provenance.study_version:
+        raise AnalysisError("provisional evaluation study version differs from inference")
+    if (
+        manifest.models != inference.manifest.models
+        or manifest.benchmarks != inference.manifest.benchmarks
+    ):
+        raise AnalysisError("provisional evaluation scope differs from inference")
+
+    captured_at = datetime.now(UTC)
+    record_paths = sorted((registry.records_root / EvaluationRecord.RECORD_TYPE).glob("*.json"))
+    records: list[EvaluationRecord] = []
+    record_index: list[dict[str, Any]] = []
+    for path in record_paths:
+        record = EvaluationRecord.model_validate_json(path.read_bytes())
+        if record.provenance.run_id != evaluation_run_id:
+            raise AnalysisError("provisional evaluation record belongs to another run")
+        records.append(record)
+        record_index.append(
+            {
+                "record_id": record.record_id,
+                "attempt_stage": record.attempt_stage.value,
+                "benchmark_id": record.benchmark_id,
+                "upstream_task_id": record.upstream_task_id,
+                "candidate_record_id": record.candidate.candidate_record_id,
+                "status": record.status.value,
+                "functional_outcome": (
+                    None if record.functional_outcome is None else record.functional_outcome.value
+                ),
+                "elapsed_seconds": record.elapsed_seconds,
+                "timeout_seconds": record.timeout_seconds,
+                "failure_type": record.failure_type,
+                "failure_message": record.failure_message,
+                "path": repository_relative(path),
+                "sha256": sha256_file(path),
+            }
+        )
+    status_after = read_json(status_path)
+    primary = [
+        record for record in records if record.attempt_stage is EvaluationAttemptStage.PRIMARY
+    ]
+    confirmations = [
+        record for record in records if record.attempt_stage is EvaluationAttemptStage.CONFIRMATION
+    ]
+    expected_primary = preflight.get("candidate_count")
+    if not isinstance(expected_primary, int) or len(primary) != expected_primary:
+        raise AnalysisError("provisional snapshot does not contain the complete primary batch")
+    primary_by_candidate = _unique_index(
+        primary, lambda item: item.candidate.candidate_record_id, "provisional primary evaluation"
+    )
+    confirmation_by_candidate = _unique_index(
+        confirmations,
+        lambda item: item.candidate.candidate_record_id,
+        "provisional confirmation evaluation",
+    )
+    primary_timeouts = [record for record in primary if record.status is EvaluationStatus.TIMEOUT]
+    if not set(confirmation_by_candidate).issubset(primary_by_candidate):
+        raise AnalysisError("provisional confirmation has no primary evaluation")
+    if any(
+        primary_by_candidate[candidate_id].status is not EvaluationStatus.TIMEOUT
+        for candidate_id in confirmation_by_candidate
+    ):
+        raise AnalysisError("provisional confirmation targets a non-timeout primary")
+
+    policy = load_timeout_policy()
+    resolutions: list[EvaluationResolutionRecord] = []
+    for primary_record in primary:
+        confirmation = confirmation_by_candidate.get(primary_record.candidate.candidate_record_id)
+        if primary_record.status is EvaluationStatus.TIMEOUT and confirmation is None:
+            continue
+        sources = [primary_record.record_id]
+        if confirmation is not None:
+            sources.append(confirmation.record_id)
+        resolution_id = evaluation_resolution_id(
+            primary_record.candidate.candidate_record_id,
+            primary_record.task_record_id,
+            primary_record.timeout_policy_version,
+            primary_record.record_id,
+            None if confirmation is None else confirmation.record_id,
+        )
+        resolutions.append(
+            resolve_evaluation_attempts(
+                record_id=resolution_id,
+                provenance=Provenance(
+                    study_version=inference.manifest.provenance.study_version,
+                    run_id=evaluation_run_id,
+                    created_at=captured_at,
+                    producer="analysis_tools/processed_dataset.py:provisional_snapshot",
+                    source_record_ids=tuple(sources),
+                ),
+                primary=primary_record,
+                confirmation=confirmation,
+                policy=policy,
+            )
+        )
+    pending = len(primary_timeouts) - len(confirmations)
+    metadata = {
+        "schema_version": "provisional-evaluation-snapshot-v1",
+        "result_status": "provisional",
+        "paper_facing": False,
+        "captured_at": captured_at.isoformat(),
+        "attempt_id": attempt_id,
+        "evaluation_run_id": evaluation_run_id,
+        "source_state": "running_confirmation",
+        "primary_count": len(primary),
+        "primary_timeout_count": len(primary_timeouts),
+        "captured_confirmation_count": len(confirmations),
+        "pending_confirmation_count": pending,
+        "synthetic_resolution_count": len(resolutions),
+        "record_count": len(records),
+        "status_before_capture": status_before,
+        "status_after_capture": status_after,
+    }
+    return ProvisionalEvaluationSnapshot(
+        registry=registry,
+        manifest=manifest,
+        manifest_path=manifest_path,
+        resolutions=tuple(resolutions),
+        record_index=tuple(record_index),
+        metadata=metadata,
     )
 
 
@@ -354,6 +532,7 @@ def build_processed_dataset(
     evaluation_run_id: str,
     dataset_id: str,
     decision_adjudication_id: str | None = None,
+    provisional_evaluation_attempt_id: str | None = None,
     output_root: Path = PROCESSED_ROOT,
 ) -> Path:
     if re.fullmatch(r"[a-z][a-z0-9-]{2,79}", dataset_id) is None:
@@ -361,7 +540,25 @@ def build_processed_dataset(
     target = output_root / dataset_id
     if target.exists():
         raise AnalysisError(f"processed dataset already exists: {target}")
-    inference, evaluation = validate_source_runs(inference_run_id, evaluation_run_id)
+    provisional: ProvisionalEvaluationSnapshot | None = None
+    if provisional_evaluation_attempt_id is None:
+        inference, evaluation = validate_source_runs(inference_run_id, evaluation_run_id)
+    else:
+        inference = _validated_inference_run(inference_run_id)
+        provisional = _provisional_evaluation_snapshot(
+            inference=inference,
+            evaluation_run_id=evaluation_run_id,
+            attempt_id=provisional_evaluation_attempt_id,
+        )
+        evaluation = ValidatedRun(
+            registry=provisional.registry,
+            manifest=provisional.manifest,
+            validation_path=LOG_ROOT
+            / "evaluation-campaign"
+            / provisional_evaluation_attempt_id
+            / "status.json",
+            manifest_path=provisional.manifest_path,
+        )
     adjudications, supplemental_outcomes, adjudication_paths, adjudication_sources = _adjudication(
         decision_adjudication_id, inference_run_id
     )
@@ -406,11 +603,17 @@ def build_processed_dataset(
         for record in records.records_of_type(DerivedProtocolOutcome.RECORD_TYPE)
         if isinstance(record, DerivedProtocolOutcome)
     ]
-    resolutions = [
-        record
-        for record in evaluation.registry.records_of_type(EvaluationResolutionRecord.RECORD_TYPE)
-        if isinstance(record, EvaluationResolutionRecord)
-    ]
+    resolutions = (
+        list(provisional.resolutions)
+        if provisional is not None
+        else [
+            record
+            for record in evaluation.registry.records_of_type(
+                EvaluationResolutionRecord.RECORD_TYPE
+            )
+            if isinstance(record, EvaluationResolutionRecord)
+        ]
+    )
     invalid_decision_calls = [
         call
         for call in calls
@@ -798,25 +1001,52 @@ def build_processed_dataset(
     write_jsonl(outcomes_path, outcome_rows)
     write_jsonl(stage_calls_path, stage_rows)
     data_dictionary = _data_dictionary()
+    data_dictionary["result_status"] = "provisional" if provisional is not None else "final"
+    data_dictionary["paper_facing"] = provisional is None
     write_json(target / "data_dictionary.json", data_dictionary)
+    if provisional is not None:
+        write_json(target / "evaluation_snapshot.json", provisional.metadata)
+        write_jsonl(target / "evaluation_record_index.jsonl", provisional.record_index)
     source_paths = [
         inference.manifest_path,
         inference.validation_path,
         evaluation.manifest_path,
-        evaluation.validation_path,
         inference.registry.root / "launch.json",
         inference.registry.root / "scope.json",
         *adjudication_paths,
     ]
+    if provisional is None:
+        source_paths.append(evaluation.validation_path)
+    result_status = "provisional" if provisional is not None else "final"
+    derived_files = {
+        "outcomes.jsonl": sha256_file(outcomes_path),
+        "stage_calls.jsonl": sha256_file(stage_calls_path),
+        "data_dictionary.json": sha256_file(target / "data_dictionary.json"),
+    }
+    if provisional is not None:
+        derived_files.update(
+            {
+                "evaluation_snapshot.json": sha256_file(target / "evaluation_snapshot.json"),
+                "evaluation_record_index.jsonl": sha256_file(
+                    target / "evaluation_record_index.jsonl"
+                ),
+            }
+        )
     manifest = {
         "schema_version": "processed-dataset-manifest-v1",
         "dataset_id": dataset_id,
+        "result_status": result_status,
+        "paper_facing": provisional is None,
         "analysis_version": _config()["analysis_version"],
         "analysis_configuration_path": repository_relative(CONFIG_PATH),
         "analysis_configuration_sha256": sha256_file(CONFIG_PATH),
         "study_version": inference.manifest.provenance.study_version,
         "inference_run_id": inference_run_id,
         "evaluation_run_id": evaluation_run_id,
+        "provisional_evaluation_attempt_id": provisional_evaluation_attempt_id,
+        "pending_confirmation_count": (
+            0 if provisional is None else int(provisional.metadata["pending_confirmation_count"])
+        ),
         "decision_adjudication_id": decision_adjudication_id,
         "source_manifests": {
             "inference": inference.manifest.record_id,
@@ -837,11 +1067,7 @@ def build_processed_dataset(
         "status_counts": dict(
             sorted(Counter(row["analysis_status"] for row in outcome_rows).items())
         ),
-        "files": {
-            "outcomes.jsonl": sha256_file(outcomes_path),
-            "stage_calls.jsonl": sha256_file(stage_calls_path),
-            "data_dictionary.json": sha256_file(target / "data_dictionary.json"),
-        },
+        "files": derived_files,
     }
     write_json(target / "manifest.json", manifest)
     validate_processed_dataset(target, write_report=True)
@@ -922,6 +1148,43 @@ def validate_processed_dataset(dataset_dir: Path, *, write_report: bool = False)
     config = _config()
     if manifest.get("analysis_configuration_sha256") != sha256_file(CONFIG_PATH):
         raise AnalysisError("processed dataset uses a different analysis configuration")
+    result_status = manifest.get("result_status", "final")
+    if result_status not in {"final", "provisional"}:
+        raise AnalysisError("processed dataset has an invalid result status")
+    if manifest.get("paper_facing", result_status == "final") is not (result_status == "final"):
+        raise AnalysisError("processed dataset result status and paper-facing flag disagree")
+    pending_confirmation_count = manifest.get("pending_confirmation_count", 0)
+    if not isinstance(pending_confirmation_count, int) or pending_confirmation_count < 0:
+        raise AnalysisError("processed dataset has an invalid pending-confirmation count")
+    if result_status == "final" and pending_confirmation_count != 0:
+        raise AnalysisError("final processed dataset cannot have pending confirmations")
+    if result_status == "provisional":
+        snapshot = read_json(dataset_dir / "evaluation_snapshot.json")
+        record_index = read_jsonl(dataset_dir / "evaluation_record_index.jsonl")
+        if (
+            snapshot.get("result_status") != "provisional"
+            or snapshot.get("paper_facing") is not False
+        ):
+            raise AnalysisError("provisional evaluation snapshot has invalid status flags")
+        if snapshot.get("pending_confirmation_count") != pending_confirmation_count:
+            raise AnalysisError("provisional pending-confirmation counts disagree")
+        if snapshot.get("record_count") != len(record_index):
+            raise AnalysisError("provisional evaluation record count differs from its index")
+        record_ids: set[str] = set()
+        for item in record_index:
+            record_id = str(item.get("record_id"))
+            if record_id in record_ids:
+                raise AnalysisError(f"duplicate provisional evaluation record: {record_id}")
+            record_ids.add(record_id)
+            record_path = PROJECT_ROOT / str(item.get("path"))
+            if sha256_file(record_path) != item.get("sha256"):
+                raise AnalysisError(f"provisional evaluation record hash mismatch: {record_id}")
+    for source in manifest.get("source_files", []):
+        if not isinstance(source, dict):
+            raise AnalysisError("processed dataset has a malformed source-file entry")
+        source_path = PROJECT_ROOT / str(source.get("path"))
+        if sha256_file(source_path) != source.get("sha256"):
+            raise AnalysisError(f"processed source file hash mismatch: {source_path}")
     for name, expected_hash in manifest.get("files", {}).items():
         path = dataset_dir / name
         if sha256_file(path) != expected_hash:
@@ -974,6 +1237,14 @@ def validate_processed_dataset(dataset_dir: Path, *, write_report: bool = False)
         "stage_call_rows": len(stage_calls),
         "complete_grid": True,
         "functional_missingness_preserved": True,
+        "result_status": result_status,
+        "paper_facing": result_status == "final",
+        "pending_confirmation_count": pending_confirmation_count,
+        "validation_scope": (
+            "terminal_source_and_derived_integrity"
+            if result_status == "final"
+            else "provisional_snapshot_and_derived_integrity"
+        ),
     }
     if write_report:
         write_json(dataset_dir / "validation.json", report)

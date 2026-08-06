@@ -32,7 +32,8 @@ git status --short
 이 runbook에서 단계 이름은 다음 의미로만 사용한다.
 
 - **전체 범위 모델 산출물 생성 campaign**: 여섯 모델과 1,677개 task에 대해 아래의
-  canonical model-call phase를 모두 수행한다.
+  canonical model-call phase를 모두 수행한다. 아래 일곱 phase 목록은 v0.2.0 재현 경로이며,
+  현재 paper-facing v0.3.0 replacement는 Section 11의 네 phase만 새로 수행한다.
 
 Canonical phase 순서는 다음과 같다.
 
@@ -499,6 +500,36 @@ printf '%s\n' "$CANDIDATE_EVALUATION_RUN_ID"
 analysis dataset 생성과 RQ별 분석을 수행한다. 분석 코드는 primary 결과를 보기 전에
 별도 version으로 동결하며, 부분 결과를 보고 분석 정의를 변경하지 않는다.
 
+### 8.3 Confirmation 진행 중 RQ1–RQ4 점검용 snapshot
+
+Confirmation이 아직 실행 중일 때 구현과 결측 구조를 미리 점검하려면 다음 명령으로 한
+시점의 immutable evaluation-record 목록을 고정한다. 이 결과는 `data/interim/`에 놓이고
+항상 `paper_facing=false`다. 완료된 confirmation만 반영하며, 아직 실행되지 않은 timeout
+confirmation은 functional `FAIL`이나 최종 `TIMEOUT`으로 간주하지 않는다.
+
+```bash
+export PROVISIONAL_DATASET_ID="primary-provisional-$(date -u +%Y%m%dT%H%M%SZ)"
+export PROVISIONAL_ANALYSIS_ID="primary-provisional-analysis-$(date -u +%Y%m%dT%H%M%SZ)"
+.venv/bin/python analysis_tools/build_processed_dataset.py \
+  --inference-run-id "$MODEL_ARTIFACT_RUN_ID" \
+  --evaluation-run-id "$CANDIDATE_EVALUATION_RUN_ID" \
+  --decision-adjudication-id "$PRIMARY_DECISION_ADJUDICATION_ID" \
+  --provisional-evaluation-attempt-id "$CANDIDATE_EVALUATION_ATTEMPT" \
+  --dataset-id "$PROVISIONAL_DATASET_ID"
+.venv/bin/python analysis_tools/run_all_rq_analysis.py \
+  --dataset-dir "data/interim/$PROVISIONAL_DATASET_ID" \
+  --analysis-id "$PROVISIONAL_ANALYSIS_ID" \
+  --allow-provisional
+.venv/bin/python analysis_tools/review_provisional_analysis.py \
+  --dataset-dir "data/interim/$PROVISIONAL_DATASET_ID" \
+  --analysis-dir "results/summaries/$PROVISIONAL_ANALYSIS_ID"
+```
+
+`provisional_review.md`와 `provisional_review.json`에서 capture 당시 confirmation 완료/대기
+수, indeterminate row 분포, evaluator failure를 먼저 확인한다. 이 절차는 실행 중인
+evaluation registry에 쓰지 않으며, Section 9의 terminal/independently validated primary
+processed dataset과 RQ별 사용자 검토를 대체하지 않는다.
+
 ## 9. Primary processed dataset과 RQ별 순차 분석
 
 `documents/08_analysis_pipeline.md`와 `analysis_tools/analysis_config.toml`이 분석 정의와
@@ -550,3 +581,77 @@ analysis ID와 supersession 관계를 만든다.
 
 실행 중에는 문서나 configuration을 수정하지 않는다. 기록 변경은 해당 단계가 완전히
 종료되고 validation을 통과한 뒤 별도 coherent commit으로 남긴다.
+
+## 11. Role-separated v0.3.0 replacement inference
+
+이 경로는 v0.2.0의 exact Initial Candidate, Direct Revision, Decision을 재사용하고 C, CR, P,
+CPR만 새로 생성한다. 기존 Section 7 명령은 v0.2.0 재현용으로 보존한다.
+
+여기서 C는 오류를 가정하지 않고 기능 문제 여부와 root cause/location을 진단한다. P는 C를
+다시 검토하지 않고 최소 변경 지침으로 변환한다. CR Revision은 C를 반영하고 CPR Revision은
+P만 구현한다. C가 no-problem이거나 P가 no-change이면 해당 Revision은 exact initial source를
+재출력하도록 요구한다. Decision은 이 네 prompt에 전달하거나 phase 실행을 중단하는 데 쓰지
+않고, 저장된 결과에서 DCR/DCPR final candidate를 선택할 때만 사용한다.
+
+### 11.1 Preflight
+
+```bash
+.venv/bin/python scripts/run_role_separated_campaign.py --preflight
+```
+
+출력에서 source run `run_c99d3b1d562acc3e80026e48`, 1,677 tasks, six models, prompt hashes,
+source validation hashes, Python/vLLM versions를 확인한다. 실제 launch는 execution inputs가
+clean하고 두 GPU가 clear일 때만 통과한다.
+
+### 11.2 네 개의 독립 phase를 자동 순차 실행
+
+```bash
+.venv/bin/python scripts/run_role_separated_campaign.py \
+  --start-sequence \
+  --attempt-id role-sequence-primary-20260806-r1
+```
+
+Supervisor는 `shared_critique → cr_revision → shared_plan → cpr_revision`을 별도 child
+attempt로 실행한다. 중간 사용자 확인은 요구하지 않지만 한 단계가 실패하거나 검증되지
+않으면 다음 단계는 시작하지 않는다.
+
+```bash
+.venv/bin/python scripts/run_role_separated_campaign.py --count
+.venv/bin/python scripts/run_role_separated_campaign.py --status
+```
+
+현재 child의 상세 log는 `--status`가 보여주는 `current_phase_log_path`에 대해 `tail -f`로
+확인한다. Sequence log 자체는 start 결과의 absolute `log_path`를 사용한다.
+
+### 11.3 실패한 phase만 새 attempt로 재실행
+
+먼저 target run ID를 확인한다.
+
+```bash
+.venv/bin/python scripts/run_role_separated_campaign.py --show-run-id
+```
+
+예를 들어 Planning의 명시적 failed call까지 새 attempt로 재시도하려면 다음을 실행한다.
+
+```bash
+.venv/bin/python scripts/run_role_separated_campaign.py \
+  --start-phase \
+  --resume-run-id <ROLE_SEPARATED_RUN_ID> \
+  --phase shared_plan \
+  --attempt-id role-phase-planning-20260806-r2 \
+  --retry-failed
+```
+
+Completed logical calls은 재생성하지 않는다. Configuration/prompt hash가 launch와 다르면
+같은 run resume를 거부하며, construct 변경은 새 version/run으로 시작해야 한다.
+
+### 11.4 최종 검증
+
+```bash
+.venv/bin/python scripts/run_role_separated_campaign.py --validate \
+  --resume-run-id <ROLE_SEPARATED_RUN_ID>
+```
+
+정상 sequence는 마지막 phase 뒤 이 검증을 자동 수행한다. 네 phase completion, 허용된 네
+stage 외 call 부재, raw-response integrity, completed child manifest와 parent source lineage가
+모두 통과해야 sequence가 `completed`가 된다.

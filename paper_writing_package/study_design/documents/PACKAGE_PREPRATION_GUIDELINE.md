@@ -266,6 +266,17 @@ Raw data가 크거나 라이선스상 복사가 어려운 경우에는 immutable
 
 ### 5.4 권장 디렉터리 구조
 
+`paper_writing_package/` 자체를 현재 authoring snapshot의 루트로 사용한다. Package ID를
+이름으로 한 하위 디렉터리나 `latest/` 포인터를 추가하지 않는다. 저자는 이 디렉터리를
+열었을 때 항상 현재 `README.md`, 설계, 설정, 데이터, 분석, 결과 및 provenance를 바로
+확인할 수 있어야 한다.
+
+새 snapshot은 별도의 실행 attempt 안에서 고유 package ID로 생성하고 독립 검증한 뒤에만
+이 루트를 교체한다. 루트에는 이전 snapshot의 전체 복사본을 함께 보관하지 않는다. 현재
+내용과 이전 내용의 변경 이력은 Git이 추적하고, package ID, source commit, manifest hash,
+검증 및 교체 시각은 package manifest와 durable attempt에 기록한다. Working Research
+Materials의 원자료와 실행 기록은 이 교체와 무관하게 불변으로 보존한다.
+
 ```text
 paper_writing_package/
 ├── README.md

@@ -1,0 +1,35 @@
+schema_version = "role-separated-campaign-configuration-v1"
+configuration_version = "role-separated-followup-2026-08-06-r1"
+study_version = "study-v0.3.0"
+schedule_version = "phase-separated-resumable-2026-08-06-r1"
+execution_gate = "enabled"
+batch_size = 32
+scope_configuration = "configs/experiments/primary_scope_v3.toml"
+inference_configuration = "configs/inference/primary_six_models.toml"
+prompt_configuration = "configs/prompts/role_separated_frozen.toml"
+model_manifest = "configs/models/checkpoints_v2.toml"
+
+source_run_id = "run_c99d3b1d562acc3e80026e48"
+source_attempt_id = "campaign-primary-20260804T104734Z"
+source_manifest_record_id = "run_manifest_c8942708e851989a5e1303fa"
+source_validation_path = "runs/logs/model-campaign/campaign-primary-20260804T104734Z/validation.json"
+source_validation_sha256 = "af01d879eddfe16242f24520d375b299556a7a1cf7782655ed3434595b67fb68"
+decision_adjudication_id = "decision-adjudication-primary-20260806-r1"
+decision_adjudication_validation_path = "runs/logs/decision-adjudication/decision-adjudication-primary-20260806-r1/validation.json"
+decision_adjudication_validation_sha256 = "69fc783d3307071046ac7bffac35abdd8796f454030b9bed1df12639a0df3a3a"
+
+phase_order = [
+  "shared_critique",
+  "cr_revision",
+  "shared_plan",
+  "cpr_revision",
+]
+
+model_order = [
+  "qwen2.5-coder-7b-instruct",
+  "qwen2.5-coder-14b-instruct",
+  "deepseek-coder-v2-lite-instruct",
+  "devstral-small-2-24b-instruct",
+  "qwen3-coder-30b-a3b-instruct-fp8",
+  "gemma-4-31b-it-qat-w4a16",
+]

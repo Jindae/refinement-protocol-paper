@@ -1,5 +1,60 @@
 # Selected known issues relevant to interpretation
 
+## ISSUE-20260806-19: v0.2.0 Critique and Planning roles overlap
+
+- First observed: 2026-08-06 during interpretation of the non-paper-facing full-scope snapshot
+- Status: Resolved prospectively; historical evidence retained
+- Severity: Major construct-validity issue for v0.2.0 CR/CPR interpretation
+- Description: The v0.2.0 Critique prompt combined diagnosis, location, and reasons while Planning
+  repeated changes and locations. CPR Revision then received both Critique and Plan. Consequently its
+  CR/CPR contrast could not isolate a distinct planning role, and a different role assignment could
+  plausibly produce a different result.
+- Affected tasks/models/benchmarks/runs: All v0.2.0 Critique, Planning, CR, and CPR artifacts in
+  `run_c99d3b1d562acc3e80026e48` and their provisional analyses. Initial, Decision, Direct Revision,
+  benchmark data, and evaluator behavior are not affected.
+- Impact on results: v0.2.0 CR/CPR outcomes remain descriptive formative evidence but are not the
+  paper-facing answer to the role-separated stage-composition RQ.
+- Resolution or mitigation: `DEC-20260806-40` freezes v0.3.0 role-separated prompts and direct-input
+  boundaries before replacement inference. Old inputs/results remain immutable and reproducible.
+- Required reruns or regenerated artifacts: Regenerate C, CR, P, CPR; evaluate new CR/CPR only; join
+  them with exact reused Direct/R/Decision evidence in a new processed dataset.
+- Related decision: `DEC-20260806-40`.
+
+
+## ISSUE-20260806-17: One BigCodeBench confirmation could not allocate evaluator memory
+
+- First observed: 2026-08-06 during the active primary candidate timeout-confirmation phase
+- Status: Investigating; immutable failure preserved
+- Severity: Major for final completeness; isolated to one captured evaluation attempt so far
+- Description: Confirmation evaluation `evaluation_35c22095e76c4f35ba2a28be` for
+  `BigCodeBench/1042` ended after 69.811 seconds with worker `OSError: [Errno 12] Cannot allocate
+  memory: '/tmp/bigcodebench-41t_5bzj'`. The failure arose while the isolated evaluator worker was
+  creating its private temporary directory and produced no functional outcome.
+- Affected tasks/models/benchmarks/runs: Candidate `candidate_0b876d790d64fddd621dbe81` in active
+  evaluation run `run_b25b1ec137928799f30217af`; the prior primary attempt is preserved as a timeout.
+  No model inference, candidate bytes, benchmark tests, timeout configuration, or other evaluation
+  record is changed.
+- Impact on results: The candidate is indeterminate. Treating this record as functional `FAIL` or as
+  a confirmed final `TIMEOUT` would violate the analysis contract. It currently produces explicit
+  evaluator-failure missingness in a provisional snapshot and prevents final acceptance until
+  separately resolved.
+- Evidence: The typed record and raw output preserve evaluator version `0.2.5`, configuration SHA-256
+  `9a5c2eda274b56fab01523a83d466e85ac4964cd4d9fcc51c9f908ee591a1f13`, 120-second wall limit,
+  error type/message, and prior evaluation lineage. At inspection time the host had substantial free
+  memory and disk, so the historical cause cannot be reduced to a persistent disk-capacity problem;
+  transient host pressure or candidate/evaluator resource behavior remains possible.
+- Temporary action: Do not alter the active campaign or relabel the immutable record. Surface the
+  exact failure in every provisional review.
+- Resolution or mitigation: After the campaign reaches a terminal state, inspect all evaluator
+  failures and decide the remediation before final analysis. The conservative candidate is a
+  separately versioned targeted retry of the exact candidate/task under the same frozen evaluator
+  and timeout policy, preserving this failed attempt. Because adopting retry semantics can affect
+  final coverage, it requires an explicit recorded decision rather than an automatic relabel.
+- Required reruns or regenerated artifacts: Pending the terminal failure inventory and explicit
+  remediation decision. No inference rerun is indicated.
+- Related decision: `DEC-20260806-38` (provisional analysis treatment only).
+
+
 ## ISSUE-20260806-14: Primary model outputs include malformed candidates and non-exact Decisions
 
 - First observed: 2026-08-06 after terminal primary inference validation
@@ -9,7 +64,7 @@
 - Affected tasks/models/benchmarks/runs: Primary inference `run_c99d3b1d562acc3e80026e48`; malformed candidates occur in DeepSeek, Devstral, Qwen3, and Gemma outputs. Invalid Decisions occur in DeepSeek (156) and Qwen3 (46).
 - Impact on results: Eight malformed initials block 48 dependent model calls and leave 32 generated candidate-condition artifacts unavailable. Ten further revision outputs lack candidate artifacts. Excluding these rows would bias model comparisons; calling them evaluator `FAIL` would claim tests ran when they did not.
 - Evidence: Independent inference validation passes 70,386 model-call/raw-response records. The difference from 70,434 scheduled task-phase units is exactly the 48 blocked dependents. Seven malformed Direct responses are length-capped with an incomplete fence and one has multiple fenced blocks.
-- Resolution or mitigation: `DEC-20260806-33` separates 156 deterministic normalizations from 46 blinded semantic adjudications. `DEC-20260806-34` preserves legacy raw statuses, reports candidate format failures as `malformed_candidate`, retains all rows, assigns only the separate end-to-end success measure a zero, and leaves functional transitions unevaluated. No response is salvaged or regenerated.
+- Resolution or mitigation: `DEC-20260806-33` separates 156 deterministic normalizations from 46 evaluation-result-free readings of non-exact Decision response directions. `DEC-20260806-34` preserves legacy raw statuses, reports candidate format failures as `malformed_candidate`, retains all rows, assigns only the separate end-to-end success measure a zero, and leaves functional transitions unevaluated. No response is salvaged or regenerated.
 - Required reruns or regenerated artifacts: No inference rerun. One complete pre-evaluation Decision resolution batch and evaluation of the 40,206 existing candidate artifacts are required.
 - Related decision: `DEC-20260806-33`, `DEC-20260806-34`.
 
@@ -27,21 +82,6 @@
 - Resolution or mitigation: Adopted `DEC-20260804-30` adds input-index timeout tracking without changing benchmark tests or oracle. Adapter `self-refinement-isolated-v4` maps only timeout-explained false details to `TIMEOUT`, gives any independent failing detail precedence, and preserves the indexes in raw output. Synthetic regression tests cover timeout-only, ordinary incorrect, mixed failure/timeout, and outer-wall timeout paths. Replacement evaluation `run_38cf240201dfb892765eccc2` independently validated all 216 resolutions and all 11 confirmation traces under adapter `v4`; every confirmation records the relevant timeout indexes, while six mixed cases with an independent false detail remain functional `FAIL` as specified.
 - Required reruns or regenerated artifacts: Complete. Evaluation attempt `evaluation-pilot-six-models-20260804-r3` and review `pilot-review-six-models-20260804-r4` replace `r2`/`r3` as freeze evidence. No inference or Decision adjudication was rerun.
 - Related decision: `DEC-20260804-30` (Adopted).
-
-
-## ISSUE-20260803-09: Primary batched greedy outputs are not batch invariant
-
-- First observed: 2026-08-03
-- Status: Resolved
-- Severity: Major
-- Description: Primary smoke `vllm-primary-smoke-20260803-r2` loaded StarCoder2 successfully with the frozen TP=2, BF16, PyTorch-native sampler, 16,384 context, and 4,096 output-token cap, but two identical prompts submitted together produced different response/token sequences despite temperature 0 and seed 0. vLLM 0.26.0 does not enable batch-invariant execution by default. Its official reproducibility guidance states that offline V1 requires deterministic scheduling or batch invariance, and its batch-invariance mode changes kernels/collectives with a performance tradeoff. The runner also checked equality before writing the result, so the two raw responses were not persisted in this attempt.
-- Affected tasks/models/benchmarks/runs: Validation-only `vllm-primary-smoke-20260803-r2`, first model `starcoder2-15b-instruct`. No benchmark task, pilot candidate, primary candidate, evaluator result, or paper-facing result exists.
-- Impact on results: The frozen 16K allocation fits StarCoder2, but the current configuration has not demonstrated repeatable outputs under batched inference. Proceeding unchanged could make a candidate depend on batch composition or scheduling, especially after resume. Enabling a deterministic mode can change generated candidates and throughput, so it must be selected before pilot inference rather than silently patched.
-- Evidence: The immutable log records successful model loading, 4.51 GiB KV cache per GPU, 118,140 KV-cache tokens, maximum 7.21 concurrency at 16,384 tokens, completed compile/warmup, and then `RuntimeError: repeated greedy outputs are not identical`. Terminal status records exit code 1 and 0/4 completed models. Host cleanup inspection found both GPUs at 15 MiB and 0% utilization with no compute process. Local vLLM 0.26.0 contains `VLLM_BATCH_INVARIANT` and `VLLM_ENABLE_V1_MULTIPROCESSING`; neither was enabled in `r2`.
-- Temporary action: Preserve `r2` and do not reinterpret it as a model, memory, or context-length failure. The worker atomically stores unequal raw responses and token IDs before failing. Focused probe `vllm-batch-invariance-probe-20260803-r1` passed exact equality and adequate 16K capacity.
-- Resolution or mitigation: `DEC-20260803-18` validated batch invariance on StarCoder2, and `DEC-20260803-19` adopted it in primary configuration `r2`. The observed one-time compile overhead and roughly 5% StarCoder2 KV-capacity reduction are acceptable for model-resident campaigns. Replacement `vllm-primary-smoke-20260803-r3` subsequently passed and independently validated exact repeated output/token equality for all four models.
-- Required reruns or regenerated artifacts: Complete. Never reuse `r2`; use validated `r3` as the primary runtime evidence. No pilot or primary candidate requires regeneration because none existed.
-- Related decision: `DEC-20260803-16` (Adopted settings require refinement before pilot).
 
 
 ## ISSUE-20260803-03: Mbpp/255 official reference exceeds the 4 GiB EvalPlus guard
@@ -72,18 +112,3 @@
 - Resolution or mitigation: Independent confirmation excludes memory, networking, isolation, and nondeterminism as causes. Adopted `DEC-20260803-12` pre-excludes only `HumanEval/32` under manifest `evalplus-benchmarks-2026-08-03-r4`, leaving the official dataset and oracle unchanged and exposing 163 included tasks.
 - Required reruns or regenerated artifacts: Complete. Replacement audit `timing-humaneval-20260803-r2-v3` passed all 489/489 observations with zero anomalies and independent artifact validation.
 - Related decision: `DEC-20260802-07` and `DEC-20260803-12` (Adopted).
-
-
-## ISSUE-20260803-01: Thirty-five BigCodeBench references fail reproducibly
-
-- First observed: 2026-08-03
-- Status: Resolved
-- Severity: Major
-- Description: Full reference audit `timing-bigcodebench-20260802-r1` completed all three repetitions, but the same 35 of 1,140 official reference tasks were anomalous in every repetition. Adapter `standalone-local-v2` corrected four result-channel, four system-path, two isolated-loopback, and two non-root filesystem cases. Integrated rerun `diagnostic-20260803-r9-integrated-v2` confirms those 12 references pass. Of the remaining cases, 17 require NLTK/TextBlob data absent from both the lock and upstream Dockerfile, and six attempt DNS or external-service access. The six are network-touching tasks, but follow-up live-network checks show they are not one homogeneous six-task exclusion class.
-- Affected tasks/models/benchmarks/runs: BigCodeBench-Instruct tasks `14`, `15`, `16`, `101`, `176`, `177`, `290`, `314`, `332`, `334`, `376`, `383`, `459`, `460`, `590`, `633`, `635`, `655`, `658`, `726`, `734`, `806`, `808`, `812`, `832`, `849`, `940`, `1005`, `1012`, `1038`, `1040`, `1101`, `1103`, `1104`, and `1109`; audit `timing-bigcodebench-20260802-r1`. No model or generated candidate is affected because inference has not started.
-- Impact on results: The `v1` audit cannot support timeout calibration, but it affected no model result because inference had not started. The frozen four-task exclusion and resource policy prevent its infrastructure anomalies from being misclassified as candidate functional `FAIL`.
-- Evidence: The audit contains 3,420/3,420 schema-valid observations and raw outputs. Independent validation passed with observation-index SHA-256 `6856e2b9528df9741dbc8ac754887508135027abb9b0a32218e1045db3a193b8` and summary SHA-256 `8ef12d5a25dd20632a63ee1523a4cc88b74ed6dd135a746f264baf07beebeaa5`. The summary records 3,315 passes and 105 anomalies, exactly three anomalies for each affected task. Tasks `16`, `1101`, `1103`, and `1104` produced invalid evaluator output; tasks `290`, `376`, `655`, `658`, `726`, `806`, `808`, and `849` explicitly reported missing NLTK corpora. Evaluator-only report `network-feasibility-20260803-r1` (SHA-256 `5498b971fde426fff8d5a7385b06aeef1fe837fb6a690d7cc9da3593f6319416`) records three live-network repetitions per task: `/101`, `/176`, `/314`, and `/1012` passed all repetitions; `/590` consistently had three HTTP 403 errors across six tests, and `/1005` consistently had four 403-derived failures across five tests. This check used official references only, not generated candidates.
-- Temporary action: The completed `v1` audit was preserved unchanged, four exclusions were applied before evaluation, and model-candidate evaluation remained blocked until the corrective audit passed. Evaluator diagnostics remain evaluation-only and must never enter model prompts.
-- Resolution or mitigation: `standalone-local-v3` retains every `v2` containment correction, mounts four revision- and checksum-pinned NLTK resources read-only, binds deterministic resolver data for `/176`, and starts a loopback-only TLS handshake fixture for `/314`. Adopted `DEC-20260803-09` pre-excludes `/101`, `/590`, `/1005`, and `/1012`; no generated candidate receives live egress. Targeted diagnostic `diagnostic-20260803-r12-targeted-v3` passed 93/93 evaluations, and corrective audit `timing-bigcodebench-20260803-r2-v3` then passed all 3,408 observations with zero anomalies. Its independently verified index and summary SHA-256 values are `0f615816d8cf1b17ae5d037b73f74ed323d4f62c800b127e36a3aa75b63f32a3` and `39b8276dc3b3773e29dc4a300b5e979d48af3ab28a9e9e48fdd5e9cae9d2ed81`.
-- Required reruns or regenerated artifacts: Complete. Never overwrite or relabel the original 3,420 `v1` observations or diagnostic reports; use the corrective `v3` audit for accepted reference timing analysis.
-- Related decision: `DEC-20260802-03`, `DEC-20260802-07`, `DEC-20260803-08`, and `DEC-20260803-09` (Adopted).

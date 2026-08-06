@@ -5,7 +5,9 @@
 This document defines the result-independent transformation and metric pipeline for RQ1–RQ4.
 The implementation is frozen before primary outcomes are inspected. It consumes only independently
 validated, terminal inference and evaluation runs and an independently validated Decision
-adjudication batch when invalid Decisions exist.
+adjudication batch when invalid Decisions exist. For `study-v0.3.0`, this is intentionally a
+composite lineage: validated v0.2.0 Initial/Direct Revision/Decision sources plus validated v0.3.0
+Critique/Planning/CR/CPR sources. The pipeline never treats the two inference registries as one raw run.
 
 The pipeline has three layers:
 
@@ -41,10 +43,21 @@ status, stage, input/output tokens, and whether the attempt is the effective log
 is the source for Experimental Token Consumption and prevents repeated per-protocol rows from
 double-counting physically executed calls.
 
-The manifest records the study and analysis versions, inference/evaluation/adjudication identifiers,
+The manifest records the study and analysis versions, every source inference/evaluation/adjudication identifier,
 source manifest and validation hashes, producer commit, row counts, status counts, and checksum of
 every derived data file. The validator requires a complete `models × tasks × 7 protocols` grid and
 checks functional missingness, row uniqueness, schema versions, and file hashes.
+The v0.2.0 broad-role CR/CPR outcomes remain a separately labeled formative/reference dataset and do
+not enter v0.3.0 paper-facing CR/CPR estimates. Direct, `R`, and their evaluations may be reused only
+through their exact candidate IDs and hashes; new CR/CPR rows must point to v0.3.0 candidates.
+
+The processed dataset preserves the role-separated information path: Critique determines whether a
+functional problem exists and diagnoses it; Planning converts the stored diagnosis into change
+instructions; CR consumes Critique; and CPR consumes Plan without direct Critique input. A no-problem
+Critique and no-change Plan remain observed artifacts rather than missing stages. Analysis does not
+retroactively correct an upstream diagnosis, infer an unobserved plan, or remove role-crossing text.
+Accordingly, RQ1 contrasts estimate complete protocol paths, not independently labeled semantic
+accuracy of Critique or Planning.
 
 ## 3. Correctness and missingness
 
@@ -121,6 +134,9 @@ machine-generated review report, a provenance manifest, and an independent valid
 - `R` versus `DR`, `CR` versus `DCR`, and `CPR` versus `DCPR`,
 - correct-`PRESERVE` and incorrect-`REFINE` rates,
 - Prevented Regression, Safe Preservation, Missed Repair, and Unsuccessful Refinement Skipped,
+- always-refine와 Decision-conditioned 조건의 repair 및 regression count/rate를 동일한
+  functional-transition complete-case 분모에서 직접 비교하고, 방지된 regression과 놓친
+  repair로 correctness difference를 재구성한 decomposition,
 - correctness difference and Net Token Saving by model-benchmark combination,
 - all-resolved results and exact-Decision-only sensitivity results,
 - descriptive Pearson and Spearman relationships with observed initial pass rate.
@@ -165,3 +181,24 @@ accepted raw records → build processed dataset → validate dataset
 ```
 
 Experiment reproduction remains a separate, more resource-intensive path.
+
+## 8. Non-paper-facing progress snapshots
+
+While the frozen evaluation campaign is in its deferred timeout-confirmation phase, an operator may
+create an explicitly provisional snapshot to inspect coverage and prepare every RQ output. This does
+not relax the terminal validation gate above. The snapshot is written under `data/interim/`, records
+the SHA-256 and identity of every evaluation attempt visible at one capture time, synthesizes
+resolutions only for completed primary/confirmation evidence under the already frozen timeout
+policy, and leaves every pending confirmation without an evaluation resolution.
+
+The complete `models × tasks × 7 protocols` grid is retained. Thus pending confirmations appear as
+explicit indeterminate rows rather than disappearing from denominators. Provisional dataset and RQ
+manifests require `result_status=provisional` and `paper_facing=false`; RQ execution additionally
+requires an explicit `--allow-provisional` acknowledgement. `provisional_review.json` reports
+pending confirmations, missingness by model/benchmark/protocol, and exact evaluator/infrastructure
+failures. These outputs can guide implementation checks, but cannot be promoted to the paper-writing
+package or cited as final results.
+
+After the evaluation attempt reaches a terminal state and passes independent validation, the final
+dataset must be rebuilt from registry `EvaluationResolutionRecord` artifacts under a new dataset and
+analysis identifier. No provisional synthetic resolution is copied or promoted into that dataset.

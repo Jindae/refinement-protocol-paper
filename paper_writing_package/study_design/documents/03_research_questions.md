@@ -17,6 +17,13 @@
 Self-refinement는 initial candidate를 바로 수정하는 방식과, 수정 전에 critique 또는 revision plan을 별도로 생성하는 방식으로 구성할 수 있다.
 Critique Generation이나 Revision Planning을 추가하면 검토 과정이 구조화될 수 있지만, 추가 model calls가 더 나은 final candidate로 이어지는지는 명확하지 않다.
 각 stage의 추가 효과를 확인하려면 동일한 initial candidate에서 `R`, `CR`, `CPR`을 비교해야 한다.
+여기서 Critique는 기능 문제의 root cause와 위치를 식별하고, Planning은 그 진단을 수정
+방법으로 변환하며, CPR의 Revision은 plan만 직접 받는다. 이 입력 경계는 stage 이름만
+분리하고 역할은 중복시키는 해석을 피하기 위해 결과 확인 전에 고정한다.
+Critique는 오류가 반드시 있다고 가정하지 않고 no-problem 결론을 허용한다. Planning과
+conditioned Revision은 같은 candidate를 다시 독립적으로 review하는 단계가 아니라 각각
+upstream 진단을 계획으로 변환하고 supplied artifact를 실행한다. Direct Revision만 선행
+artifact가 없으므로 review와 수정 필요성 판단을 자체적으로 수행한다.
 
 ### Empirical Scope
 
@@ -37,6 +44,9 @@ RQ1은 다음 paired protocol comparison을 중심으로 분석한다.
 
 결과에서는 stage가 많을수록 성능이 증가하는지 여부를 단순히 확인하는 데 그치지 않는다.
 어떤 stage를 추가했을 때 final correctness가 개선되거나 감소하는지, 그 효과가 model-benchmark combination에 따라 달라지는지를 논의한다.
+다만 `R`-`CR` 및 `CR`-`CPR` 차이는 각각 완전한 정보 경로의 효과이며, Critique 또는 Plan의
+의미 정확성을 독립적으로 식별한 인과 효과로 해석하지 않는다. Upstream 오진과 downstream
+지시 이행 실패는 해당 protocol의 관찰된 성능에 포함된다.
 
 ## RQ2. Repair and Regression Balance
 
@@ -80,6 +90,20 @@ Critique Generation과 Revision Planning이 repair와 regression에 각각 어�
 ### Motivation
 
 Refinement-Need Decision은 각 initial candidate를 보존할지, 대응하는 Always-Refine Protocol의 revised candidate를 사용할지 결정한다.
+이러한 Decision의 분리는 임의적인 stage 추가가 아니다. 선행연구는 별도 Asker나 reward
+model로 whether-to-refine을 판단하거나, self-verification token으로 refine-or-stop을
+결정하여 수정 필요성 판단과 수정 생성을 서로 다른 기능으로 다뤘다. 본 연구는 이 분리
+자체의 신규성을 주장하지 않고, execution-feedback-free code generation에서 Decision을
+독립적이고 관찰 가능한 call로 구현했을 때의 효과를 분석한다.
+구현 방식은 동일하지 않다. ART와 DeCRIM은 별도 판단 stage가 실제 refinement 실행을
+조건부로 제어하지만 판단 과정에서 생성한 subquestion 또는 feedback을 refiner에 전달한다.
+GLoRe의 main evaluation은 refinement 후보를 먼저 생성한 뒤 learned verifier로 선택하며,
+ReVISE는 SFT와 DPO로 학습한 `[eos]`/`[refine]` token을 동일 generation 안에서 사용한다.
+본 연구의 Decision은 binary output만 반환하는 별도 model call이고 그 내용은 이후
+Critique, Planning, Revision에 전달되지 않는다.
+다만 실험에서는 Decision이 generation schedule을 중단시키지 않는다. 모든 always-refine
+candidate를 수집한 뒤 Decision-conditioned outcome을 파생하며, `REFINE`일 때만 후속 call을
+실행한다는 조건은 protocol-implied execution과 cost에 적용한다.
 Benchmark-level 결과는 Decision output뿐 아니라 initially correct candidates와 initially incorrect candidates의 수에 따라 달라진다.
 Initial pass rate가 높은 combination에서는 correct candidate를 보존하여 regression과 token consumption을 줄일 기회가 많다.
 Initial pass rate가 낮은 combination에서는 incorrect candidate를 보존하여 repair 기회를 놓칠 가능성이 커진다.

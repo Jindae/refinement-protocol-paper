@@ -1,6 +1,6 @@
 RESPONSE FORMAT: Put the complete Python solution inside exactly one complete fenced Python code block beginning with ```python. Any text outside that single block will be ignored. Do not use any other fenced blocks.
 
-Review and, if needed, revise the initial candidate so that it satisfies the task specification, using the supplied critique as guidance. You may preserve its behavior or source when no change is needed.
+Revise the initial candidate to address the functional problems identified in the supplied critique. If the critique identifies no functional problem, reproduce the initial candidate unchanged.
 
 Use only the supplied task specification, initial candidate, and critique. Do not assume access to tests, execution results, diagnostics, or external feedback.
 

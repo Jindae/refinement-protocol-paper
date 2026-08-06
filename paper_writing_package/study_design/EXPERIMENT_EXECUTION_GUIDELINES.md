@@ -4,6 +4,10 @@
 연구 construct, protocol 정의, 입력 의존성은 `documents/`가 정의하며, 이 지침은 그
 설계를 바꾸지 않고 GPU 상주 시간, 재개 가능성, 진행 확인을 최적화한다.
 
+현재 paper-facing replacement는 `study-v0.3.0`이며 Section 2.2의 phase-separated schedule을
+사용한다. 아래 원래 model-resident seven-phase schedule은 `study-v0.2.0` 결과를 같은
+조건으로 재현하기 위해 보존한다.
+
 ## 1. 실행 계층
 
 정상적인 실행 계층은 다음 순서를 따른다.
@@ -24,7 +28,7 @@
 순서는 고정할 수 있지만 HumanEval+ 완료 후 사용자 확인을 기다렸다가 MBPP+를 별도
 실행하는 식으로 campaign을 분할하지 않는다.
 
-## 2. 모델 하나의 필수 phase 순서
+## 2. v0.2.0 재현용 모델 하나의 필수 phase 순서
 
 한 모델을 로드한 worker는 다음 phase를 순서대로 수행한다. Phase 전환은 status와
 manifest에 기록하는 checkpoint이지, 사용자 개입이나 모델 reload 지점이 아니다.
@@ -70,6 +74,38 @@ Primary experiment에서는 evaluation descendant가 이미 존재하는 inferen
 `pre_evaluation` 판정을 기록할 수 없다. Pilot처럼 평가가 먼저 존재했던 과거 validation
 run을 진단적으로 판정할 때는 그 사실을 provenance에 기록하며 paper-facing estimate에
 사용하지 않는다.
+
+## 2.2 Role-separated v0.3.0 replacement schedule
+
+검증된 v0.2.0 source run의 exact Initial Candidate, Direct Revision, Decision을 재사용하고
+다음 네 model-call phase만 새 registry에 생성한다.
+
+1. **Critique Generation** (`shared_critique`)
+2. **Critique-Conditioned Revision** (`cr_revision`)
+3. **Revision Planning** (`shared_plan`)
+4. **Plan-Conditioned Revision** (`cpr_revision`)
+
+각 phase는 별도 background attempt, process, status, log, command, summary, validation을 가진다.
+한 phase 안에서는 모델 하나를 로드하고 세 benchmark의 1,677 task를 모두 처리한 뒤 다음
+모델로 이동한다. Phase 사이에는 model을 다시 로드하며, 이는 중단된 phase만 재실행하고
+아직 시작하지 않은 phase의 구현 결함을 독립적으로 수정할 수 있게 하는 의도적 비용이다.
+
+Sequence supervisor는 위 네 child attempt를 순서대로 시작한다. 직전 child가 terminal
+`completed`이고 validation이 `passed`일 때만 다음 child를 별도 process로 시작하며, 실패 시
+즉시 sequence를 중단한다. Model output의 명시적 failed/malformed call은 task accounting에
+남고 dependency가 필요한 뒤 phase에서는 `blocked`가 될 수 있으나 infrastructure exception과
+혼동하지 않는다. 같은 logical call의 resume는 completed artifact를 재사용하고 실패 call의
+재시도는 명시적 `--retry-failed`와 새 phase attempt를 요구한다.
+
+CPR의 직접 prompt input은 task specification, exact initial candidate, stored plan뿐이다.
+Critique record ID는 plan을 통한 lineage로만 남는다. 기존 v0.2.0 prompt/config/script bytes와
+registry는 수정하거나 새 결과와 혼합하지 않는다.
+
+역할 분리 실행에서 Critique는 오류를 전제하지 않고 기능 문제 존재 여부와 원인/위치를
+기록한다. Planning은 stored Critique를 독립적으로 재검토하지 않고 최소 변경 지침으로
+변환한다. CR Revision은 Critique를, CPR Revision은 Plan만 실행하며 각각 upstream artifact가
+no-problem 또는 no-change이면 exact initial source를 다시 출력하도록 요구한다. Decision은
+이 네 phase의 prompt input이나 실행 진행 조건이 아니며, 후속 derived outcome 선택에만 쓴다.
 
 ## 3. 평가와 분석 경계
 

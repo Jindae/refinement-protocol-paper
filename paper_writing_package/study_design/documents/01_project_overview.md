@@ -68,20 +68,33 @@ Protocol 간 차이는 initial generation 차이가 아니라 stage composition 
 
 ## 5. 전반적인 연구 개요
 
-연구는 네 개의 local code model과 세 개의 Python code-generation benchmark를 사용한다.
+연구는 여섯 개의 local open-weight instruct model과 세 개의 Python code-generation benchmark를 사용한다.
 각 모델은 각 task에 대해 initial candidate를 한 번 생성한다.
 이 candidate는 Direct Generation 결과이자 모든 refinement protocol의 공통 입력으로 사용된다.
 
 Always-Refine Protocol은 다음의 누적 구조로 구성한다.
 
 - `R`: task specification과 initial candidate를 이용한 Direct Revision
-- `CR`: Critique Generation 후 Critique-Conditioned Revision
-- `CPR`: Critique Generation, Revision Planning, Plan-Conditioned Revision
+- `CR`: 기능 문제의 root cause와 위치를 식별하는 Critique Generation 후, 그 critique를
+  직접 사용하는 Critique-Conditioned Revision
+- `CPR`: 같은 critique를 수정 방법으로 변환하는 Revision Planning 후, critique 원문은
+  다시 주지 않고 plan만 직접 사용하는 Plan-Conditioned Revision
+
+이 누적 구성은 같은 검토를 여러 번 반복하는 절차가 아니다. Critique Generation은 기능
+문제가 실제로 있는지 판단하고, 발견한 문제의 root cause와 위치를 진단한다. 문제가 없으면
+그 사실을 명시한다. Revision Planning은 그 진단의 존재 여부를 다시 판단하지 않고, 발견된
+문제를 해결할 최소 변경과 보존할 기존 동작으로 변환한다. `CR`의 Revision은 Critique를
+근거로 수정하고, `CPR`의 Revision은 Plan만 실행한다. 선행 artifact가 no-change를 나타내면
+각 conditioned Revision은 exact initial candidate를 다시 출력하도록 요구한다. 선행 분석이
+없는 Direct Revision만 initial candidate를 직접 검토하여 수정 필요 여부와 구현을 함께 맡는다.
 
 각 candidate에 대해서는 Refinement-Need Decision도 한 번 생성한다.
 Decision이 `PRESERVE`이면 Decision-Conditioned Refinement의 final candidate는 exact initial candidate가 된다.
 Decision이 `REFINE`이면 해당 Always-Refine Protocol의 final candidate를 사용한다.
 이에 따라 `DR`, `DCR`, `DCPR` 결과는 별도의 revision call 없이 사후 구성할 수 있다.
+Decision output은 Critique, Planning 또는 Revision prompt에 전달하지 않는다. 실험에서는
+반사실적 repair와 regression을 관찰하기 위해 Always-Refine candidate를 모두 생성한 뒤,
+Decision이 `PRESERVE`이면 initial candidate를, `REFINE`이면 대응 candidate를 선택한다.
 
 Initial candidate와 각 final candidate는 benchmark의 전체 evaluation tests로 평가한다.
 주요 correctness outcome은 initial pass rate, final pass rate, refinement gain, repair, correct-to-incorrect regression이다.

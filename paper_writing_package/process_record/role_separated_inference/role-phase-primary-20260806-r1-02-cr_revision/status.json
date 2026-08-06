@@ -1,0 +1,66 @@
+{
+  "attempt_directory": "/data/refinement-protocol/runs/logs/role-separated-phase/role-phase-primary-20260806-r1-02-cr_revision",
+  "attempt_id": "role-phase-primary-20260806-r1-02-cr_revision",
+  "campaign_configuration": "/data/refinement-protocol/configs/experiments/role_separated_campaign.toml",
+  "completed_models": 6,
+  "completed_task_units": 10062,
+  "current_model_id": null,
+  "current_model_index": 6,
+  "current_phase": {
+    "benchmark_counts": {
+      "bigcodebench_instruct": {
+        "blocked": 0,
+        "completed": 1136,
+        "failed": 0,
+        "reused": 0,
+        "total": 1136
+      },
+      "humaneval_plus": {
+        "blocked": 0,
+        "completed": 163,
+        "failed": 0,
+        "reused": 0,
+        "total": 163
+      },
+      "mbpp_plus": {
+        "blocked": 2,
+        "completed": 374,
+        "failed": 2,
+        "reused": 0,
+        "total": 378
+      }
+    },
+    "blocked": 2,
+    "completed": 1673,
+    "failed": 2,
+    "phase": "cr_revision",
+    "reused": 0,
+    "stage": "critique_conditioned_revision",
+    "terminal": 1677,
+    "total": 1677
+  },
+  "cwd": "/data/refinement-protocol",
+  "ended_at": "2026-08-06T19:45:46.733364+00:00",
+  "exit_code": 0,
+  "expected_models": 6,
+  "expected_task_units": 10062,
+  "git_commit": "4902b6b8eeb0abce544a4e98141abc94a8101610",
+  "job_kind": "role-separated-phase",
+  "log_path": "/data/refinement-protocol/runs/logs/role-separated-phase/role-phase-primary-20260806-r1-02-cr_revision/run.log",
+  "output_paths": [
+    "/data/refinement-protocol/runs/registry/run_1dd46dd4a0ae265ab7a184a9",
+    "/data/refinement-protocol/runs/logs/role-separated-phase/role-phase-primary-20260806-r1-02-cr_revision/summary.json"
+  ],
+  "parent_sequence_attempt_id": "role-sequence-primary-20260806-r1",
+  "phase": "completed",
+  "pid": 3774864,
+  "retry_failed": false,
+  "role_phase": "cr_revision",
+  "run_id": "run_1dd46dd4a0ae265ab7a184a9",
+  "schema_version": "role-separated-phase-status-v1",
+  "started_at": "2026-08-06T17:27:26.666267+00:00",
+  "state": "completed",
+  "terminal_manifest_record_id": "run_manifest_af21188e22a383514eade1d3",
+  "updated_at": "2026-08-06T19:45:46.733506+00:00",
+  "validation_result": "passed"
+}

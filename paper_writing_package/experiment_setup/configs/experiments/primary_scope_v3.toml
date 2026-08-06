@@ -1,6 +1,6 @@
 schema_version = "campaign-scope-configuration-v1"
-scope_version = "primary-scope-2026-08-04-r2"
-study_version = "study-v0.2.0"
+scope_version = "primary-scope-2026-08-06-r3"
+study_version = "study-v0.3.0"
 selection = "all_manifest_included"
 
 [benchmark_manifests]
