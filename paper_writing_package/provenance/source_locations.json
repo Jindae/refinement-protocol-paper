@@ -1,1 +1,70 @@
-{"complete_raw_responses_included":false,"decision_processing_attempt_id":"decision-adjudication-primary-20260806-r1","decision_validation_sha256":"69fc783d3307071046ac7bffac35abdd8796f454030b9bed1df12639a0df3a3a","inference_registry_path":"runs/registry/run_c99d3b1d562acc3e80026e48","inference_run_id":"run_c99d3b1d562acc3e80026e48","inference_validation_sha256":"af01d879eddfe16242f24520d375b299556a7a1cf7782655ed3434595b67fb68","raw_response_lookup":"Join data/inference_call_inventory.csv on call_record_id; use raw_response_registry_path and raw_response_sha256 in the immutable source registry.","role_phase_validation_sha256":{"role-phase-primary-20260806-r1-01-shared_critique":"ba62d187052429d17baf3b5b450594e4b0d4822740b5dcb24c7b61dbc00dd865","role-phase-primary-20260806-r1-02-cr_revision":"6477ae2c9cec83d0d38960e086dd05f1a9f2f9d11f84cb7f8f7bde658671d802"},"role_separated_registry_path":"runs/registry/run_1dd46dd4a0ae265ab7a184a9","role_separated_run_id":"run_1dd46dd4a0ae265ab7a184a9","schema_version":"paper-package-source-locations-v1"}
+{
+  "note": "Raw registries remain in immutable working storage; the complete canonical processed dataset is included in deterministic gzip form.",
+  "processed_dataset_id": "primary-final-v04-20260808-r5",
+  "raw_registry_bytes_included": false,
+  "schema_version": "final-result-source-locations-v1",
+  "source_files": [
+    {
+      "path": "runs/logs/decision-adjudication/decision-adjudication-primary-20260806-r1/status.json",
+      "sha256": "63c4e225c55ec70c5f9196bb4388fe37555bcea36608ed14b0e4b70083691707"
+    },
+    {
+      "path": "runs/logs/decision-adjudication/decision-adjudication-primary-20260806-r1/validation.json",
+      "sha256": "69fc783d3307071046ac7bffac35abdd8796f454030b9bed1df12639a0df3a3a"
+    },
+    {
+      "path": "runs/logs/evaluation-campaign/evaluation-role-separated-primary-20260807-r1/status.json",
+      "sha256": "ee72430d0c8b07d9df4500a2c3d887668f101906e9b3c35b948500eca14b3716"
+    },
+    {
+      "path": "runs/logs/evaluation-campaign/evaluation-role-separated-primary-20260807-r1/validation.json",
+      "sha256": "54f33dd74403e0b21ef74e98d4b964a4e436683ff4e2f4f213ab89503c8df03e"
+    },
+    {
+      "path": "runs/logs/evaluation-campaign/evaluation-single-call-primary-20260807-r1/status.json",
+      "sha256": "3d200080dfa04db5809a23e5e11833fdfee1498e09a69cbd3fcda4327501bb59"
+    },
+    {
+      "path": "runs/logs/evaluation-campaign/evaluation-single-call-primary-20260807-r1/validation.json",
+      "sha256": "4c050428ad12d4db4d44ff0d519014d4e9ddfec1b7a7620f7db7c7cd9b98c6bc"
+    },
+    {
+      "path": "runs/logs/evaluation-remediation/evaluation-remediation-v02-20260808-r4/status.json",
+      "sha256": "de53ad76983872d82baa0a200aa046f000be7c5bc06a95199a6f789547170376"
+    },
+    {
+      "path": "runs/logs/evaluation-remediation/evaluation-remediation-v02-20260808-r4/validation.json",
+      "sha256": "3bf4c6abdf20ed1c0d82f3328183924bcb3c84a9c74f584c291aadd651f98b24"
+    },
+    {
+      "path": "runs/logs/model-campaign/campaign-primary-20260804T104734Z/status.json",
+      "sha256": "4d394d936613efbae8ffd8d114efd69562ff861f4c9fc4f82e80210029a1fbf2"
+    },
+    {
+      "path": "runs/logs/model-campaign/campaign-primary-20260804T104734Z/validation.json",
+      "sha256": "af01d879eddfe16242f24520d375b299556a7a1cf7782655ed3434595b67fb68"
+    },
+    {
+      "path": "runs/registry/run_1dd46dd4a0ae265ab7a184a9/launch.json",
+      "sha256": "235bcea4e6be09f27905dd4f86fe675c7f3dde922ff97db7c14330312a228d24"
+    },
+    {
+      "path": "runs/registry/run_5a4129eed4283cd222e2de9e/launch.json",
+      "sha256": "cde9c223e90b7229115a794b465cc5bce0e733726dec8b2a9d20278a6212df54"
+    },
+    {
+      "path": "runs/registry/run_c99d3b1d562acc3e80026e48/launch.json",
+      "sha256": "ff32cb8642faf074eaac36eae84b5720b548992d9d907bc3e189dcb2d3cfc2e5"
+    }
+  ],
+  "source_runs": {
+    "base_evaluation": "run_b25b1ec137928799f30217af",
+    "base_inference": "run_c99d3b1d562acc3e80026e48",
+    "base_remediation": "run_cfde994451c10e10b850905f",
+    "role_evaluation": "run_1e4f588e7975f8b97a71400f",
+    "role_inference": "run_1dd46dd4a0ae265ab7a184a9",
+    "single_evaluation": "run_7e4ee0647f99f8eb90c1aecd",
+    "single_inference": "run_5a4129eed4283cd222e2de9e"
+  },
+  "working_registry_root": "runs/registry/<run_id>"
+}

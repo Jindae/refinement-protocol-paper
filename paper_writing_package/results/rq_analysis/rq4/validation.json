@@ -1,0 +1,13 @@
+{
+  "analysis_id": "primary-final-four-rq-20260808-r3",
+  "dataset_id": "primary-final-v04-20260808-r5",
+  "file_count": 7,
+  "manifest_sha256": "d8e49497d87102f5c1ee0a4eebfa75d134564f43b76ecb01e42e8a317a4dc73a",
+  "paper_facing": true,
+  "pending_confirmation_count": 0,
+  "result_status": "final",
+  "rq": "rq4",
+  "schema_version": "rq-analysis-validation-v1",
+  "validation_result": "passed",
+  "validation_scope": "terminal_rq_output_integrity"
+}

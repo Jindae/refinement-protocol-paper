@@ -1,3 +1,0 @@
-REFINE
-
-The initial candidate has a typo in the variable name "LETTERS" which is misspelled as "LETTERTERS" in the for loop. This would cause a NameError when the code is executed. The candidate also uses numpy for calculating the mean, but the task specification doesn't require it

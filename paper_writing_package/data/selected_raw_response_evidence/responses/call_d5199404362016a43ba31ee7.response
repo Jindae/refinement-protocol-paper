@@ -1,3 +1,0 @@
-REFINE
-
-The initial candidate has a logical flaw in how it handles timezone localization. When parsing a date string, the parsed datetime is naive (no timezone info), and then it's localized to the specified timezone. However, when creating the next New Year datetime, it's also localized, but the comparison between the two

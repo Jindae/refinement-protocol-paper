@@ -1,0 +1,34 @@
+{
+  "analysis_id": "mechanism-followup-2026-08-08-r3",
+  "analysis_version": "mechanism-followup-2026-08-08-r3",
+  "configuration_path": "analysis_tools/followup_analysis_config.toml",
+  "configuration_sha256": "70af393bb9cefc930635a5e683c156960504b3975de7cf95f0f1a375722fd3eb",
+  "files": {
+    "artifact_chain_detail.csv": "00a3459bec04c59f288f9422cbc20f69abf2c69948bbdf074b941275e8081fab",
+    "artifact_chain_summary.csv": "76d7966968a68c9b5b9df506d4abefca96948d33c0861dff53a55a8016843c7b",
+    "decision_mediation.csv": "64b253e75c2ff55783f6d61cfeb3e6dd1bb44e110bb5483e3170b3e754bf9017",
+    "reachability_multiplicity.csv": "e271136ce78d683e7518e207da1193a91271b131fdd36b03bd05c3a32017ef69",
+    "reachability_protocol_contribution.csv": "1e4a606c0301e0b76f42eebd894fda0670dbb9aae03db196705997ffe15e1afd",
+    "reachability_summary.csv": "642332aff4a8bd88e3640f92d399dcb1aa974eeee5a95e7f4ade957d2a5c2775",
+    "report.md": "c035323684f8ce4f138577a37c9278433056acc56fc594f95f6db70cf5183097",
+    "task_set_overlap.csv": "f0cf070c821f514066a11317ab1a66fad5953e1522e26648f410ac8203de157c",
+    "topology_net_decomposition.csv": "6c0e55985dc54df12b21031e73259da736ef39346e8b71e26f5ff89cff8667a7"
+  },
+  "producer_commit": "a27066c7fbbf262112b96783935a634c37fc2d69",
+  "result_status": "exploratory_post_hoc",
+  "role_run_id": "run_1dd46dd4a0ae265ab7a184a9",
+  "row_counts": {
+    "artifact_chain_detail": 10054,
+    "artifact_chain_summary": 335,
+    "decision_mediation": 171,
+    "reachability_multiplicity": 123,
+    "reachability_protocol_contribution": 152,
+    "reachability_summary": 19,
+    "task_set_overlap": 95,
+    "topology_net_decomposition": 95
+  },
+  "schema_version": "followup-analysis-manifest-v1",
+  "source_dataset_id": "primary-final-v04-20260808-r5",
+  "source_outcomes": "paper_writing_package/data/canonical_processed/outcomes.jsonl.gz",
+  "source_outcomes_sha256": "f794be6650da2d88da4e7984c6c04cb9ffe7ecd56e0635209e967eb4281af7e4"
+}

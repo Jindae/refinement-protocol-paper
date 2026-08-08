@@ -1,0 +1,68 @@
+schema_version = "followup-analysis-configuration-v1"
+analysis_version = "mechanism-followup-2026-08-08-r3"
+result_status = "exploratory_post_hoc"
+source_dataset_id = "primary-final-v04-20260808-r5"
+source_outcomes = "paper_writing_package/data/canonical_processed/outcomes.jsonl.gz"
+source_outcomes_sha256 = "f794be6650da2d88da4e7984c6c04cb9ffe7ecd56e0635209e967eb4281af7e4"
+role_registry = "runs/registry/run_1dd46dd4a0ae265ab7a184a9"
+role_run_id = "run_1dd46dd4a0ae265ab7a184a9"
+role_status = "runs/logs/role-separated-sequence/role-sequence-primary-20260806-r1/status.json"
+role_status_sha256 = "a1472ba76394b46cdc281e77aed6637c734eabe985231c51cbd174e511eac0c1"
+
+generated_protocols = [
+  "r", "cr", "cpr", "sc_cr", "sc_cpr", "sc_dr", "sc_dcr", "sc_dcpr",
+]
+
+[[topology_contrasts]]
+multi = "cr"
+single = "sc_cr"
+
+[[topology_contrasts]]
+multi = "cpr"
+single = "sc_cpr"
+
+[[topology_contrasts]]
+multi = "dr"
+single = "sc_dr"
+
+[[topology_contrasts]]
+multi = "dcr"
+single = "sc_dcr"
+
+[[topology_contrasts]]
+multi = "dcpr"
+single = "sc_dcpr"
+
+[[decision_families]]
+always = "r"
+separate_decision = "dr"
+single_decision = "sc_dr"
+
+[[decision_families]]
+always = "cr"
+separate_decision = "dcr"
+single_decision = "sc_dcr"
+
+[[decision_families]]
+always = "cpr"
+separate_decision = "dcpr"
+single_decision = "sc_dcpr"
+
+[surface_classification]
+critique_explicit_no_problem_patterns = [
+  "no functional problem",
+  "no functional issue",
+  "no apparent functional problem",
+  "no apparent functional issue",
+  "there are no functional problems",
+  "there are no functional issues",
+  "appears to be correct and functional",
+]
+plan_explicit_no_change_patterns = [
+  "no change is needed",
+  "no changes are needed",
+  "no revision is needed",
+  "no revisions are needed",
+  "no modification is needed",
+  "no modifications are needed",
+]

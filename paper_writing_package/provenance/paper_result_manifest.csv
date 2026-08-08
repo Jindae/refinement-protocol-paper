@@ -1,5 +1,5 @@
-result_id,research_question,paper_location,source_raw,processed_data,analysis_script,output,validation_status
-rq1,RQ1,pending,pending,pending,analysis_tools/run_rq_analysis.py,pending,unavailable
-rq2,RQ2,pending,pending,pending,analysis_tools/run_rq_analysis.py,pending,unavailable
-rq3,RQ3,pending,pending,pending,analysis_tools/run_rq_analysis.py,pending,unavailable
-rq4,RQ4,pending,pending,pending,analysis_tools/run_rq_analysis.py,pending,unavailable
+result_id,research_question,processed_data,analysis_output,paper_asset,validation_status
+rq1,RQ1,data/canonical_processed/outcomes.jsonl.gz,results/rq_analysis/rq1,results/paper_assets,passed
+rq2,RQ2,data/canonical_processed/outcomes.jsonl.gz,results/rq_analysis/rq2,results/paper_assets,passed
+rq3,RQ3,data/canonical_processed/outcomes.jsonl.gz,results/rq_analysis/rq3,results/paper_assets,passed
+rq4,RQ4,data/canonical_processed/outcomes.jsonl.gz,results/rq_analysis/rq4,results/paper_assets,passed

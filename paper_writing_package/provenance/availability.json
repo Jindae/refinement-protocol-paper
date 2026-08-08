@@ -1,1 +1,14 @@
-{"accepted_reference_timing_raw":false,"accepted_reference_timing_summaries":true,"candidate_evaluation_raw":false,"canonical_processed_dataset":false,"package_stage":"validated_role_separated_inference_progress_pre_results","paper_figures":false,"paper_tables":false,"rq_results":false,"schema_version":"paper-package-availability-v1","selected_model_format_exception_raw":true,"validated_decision_resolution":true,"validated_inference_call_inventory":true,"validated_primary_inference_processed_artifacts":true,"validated_primary_inference_raw":false,"validated_role_separated_cpr":false,"validated_role_separated_cr":true,"validated_role_separated_critique":true,"validated_role_separated_partial_inference":true,"validated_role_separated_plan":false}
+{
+  "accepted_reference_timing_raw": false,
+  "candidate_evaluation_raw": false,
+  "canonical_processed_dataset": true,
+  "exploratory_post_hoc_results": true,
+  "package_stage": "final_results",
+  "paper_figure_source_data": true,
+  "paper_figures": false,
+  "paper_tables": true,
+  "rq_results": true,
+  "schema_version": "paper-package-availability-v1",
+  "validated_decision_resolution": true,
+  "validated_primary_inference_raw": false
+}

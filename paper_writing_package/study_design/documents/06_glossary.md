@@ -18,6 +18,7 @@
 | **Execution Feedback** | Test result, runtime output, exception, compiler diagnostic, execution trace 등 code execution에서 얻은 정보 | 본 연구에서는 candidate 평가에만 사용하고 모델에는 제공하지 않음 | feedback만 사용하여 critique와 혼동 |
 | **Refinement Stage** | 별도의 prompt와 model call로 구현한 Refinement-Need Decision, Critique Generation, Revision Planning, Code Revision 중 하나 | 모델 내부 reasoning step이 아니라 실험에서 직접 관찰되는 call | internal stage, hidden reasoning stage |
 | **Stage Composition** | Protocol에 포함된 Refinement Stage와 그 순서 | `R`, `CR`, `CPR`의 차이를 설명할 때 사용 | protocol complexity, pipeline complexity |
+| **Call Topology** | 동일한 refinement roles를 한 call 안에 명시하거나 여러 observable calls로 외부화하는 구성 | `SC-*`와 multi-call protocol 비교에 사용 | hidden reasoning structure |
 | **Shared-Initial Design** | 동일한 model-task pair의 모든 protocol이 같은 initial candidate를 재사용하는 실험 설계 | Protocol 차이를 initial generation 차이와 분리 | shared mode, controlled mode |
 | **Self-Generated Initial Candidate** | 평가 대상 모델이 직접 생성하고 같은 모델이 refine하는 initial candidate | 다른 모델이 생성한 candidate와 구분할 때 사용 | model-independent candidate, common candidate pool |
 | **Model-Benchmark Combination** | 하나의 model과 하나의 benchmark로 구성된 분석 단위 | 여섯 모델과 세 benchmark는 총 18개 combinations를 구성 | setting, cell, model-benchmark cell |
@@ -76,6 +77,11 @@
 | **Decision-Conditioned Direct Revision** | `DR` | `PRESERVE`이면 initial candidate, `REFINE`이면 `R` candidate 사용 |
 | **Decision-Conditioned Critique-Conditioned Revision** | `DCR` | `PRESERVE`이면 initial candidate, `REFINE`이면 `CR` candidate 사용 |
 | **Decision-Conditioned Critique-and-Plan-Conditioned Revision** | `DCPR` | `PRESERVE`이면 initial candidate, `REFINE`이면 `CPR` candidate 사용 |
+| **Single-Call Critique and Revision** | `SC-CR` | 한 call에 C-R 역할을 순서대로 명시하고 emitted code를 final candidate로 사용 |
+| **Single-Call Critique, Planning, and Revision** | `SC-CPR` | 한 call에 C-P-R 역할을 순서대로 명시하고 emitted code를 final candidate로 사용 |
+| **Single-Call Decision and Revision** | `SC-DR` | 한 call에 D-R 역할을 명시하고 reported Decision label과 emitted code를 함께 저장 |
+| **Single-Call Decision, Critique, and Revision** | `SC-DCR` | 한 call에 D-C-R 역할을 명시하고 label과 emitted code를 함께 저장 |
+| **Single-Call Decision, Critique, Planning, and Revision** | `SC-DCPR` | 한 call에 D-C-P-R 역할을 명시하고 label과 emitted code를 함께 저장 |
 
 ### Protocol Terminology Notes
 
@@ -84,6 +90,10 @@
 - `R`, `CR`, `CPR`은 누적 call composition을 비교하지만, `CPR` Revision의 직접 입력은
   Critique가 아니라 Plan으로 대체된다. 따라서 `CR`-`CPR` 차이는 call count와 입력 경계를
   함께 포함한다.
+- `SC-*`의 C/P/D 표기는 별도 model call이나 observable intermediate artifact를 뜻하지 않는다.
+- `SC-D*`의 main outcome은 reported label과 무관한 emitted code다. Label-enforced selection은
+  supplementary derived outcome으로 명시한다.
+- `single-phase`나 `integrated`를 약어로 줄이지 않고 canonical prefix `SC-`를 사용한다.
 
 ## 6. Outcome Transitions
 
@@ -169,6 +179,6 @@ candidate artifact를 만들 수 없는 상태다. 이는 parser나 evaluator의
 
 - Stage 이름은 개념을 지칭할 때 대문자로 시작한다: `Refinement-Need Decision`, `Critique Generation`, `Revision Planning`, `Code Revision`.
 - 일반적인 동작을 지칭할 때는 소문자를 사용할 수 있다: `the model critiques the candidate`.
-- Protocol abbreviation은 code font 또는 수식 표기를 사용한다: `R`, `CR`, `CPR`, `DR`, `DCR`, `DCPR`.
+- Protocol abbreviation은 code font 또는 수식 표기를 사용한다: `R`, `CR`, `CPR`, `DR`, `DCR`, `DCPR`, `SC-CR`, `SC-CPR`, `SC-DR`, `SC-DCR`, `SC-DCPR`.
 - Transition은 prose에서 `incorrect-to-correct`와 `correct-to-incorrect`로 쓰고, 표에서는 `FAIL -> PASS`, `PASS -> FAIL`을 사용할 수 있다.
 - Pass-rate difference는 absolute percentage points로 보고한다.

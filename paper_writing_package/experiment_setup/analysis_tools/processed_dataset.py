@@ -1148,6 +1148,8 @@ def validate_processed_dataset(dataset_dir: Path, *, write_report: bool = False)
     config = _config()
     if manifest.get("analysis_configuration_sha256") != sha256_file(CONFIG_PATH):
         raise AnalysisError("processed dataset uses a different analysis configuration")
+    if manifest.get("analysis_version") != config["analysis_version"]:
+        raise AnalysisError("processed dataset has a stale analysis version")
     result_status = manifest.get("result_status", "final")
     if result_status not in {"final", "provisional"}:
         raise AnalysisError("processed dataset has an invalid result status")

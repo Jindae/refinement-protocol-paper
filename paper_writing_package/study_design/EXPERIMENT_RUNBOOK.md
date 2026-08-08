@@ -376,9 +376,9 @@ version과 새 run이 필요하다.
 ### 6.2 Evaluation resume
 
 Evaluation resume는 host/process 중단으로 일부 record가 아예 없는 경우에만 사용한다.
-이미 `evaluation_failure` record가 저장된 경우에는 기존 run을 보존하고, 원인 해결 후
-새 evaluation attempt를 `--resume-evaluation-run-id` 없이 시작하여 replacement run을
-만든다.
+Host/process 중단으로 누락 record가 있는 경우와, 이미 terminal
+`evaluation_failure` resolution이 있는 경우를 구분한다. 전자는 아래 resume 경로를
+사용한다.
 
 ```bash
 export EVALUATION_RUN_ID="$(.venv/bin/python scripts/run_evaluation_campaign.py --show-run-id)"
@@ -394,6 +394,70 @@ export RESUME_EVALUATION_ATTEMPT="evaluation-pilot-resume-$(date -u +%Y%m%dT%H%M
 이미 저장된 primary/confirmation/resolution record는 재사용되고 누락된 대상만 이어서
 처리된다. 같은 evaluation run 안에서 기록된 evaluator failure를 덮어쓰거나 재평가하지
 않는다.
+
+Terminal confirmation evaluator failure는 `DEC-20260807-44`의 별도 remediation 경로를
+사용한다. Preflight는 source run의 failure inventory 전체, frozen timeout과 evaluator
+lineage, clean execution inputs, 다른 active evaluation 부재를 확인한다.
+
+```bash
+.venv/bin/python scripts/remediate_evaluation_failures.py --preflight \
+  --evaluation-run-id run_b25b1ec137928799f30217af
+
+.venv/bin/python scripts/remediate_evaluation_failures.py --run \
+  --evaluation-run-id run_b25b1ec137928799f30217af \
+  --attempt-id evaluation-remediation-v02-20260807-r1
+
+.venv/bin/python scripts/remediate_evaluation_failures.py --validate \
+  --attempt-directory runs/logs/evaluation-remediation/evaluation-remediation-v02-20260807-r1
+```
+
+새 attempt는 원본 failed confirmation과 resolution을 보존한 채 replacement lineage만
+추가한다. `remediation_result=resolved`와 독립 validation `passed`가 모두 필요하며, 재시도
+결과가 다시 evaluator failure이면 자동 반복하지 않는다. 다른 evaluation campaign이
+`starting` 또는 `running`인 동안 launch는 거부된다.
+
+사용자가 단건 병행 실행을 명시적으로 승인한 경우에만 `--allow-concurrent-evaluation`을
+추가할 수 있으며 active attempt와 자원 snapshot이 preflight/command metadata에 기록된다.
+관리형 sandbox에서 evaluator가 `Cannot open netlink socket: Operation not permitted`처럼
+host 기능 접근 전에 실패하면 그 attempt를 immutable `unresolved` evidence로 보존한다.
+이를 후보 결과나 server-load 재현으로 해석하지 않으며, 자동 재시도하지 않는다. 다음
+시도는 active evaluation 종료 후 검증된 host execution entrypoint와 새 attempt identifier,
+predecessor 기록을 요구한다.
+
+Sandbox capability failure를 교정하는 replacement 예시는 다음과 같다. 이 command는 일반
+managed sandbox가 아니라 승인된 host execution context에서 실행한다.
+
+```bash
+.venv/bin/python scripts/remediate_evaluation_failures.py --run \
+  --evaluation-run-id run_b25b1ec137928799f30217af \
+  --attempt-id evaluation-remediation-v02-20260807-r2 \
+  --predecessor-attempt-id evaluation-remediation-v02-20260807-r1 \
+  --allow-concurrent-evaluation
+```
+
+모든 evaluation 종료 후 isolated 재시도는 concurrency override를 제거하고 직전 validated
+unresolved attempt를 predecessor로 연결한다. `evaluation-remediation-v02-20260808-r3`는 이
+조건에서도 worker의 `TemporaryDirectory(prefix="bigcodebench-")` 경로를 포함한 `ENOMEM`을
+재현했다. 이후 별도 host `screen`에서 exact task reference가 같은 제한으로 5/5를 통과했고,
+문제 후보는 EOF를 반환하지 않는 mock `recv` 결과를 계속 이어 붙여 메모리를 소진한다는
+것이 확인되었다. 경로는 생성 실패만 뜻하지 않는다. context 종료 시 cleanup `ENOMEM`이
+이미 수집된 unittest 결과를 덮어쓸 수 있다.
+
+`DEC-20260808-48` 이후 replacement remediation은 정책
+`retry-confirmation-evaluator-failures-once-2026-08-08-r2`를 사용하며, 이 경로에서만 worker의
+disposable private tmpfs cleanup error를 무시한다. 후보/hidden test bytes, timeout, RLIMIT,
+network isolation은 변경하지 않으며 일반 evaluation adapter의 기본 cleanup 동작도 strict로
+유지한다. 새 attempt는 `r3`를 predecessor로 연결하고 별도 host `screen`에서 실행한 뒤
+독립 validation을 통과해야 한다.
+
+```bash
+screen -DmS bcb_remediation_r4 bash -lc \
+  'cd /data/refinement-protocol && .venv/bin/python scripts/remediate_evaluation_failures.py \
+    --run \
+    --evaluation-run-id run_b25b1ec137928799f30217af \
+    --attempt-id evaluation-remediation-v02-20260808-r4 \
+    --predecessor-attempt-id evaluation-remediation-v02-20260808-r3'
+```
 
 ## 6. Primary freeze 상태
 
@@ -655,3 +719,107 @@ Completed logical calls은 재생성하지 않는다. Configuration/prompt hash�
 정상 sequence는 마지막 phase 뒤 이 검증을 자동 수행한다. 네 phase completion, 허용된 네
 stage 외 call 부재, raw-response integrity, completed child manifest와 parent source lineage가
 모두 통과해야 sequence가 `completed`가 된다.
+
+## 12. Single-call versus multi-call comparison
+
+이 경로는 validated v0.2.0 exact Initial Candidate를 재사용하고 `SC-CR`, `SC-CPR`, `SC-DR`,
+`SC-DCR`, `SC-DCPR`만 새로 생성한다. v0.3.0 evaluation 결과를 입력으로 사용하지 않는다.
+현재 v0.3.0 CPR inference가 완료되고 GPU가 clear이면 pilot inference를 시작할 수 있다.
+Benchmark evaluation과는 동시에 실행하지 않는다.
+
+### 12.1 Pilot preflight and launch
+
+```bash
+.venv/bin/python scripts/run_single_call_campaign.py --preflight \
+  --campaign-configuration configs/experiments/single_call_pilot_campaign.toml
+
+.venv/bin/python scripts/run_single_call_campaign.py --start \
+  --campaign-configuration configs/experiments/single_call_pilot_campaign.toml \
+  --attempt-id single-call-pilot-20260807-r1
+```
+
+하나의 model load 안에서 다섯 condition이 세 benchmark의 nine-task scope를 모두 처리한다.
+진행은 다음 명령으로 확인한다.
+
+```bash
+.venv/bin/python scripts/run_single_call_campaign.py --count
+.venv/bin/python scripts/run_single_call_campaign.py --status
+```
+
+### 12.2 Pilot validation and review gate
+
+```bash
+.venv/bin/python scripts/run_single_call_campaign.py --validate
+```
+
+검증은 logical call completeness, raw response, candidate, reported Decision parsing record,
+exact initial lineage와 terminal manifest를 확인한다. 이후 sample review에서 다섯 prompt의
+role instruction, code format, Decision/code 독립 parsing과 malformed accounting을 확인한다.
+Review가 승인되기 전 `configs/experiments/single_call_campaign.toml`의 full execution gate를
+열지 않는다.
+
+Accepted pilot `single-call-pilot-20260807-r1` passed 270/270 raw-call validation with 266 valid
+candidates, four explicit multi-fence malformed candidates, and 162/162 exact integrated Decision
+labels. `DEC-20260807-42` accepts these as model-attributable noncompliance without changing prompt or
+parser bytes and enables full configuration `r2`.
+
+### 12.3 Full inference after pilot approval
+
+Pilot 승인과 별도 coherent commit 뒤 다음 명령을 사용한다.
+
+```bash
+.venv/bin/python scripts/run_single_call_campaign.py --preflight
+
+.venv/bin/python scripts/run_single_call_campaign.py --start \
+  --attempt-id single-call-primary-20260807-r1
+```
+
+정상 schedule은 모델마다 `SC-CR → SC-CPR → SC-DR → SC-DCR → SC-DCPR`을 batch 32로
+처리한 뒤 다음 모델을 로드하므로 총 model load는 여섯 번이다. 중단된 run은 새 attempt ID와
+`--resume-run-id`, 필요할 때만 `--retry-failed`를 사용한다.
+
+### 12.4 Separate evaluation with two workers
+
+Inference validation 뒤 source run ID를 확인하고 다음과 같이 평가한다.
+
+```bash
+.venv/bin/python scripts/run_evaluation_campaign.py --start \
+  --source-run-id <SINGLE_CALL_RUN_ID> \
+  --attempt-id evaluation-single-call-primary-20260807-r1 \
+  --workers 2
+
+.venv/bin/python scripts/run_evaluation_campaign.py --count
+.venv/bin/python scripts/run_evaluation_campaign.py --status
+.venv/bin/python scripts/run_evaluation_campaign.py --validate
+```
+
+두 evaluator worker는 candidate process만 실행하고 main process가 raw/typed registry record를
+atomic하게 저장한다. Primary 전체가 끝난 뒤 timeout confirmations를 같은 worker limit으로
+처리한다.
+
+### 12.5 Default unattended full sequence
+
+Full inference와 두 pending evaluation을 중간 사용자 확인 없이 실행하려면 다음 하나의
+background entrypoint를 사용한다.
+
+```bash
+.venv/bin/python scripts/run_single_call_full_sequence.py --preflight
+
+.venv/bin/python scripts/run_single_call_full_sequence.py --start \
+  --attempt-id single-call-sequence-primary-20260807-r1
+```
+
+Full single-call inference와 독립적인 role-separated CR/CPR evaluation(`workers=2`)을 동시에
+시작한다. 두 branch가 모두 검증되면 single-call evaluation(`workers=2`)을 시작한다. 각 child는
+기존 독립 runner의 attempt/status/log/registry를 그대로 사용한다. 이미 시작된 inference를
+보존해 supervisor만 교체하는 경우 `--resume-inference-attempt`와
+`--predecessor-attempt-id`를 함께 사용한다.
+
+```bash
+.venv/bin/python scripts/run_single_call_full_sequence.py --count
+.venv/bin/python scripts/run_single_call_full_sequence.py --status
+```
+
+`--count`의 `validated phases`와 각 child의 `validation` 필드를 기준으로 종속 stage 진입
+가능 여부를 판단한다. `generation completed` 또는 `evaluation completed`만으로는 독립 검증이
+끝난 것이 아니다.

@@ -1,29 +1,17 @@
-# Paper-writing package snapshot: paper-writing-v03-progress-20260807-r3
+# Final paper-writing package
 
-This is an internal authoring snapshot for paper-facing study `study-v0.3.0`. It combines only the
-validated evidence currently eligible for that study and is not a replication archive.
+This allowlisted internal package contains the accepted `study-v0.4.0` design, complete compressed
+canonical processed data, validated RQ1-RQ4 outputs, compact paper table/chart source CSVs, analysis
+code, and the final findings narrative.
 
-## Included evidence
+- Dataset: `primary-final-v04-20260808-r5` (120,744 outcome rows)
+- RQ analysis: `primary-final-four-rq-20260808-r3`
+- Paper assets: `primary-final-four-rq-20260808-r3`
+- Exploratory supplement: `mechanism-followup-2026-08-08-r3`
+- Source commit: `f2b90131f9cd55060d8ac8bfdf4adf8ebf93268e`
 
-- exact validated v0.2.0 Direct Generation, Refinement-Need Decision, and Direct Revision evidence
-  reused by v0.3.0;
-- validated v0.3.0 phases: shared_critique, cr_revision;
-- 50,278 selected model-call provenance/token rows linked to immutable call and
-  raw-response SHA-256 values;
-- paper-facing parsed candidates and intermediate artifacts consolidated as JSONL;
-- raw response bytes only for 225 selected model-format exceptions;
-- complete non-exact Decision direction records, with only paper-facing `DR` candidate selections;
-- adopted study documents, v4 prompts, configurations, analysis code, calibration summaries, and
-  completed-phase validation evidence.
-
-## Excluded boundary
-
-The following v0.3.0 phases were not validated at export and are excluded: shared_plan, cpr_revision. Historical
-v0.2.0 Critique, Planning, `CR`, `CPR`, `DCR`, and `DCPR` artifacts are also excluded because they
-are not paper-facing under the role-separated design. Candidate evaluation attempt
-`evaluation-full-candidates-20260806-r1` is `completed` but has not passed the
-required independent validation, so evaluation records and outcomes are excluded. Provisional
-processed data, RQ outputs, tables, and figures are excluded.
-
-The package supports method writing, provenance review, and qualitative inspection of validated
-inference evidence. It does not yet support a paper-facing empirical result claim.
+The three `.jsonl.gz` files are deterministic gzip streams and can be read directly by Python,
+pandas, R, or command-line gzip tools. Raw experiment registries are not duplicated; exact run IDs,
+source validation files, and SHA-256 values are recorded in `provenance/source_locations.json`.
+Rendered figures are intentionally not frozen yet; `results/paper_assets/figure_data_*.csv` are the
+accepted plotting inputs.

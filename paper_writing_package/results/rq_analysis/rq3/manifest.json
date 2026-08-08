@@ -1,0 +1,23 @@
+{
+  "analysis_configuration_path": "analysis_tools/analysis_config.toml",
+  "analysis_configuration_sha256": "7db123fee8009654877e5308e16fc4e262644207a10895b362b057b6f922cfb0",
+  "analysis_id": "primary-final-four-rq-20260808-r3",
+  "dataset_id": "primary-final-v04-20260808-r5",
+  "files": {
+    "label_enforced_sensitivity.csv": "e5f95423779d1884956959b4cb675fe3d8aa9c4674a51708f1891237d283e8eb",
+    "metrics.json": "b8692121f36a632fc27fb6733a59bb077e4c204d36756b434ca5309d34dd943d",
+    "report.md": "c7a7e767da45d8f789686baa8efebd87d223c6535fe054af230713c663d0d6a7",
+    "single_call_label_consistency.csv": "3c95465ab7469fc75818d242693da8fae80869404e46475a60534e149e980bfa",
+    "topology_paired_contrasts.csv": "7b644ce6acdf301e7fdd8ca8a53f0007ba8904294fc248324ac148cb2aadc465",
+    "topology_repair_regression.csv": "60eb031294e8b80b53a5e1c988c53adf5ab103d0922c54dd5bd7c03135e4af2b"
+  },
+  "paper_facing": true,
+  "pending_confirmation_count": 0,
+  "processed_manifest_path": "data/processed/primary-final-v04-20260808-r5/manifest.json",
+  "processed_manifest_portable": true,
+  "processed_manifest_sha256": "06828ac1bf1ab17bdf76e3667e55031e8901dcf6c78d84f7b383b903e374efcc",
+  "producer_git_commit": "a15ce86c6b51e242d0bac8343d6f93ce9091098f",
+  "result_status": "final",
+  "rq": "rq3",
+  "schema_version": "rq-analysis-manifest-v1"
+}

@@ -1,1 +1,6 @@
-{"complete_repository_source_included":false,"git_clean":true,"git_commit":"5baaab8fa8a74cfe8a0e98d2730fe0159f24c6b6","schema_version":"paper-package-source-revision-v1"}
+{
+  "complete_repository_source_included": false,
+  "git_clean": true,
+  "git_commit": "f2b90131f9cd55060d8ac8bfdf4adf8ebf93268e",
+  "schema_version": "paper-package-source-revision-v1"
+}

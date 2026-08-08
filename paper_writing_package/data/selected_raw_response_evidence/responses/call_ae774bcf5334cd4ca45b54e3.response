@@ -1,3 +1,0 @@
-REFINE
-
-The initial candidate hardcodes `n_clusters=3`, but the task specification doesn't specify the number of clusters. The function should allow the number of clusters to be configurable or determine it dynamically, making the implementation incomplete for the given specification.

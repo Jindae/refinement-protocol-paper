@@ -1,6 +1,0 @@
-REFINE
-
-The initial candidate has several issues that need to be addressed:
-
-1. The function is supposed to return a tuple containing (DataFrame, Axes) but returns (DataFrame, g.ax_joint) - the axes object should be the overall figure's axes, not just the joint axis
-2. The task specification requires

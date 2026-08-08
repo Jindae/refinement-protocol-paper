@@ -1,0 +1,4 @@
+protocol,exact_label,invalid_label,preserve_changed,refine_unchanged,behavior_label_inconsistency,behavior_label_inconsistency_rate,label_sensitivity_complete,emitted_correct,label_enforced_correct,label_enforced_minus_emitted
+sc_dr,10054,0,180,674,854,0.08494131688880048,10020,5691,5693,0.0001996007984031936
+sc_dcr,10054,0,123,763,886,0.08812412969962204,9994,5671,5676,0.0005003001801080648
+sc_dcpr,10054,0,114,297,411,0.040879252038989455,9973,5648,5646,-0.0002005414619472576

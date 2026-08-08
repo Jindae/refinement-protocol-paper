@@ -1,3 +1,0 @@
-REFINE
-
-The initial candidate modifies the first list in-place, which is not ideal behavior for a function that should replace elements. The task specification doesn't explicitly state that the original list should be modified, and the test case suggests a new list should be returned. The function should create a new list rather than mutating the

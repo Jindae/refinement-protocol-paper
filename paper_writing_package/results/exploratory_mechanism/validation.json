@@ -1,0 +1,7 @@
+{
+  "analysis_id": "mechanism-followup-2026-08-08-r3",
+  "schema_version": "followup-analysis-validation-v1",
+  "validated_files": 9,
+  "validated_rows": 11044,
+  "validation_result": "passed"
+}

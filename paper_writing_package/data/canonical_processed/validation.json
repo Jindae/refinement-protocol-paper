@@ -1,0 +1,14 @@
+{
+  "complete_grid": true,
+  "dataset_id": "primary-final-v04-20260808-r5",
+  "functional_missingness_preserved": true,
+  "manifest_sha256": "06828ac1bf1ab17bdf76e3667e55031e8901dcf6c78d84f7b383b903e374efcc",
+  "outcome_rows": 120744,
+  "paper_facing": true,
+  "pending_confirmation_count": 0,
+  "result_status": "final",
+  "schema_version": "processed-dataset-validation-v1",
+  "stage_call_rows": 120656,
+  "validation_result": "passed",
+  "validation_scope": "terminal_source_and_derived_integrity"
+}

@@ -1,3 +1,0 @@
-REFINE
-
-The initial candidate has a bug in the target variable selection. According to the task specification, the function should perform linear regression "to 'x,' 'y,' against 'z'" which means 'z' should be the target variable, not the default 'z' parameter. The current implementation uses the target

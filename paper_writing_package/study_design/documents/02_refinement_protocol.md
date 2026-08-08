@@ -22,6 +22,12 @@ Decision (stored once; used only for derived selection)
 Initial Candidate -> Direct Revision                         (R)
 Initial Candidate -> Critique -> Critique-based Revision    (CR)
 Initial Candidate -> Critique -> Plan -> Plan-based Revision (CPR)
+
+Initial Candidate -> one call explicitly sequencing C-R       (SC-CR)
+Initial Candidate -> one call explicitly sequencing C-P-R     (SC-CPR)
+Initial Candidate -> one call explicitly sequencing D-R       (SC-DR)
+Initial Candidate -> one call explicitly sequencing D-C-R     (SC-DCR)
+Initial Candidate -> one call explicitly sequencing D-C-P-R   (SC-DCPR)
 ```
 
 `D`, `C`, `P`, `R`은 모델 내부의 숨겨진 reasoning 단계를 의미하지 않는다.
@@ -222,7 +228,37 @@ candidate를 생성한 뒤 Decision-conditioned final candidate를 파생한다.
 사례에서도 발생했을 repair 또는 regression을 관찰하기 위한 것이며, Decision을 후속 prompt
 입력으로 사용하는 것과는 다르다.
 
-## 9. Protocol의 해석 범위
+## 9. Single-Call Role Protocols
+
+`study-v0.4.0`은 multi-call role separation과 비교하기 위해 다섯 generated candidate
+conditions를 추가한다.
+
+- `SC-CR`: 한 call 안에서 문제 분석과 revision을 순서대로 지시
+- `SC-CPR`: 한 call 안에서 문제 분석, revision planning, revision을 순서대로 지시
+- `SC-DR`: 한 call 안에서 Decision과 direct revision path를 순서대로 지시
+- `SC-DCR`: 한 call 안에서 Decision, critique 역할, revision을 순서대로 지시
+- `SC-DCPR`: 한 call 안에서 Decision, critique 역할, planning 역할, revision을 순서대로 지시
+
+모든 조건은 task specification과 exact initial candidate만 직접 입력으로 받으며 한 번의
+model call에서 최종 code를 생성한다. `SC-CR`과 `SC-CPR`은 최종 code만 요구한다.
+`SC-DR`, `SC-DCR`, `SC-DCPR`은 첫 non-empty line에 `DECISION: PRESERVE` 또는
+`DECISION: REFINE`을 쓰고, 같은 response에 최종 code를 출력하도록 요구한다.
+
+Single-call Decision label은 다음 call을 실제로 중단시키지 않는다. 주 outcome은 label과
+관계없이 그 call이 emitted한 code다. 따라서 `PRESERVE` label과 changed code 또는 `REFINE`
+label과 unchanged code가 함께 관찰될 수 있다. Label과 code는 독립적으로 parse하며, valid
+code와 invalid label은 code candidate를 유지하고 label만 invalid로 기록한다. Malformed code와
+valid label은 candidate 없이 label record를 유지한다. 별도 Decision처럼 사람 판독으로 label을
+대체하지 않는다.
+
+Supplementary label-enforced outcome은 새 model call 없이 `PRESERVE`이면 exact initial,
+`REFINE`이면 emitted code를 선택한다. 이는 main single-call candidate가 아니라 integrated
+label을 selection gate처럼 적용했을 때의 파생 결과다.
+
+Single-call prompt에 역할 순서를 적는 것은 내부 reasoning trace가 실제로 그 순서를 따랐음을
+증명하지 않는다. `SC-*`와 multi-call protocol의 비교 대상은 prompt-and-call topology 전체다.
+
+## 10. Protocol의 해석 범위
 
 본 연구에서 stage 추가의 효과는 해당 stage를 포함한 전체 protocol과 포함하지 않은 protocol의 차이를 의미한다.
 예를 들어 `CR`과 `R`의 차이는 Critique Generation call, 생성된 critique artifact, 추가 token consumption이 결합된 효과다.
@@ -235,5 +271,21 @@ Planning이 변환하고 Revision이 실행하는 전체 정보 경로의 결과
 Decision-Conditioned Refinement의 효과는 Decision의 classification accuracy만이 아니라, prevented regression, missed repair, 생략한 refinement calls를 포함한다.
 
 `study-v0.2.0`에서 사용한 broad Critique 및 Critique+Plan 동시 CPR 입력은 참고용 선행
-실행으로 보존한다. 현재 paper-facing 설계인 `study-v0.3.0`은 위 역할 분리 계약을 사용하며,
-두 버전의 CR/CPR 결과를 하나의 protocol estimate로 혼합하지 않는다.
+실행으로 보존한다. `study-v0.3.0`은 역할 분리된 multi-call estimate를 제공한다.
+현재 paper-facing `study-v0.4.0`은 그 validated artifacts를 재사용하고 다섯 `SC-*` 조건을
+추가한다. 세 버전의 서로 다른 CR/CPR construct를 하나의 protocol estimate로 혼합하지 않는다.
+
+## 11. Post-hoc Option-A Follow-up Boundary
+
+`study-v0.5.0-option-a-pilot`은 accepted protocol panel을 바꾸지 않는 후속 prompt ablation이다.
+
+- `REGEN-NO-INIT`: task specification만으로 처음부터 다시 생성한다.
+- `DRAFT-CR-FINAL`: 한 response 안에서 observable draft, 그 draft의 critique, final code를
+  순서대로 생성하며 draft와 final을 별도 candidate로 보존한다.
+- `C-GENERATE-NO-INITIAL`: task specification과 frozen stored Critique만 받고, Critique가
+  원래 다룬 initial code는 받지 않은 채 처음부터 solution을 생성한다.
+
+세 조건 모두 기존 exact initial을 분석 기준과 provenance로만 연결한다. 그 source code는
+prompt input이 아니다. `C-GENERATE-NO-INITIAL`의 Critique 자체가 initial에서 파생되고 focused
+snippet을 포함할 수 있으므로 candidate-independent generation으로 해석하지 않고
+candidate-code-omitted generation으로 한정한다.

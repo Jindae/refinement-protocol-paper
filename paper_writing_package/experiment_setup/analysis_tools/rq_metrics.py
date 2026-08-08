@@ -31,7 +31,20 @@ from analysis_tools.processed_dataset import CONFIG_PATH, validate_processed_dat
 
 RESULTS_ROOT = PROJECT_ROOT / "results" / "summaries"
 RQ_VALUES = {"rq1", "rq2", "rq3", "rq4"}
-PROTOCOL_ORDER = ("direct", "r", "cr", "cpr", "dr", "dcr", "dcpr")
+PROTOCOL_ORDER = (
+    "direct",
+    "r",
+    "cr",
+    "cpr",
+    "dr",
+    "dcr",
+    "dcpr",
+    "sc_cr",
+    "sc_cpr",
+    "sc_dr",
+    "sc_dcr",
+    "sc_dcpr",
+)
 
 
 def _config() -> dict[str, Any]:
@@ -177,7 +190,7 @@ def _contrast_with_pass_rates(
     return result
 
 
-def compute_rq1(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+def _compute_stage_performance(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
     always = [row for row in rows if row["protocol"] in {"direct", "r", "cr", "cpr"}]
     summaries: list[dict[str, Any]] = []
     contrasts: list[dict[str, Any]] = []
@@ -207,7 +220,7 @@ def compute_rq1(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
     return {"protocol_summary": summaries, "paired_contrasts": contrasts}
 
 
-def compute_rq2(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+def _compute_transition_balance(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
     transition_rows: list[dict[str, Any]] = []
     change_rows: list[dict[str, Any]] = []
     grouped = _group(rows, ("model_id", "benchmark_id", "protocol"))
@@ -266,6 +279,11 @@ def compute_rq2(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
                 }
             )
     return {"transition_summary": transition_rows, "candidate_change_cross_tab": change_rows}
+
+
+def compute_rq1(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    """Jointly report performance and the repair/regression mechanism behind it."""
+    return {**_compute_stage_performance(rows), **_compute_transition_balance(rows)}
 
 
 def _resolved_decision_rows(rows: list[dict[str, Any]], sensitivity: str) -> list[dict[str, Any]]:
@@ -340,15 +358,15 @@ def _repair_regression_decomposition(
     }
 
 
-def compute_rq3(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+def compute_rq2(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
     contrast_pairs = [
-        tuple(str(value).split(":", maxsplit=1)) for value in _config()["rq3"]["contrasts"]
+        tuple(str(value).split(":", maxsplit=1)) for value in _config()["rq2"]["contrasts"]
     ]
     summary_rows: list[dict[str, Any]] = []
     decomposition_rows: list[dict[str, Any]] = []
     relationship_rows: list[dict[str, Any]] = []
     grouped = _group(rows, ("model_id", "benchmark_id"))
-    for sensitivity in _config()["rq3"]["decision_sensitivity"]:
+    for sensitivity in _config()["rq2"]["decision_sensitivity"]:
         for (model_id, benchmark_id), group_rows in sorted(grouped.items()):
             for always_protocol, decision_protocol in contrast_pairs:
                 derived_all = [row for row in group_rows if row["protocol"] == decision_protocol]
@@ -364,7 +382,7 @@ def compute_rq3(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
                     paired_rows,
                     always_protocol,
                     decision_protocol,
-                    seed_parts=("rq3", str(sensitivity), model_id, benchmark_id),
+                    seed_parts=("rq2", str(sensitivity), model_id, benchmark_id),
                 )
                 initial_values = [
                     _functional(row.get("initial_functional_outcome")) for row in derived_all
@@ -467,7 +485,7 @@ def compute_rq3(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
                     }
                 )
     correlations: list[dict[str, Any]] = []
-    for sensitivity in _config()["rq3"]["decision_sensitivity"]:
+    for sensitivity in _config()["rq2"]["decision_sensitivity"]:
         for always_protocol, decision_protocol in contrast_pairs:
             selected = [
                 row
@@ -496,6 +514,136 @@ def compute_rq3(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
         "repair_regression_decomposition": decomposition_rows,
         "combination_relationships": relationship_rows,
         "descriptive_correlations": correlations,
+    }
+
+
+def compute_rq3(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    """Compare matched multi-call and single-call role topologies."""
+    contrasts: list[dict[str, Any]] = []
+    decompositions: list[dict[str, Any]] = []
+    consistency: list[dict[str, Any]] = []
+    label_sensitivity: list[dict[str, Any]] = []
+    pairs = [tuple(str(value).split(":", 1)) for value in _config()["rq3"]["contrasts"]]
+    for (model_id, benchmark_id), group_rows in sorted(
+        _group(rows, ("model_id", "benchmark_id")).items()
+    ):
+        index = {(str(row["task_record_id"]), str(row["protocol"])): row for row in group_rows}
+        tasks = sorted({str(row["task_record_id"]) for row in group_rows})
+        for multi, single in pairs:
+            contrasts.append(
+                {
+                    "model_id": model_id,
+                    "benchmark_id": benchmark_id,
+                    "multi_call_protocol": multi,
+                    "single_call_protocol": single,
+                    **_contrast_with_pass_rates(
+                        group_rows,
+                        multi,
+                        single,
+                        seed_parts=("rq3", model_id, benchmark_id),
+                    ),
+                }
+            )
+            paired = [
+                (index[(task, multi)], index[(task, single)])
+                for task in tasks
+                if (task, multi) in index
+                and (task, single) in index
+                and index[(task, multi)].get("transition") is not None
+                and index[(task, single)].get("transition") is not None
+            ]
+            for side, protocol, position in (
+                ("multi_call", multi, 0),
+                ("single_call", single, 1),
+            ):
+                counts = Counter(str(item[position]["transition"]) for item in paired)
+                initial_fail = counts["repair"] + counts["unrepaired_failure"]
+                initial_pass = counts["regression"] + counts["functional_preservation"]
+                decompositions.append(
+                    {
+                        "model_id": model_id,
+                        "benchmark_id": benchmark_id,
+                        "contrast": f"{multi}:{single}",
+                        "side": side,
+                        "protocol": protocol,
+                        "common_complete_tasks": len(paired),
+                        "repair": counts["repair"],
+                        "repair_rate": counts["repair"] / initial_fail if initial_fail else None,
+                        "regression": counts["regression"],
+                        "regression_rate": counts["regression"] / initial_pass
+                        if initial_pass
+                        else None,
+                        "functional_preservation": counts["functional_preservation"],
+                        "unrepaired_failure": counts["unrepaired_failure"],
+                    }
+                )
+        for protocol in ("sc_dr", "sc_dcr", "sc_dcpr"):
+            selected = [row for row in group_rows if row["protocol"] == protocol]
+            counts = Counter(str(row.get("label_change_consistency")) for row in selected)
+            parse = Counter(str(row.get("single_call_decision_parse_status")) for row in selected)
+            inconsistent = counts["preserve_changed"] + counts["refine_unchanged"]
+            consistency.append(
+                {
+                    "model_id": model_id,
+                    "benchmark_id": benchmark_id,
+                    "protocol": protocol,
+                    "total_rows": len(selected),
+                    "exact_label": parse["exact"],
+                    "invalid_label": parse["invalid"],
+                    "preserve_changed": counts["preserve_changed"],
+                    "preserve_unchanged": counts["preserve_unchanged"],
+                    "refine_changed": counts["refine_changed"],
+                    "refine_unchanged": counts["refine_unchanged"],
+                    "behavior_label_inconsistency": inconsistent,
+                    "behavior_label_inconsistency_rate": inconsistent / parse["exact"]
+                    if parse["exact"]
+                    else None,
+                }
+            )
+            differences: list[int] = []
+            excluded = 0
+            for row in selected:
+                emitted = _success(row)
+                enforced = row.get("label_enforced_end_to_end_success")
+                if emitted not in {0, 1} or enforced not in {0, 1}:
+                    excluded += 1
+                else:
+                    differences.append(int(enforced) - int(emitted))
+            low, high = paired_bootstrap_ci(
+                differences,
+                confidence_level=float(_config()["confidence_level"]),
+                resamples=int(_config()["bootstrap_resamples"]),
+                seed=deterministic_seed(
+                    int(_config()["bootstrap_seed"]),
+                    "rq3-label",
+                    model_id,
+                    benchmark_id,
+                    protocol,
+                ),
+            )
+            improved = sum(value == 1 for value in differences)
+            worsened = sum(value == -1 for value in differences)
+            label_sensitivity.append(
+                {
+                    "model_id": model_id,
+                    "benchmark_id": benchmark_id,
+                    "protocol": protocol,
+                    "paired_complete": len(differences),
+                    "excluded": excluded,
+                    "label_enforced_minus_emitted": mean(differences),
+                    "bootstrap_ci_low": low,
+                    "bootstrap_ci_high": high,
+                    "improved": improved,
+                    "worsened": worsened,
+                    "unchanged": len(differences) - improved - worsened,
+                    "mcnemar_exact_two_sided_p": exact_mcnemar_p_value(improved, worsened),
+                }
+            )
+    return {
+        "topology_paired_contrasts": contrasts,
+        "topology_repair_regression": decompositions,
+        "single_call_label_consistency": consistency,
+        "label_enforced_sensitivity": label_sensitivity,
     }
 
 
@@ -697,6 +845,7 @@ def compute_rq4(
     efficiency_rows: list[dict[str, Any]] = []
     contrasts = [
         *(tuple(str(value).split(":", maxsplit=1)) for value in _config()["rq1"]["contrasts"]),
+        *(tuple(str(value).split(":", maxsplit=1)) for value in _config()["rq2"]["contrasts"]),
         *(tuple(str(value).split(":", maxsplit=1)) for value in _config()["rq3"]["contrasts"]),
     ]
     for (model_id, benchmark_id), group_rows in sorted(grouped.items()):
@@ -800,7 +949,7 @@ def _report(
             "",
             "Interpretation should begin only after the output validation passes and the displayed "
             "denominators, missingness, and source-run lineage are reviewed. Statistical "
-            "associations in RQ3 are descriptive and are not causal estimates.",
+            "associations in RQ2 are descriptive and are not causal estimates.",
             "",
         ]
     )

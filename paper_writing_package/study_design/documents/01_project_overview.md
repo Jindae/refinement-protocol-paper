@@ -32,6 +32,7 @@ Locally deployable open-weight instruct models를 대상으로 명시적인 refi
 - Refinement-Need Decision이 incorrect candidate의 repair 기회를 얼마나 놓치는가
 - Initial pass rate가 다른 model-benchmark combination에서 동일한 protocol의 가치가 어떻게 달라지는가
 - Candidate 수준의 이익과 손실이 benchmark 전체의 correctness와 token cost로 어떻게 누적되는가
+- 동일한 C/P/D/R 역할을 한 call에 명시하는 것과 별도 call로 외부화하는 것의 차이는 무엇인가
 
 본 연구는 intermediate critique나 plan의 의미적 정확성을 직접 평가하지 않는다.
 대신 각 stage를 별도의 model call로 구성하고, stage를 추가했을 때 final candidate의 테스트 결과가 어떻게 달라지는지 측정한다.
@@ -47,7 +48,8 @@ self-refinement protocol을 구성하는 실용적인 방법을 조사하는 것
 2. 각 protocol의 Refinement Gain을 Repair와 Correct-to-Incorrect Regression으로 분해한다.
 3. Decision-Conditioned Refinement가 candidate별 결과와 benchmark 전체 결과에 미치는 영향을 분석한다.
 4. Model과 benchmark에 따라 달라지는 initial pass rate가 protocol의 효용에 어떤 관계를 갖는지 분석한다.
-5. 추가 stage가 소비하는 토큰과 얻는 correctness improvement를 함께 비교하여 각 protocol의 cost-effectiveness를 평가한다.
+5. 역할을 single-call prompt에 명시하는 방식과 multi-call artifact로 외부화하는 방식을 비교한다.
+6. 추가 stage와 call topology가 소비하는 토큰 및 correctness improvement를 함께 비교한다.
 
 ## 4. 연구 범위
 
@@ -96,6 +98,11 @@ Decision output은 Critique, Planning 또는 Revision prompt에 전달하지 않
 반사실적 repair와 regression을 관찰하기 위해 Always-Refine candidate를 모두 생성한 뒤,
 Decision이 `PRESERVE`이면 initial candidate를, `REFINE`이면 대응 candidate를 선택한다.
 
+추가 비교 축은 같은 역할을 한 call 안에 명시하는 `SC-CR`, `SC-CPR`, `SC-DR`, `SC-DCR`,
+`SC-DCPR`이다. 이 조건은 external Critique/Plan artifact를 만들지 않는다. `SC-D*`는
+Decision label과 final code를 같은 response에 출력하며, emitted code를 main candidate로
+평가해 별도 Decision gate의 exact preservation과 비교한다.
+
 Initial candidate와 각 final candidate는 benchmark의 전체 evaluation tests로 평가한다.
 주요 correctness outcome은 initial pass rate, final pass rate, refinement gain, repair, correct-to-incorrect regression이다.
 Decision의 결과는 prevented regression, missed repair, safe preservation, unsuccessful refinement avoidance로 분석한다.
@@ -114,6 +121,7 @@ Benchmark 수준에서는 candidate-level 결과를 합산하여 total tokens, m
 - Refinement-Need Decision이 candidate를 보존하거나 refine하면서 만드는 correctness와 token-cost의 이익 및 손실
 - Initial pass rate가 다른 model-benchmark combination에서 protocol의 유용성이 달라지는 양상
 - 추가 token consumption이 final correctness improvement를 정당화하는 protocol과 그렇지 않은 protocol
+- Single-call role instruction과 multi-call role externalization의 correctness/preservation 차이
 - Locally deployable code model을 위한 self-refinement protocol 선택에 사용할 수 있는 경험적 지침
 
 연구 결과는 self-refinement의 절대적 우수성을 주장하기보다, stage composition과 Decision-Conditioned Refinement가 어떤 조건에서 유효한지를 제한된 범위 안에서 설명하는 데 목적이 있다.

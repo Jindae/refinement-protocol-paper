@@ -1,0 +1,97 @@
+{
+  "analysis_configuration_path": "analysis_tools/analysis_config.toml",
+  "analysis_configuration_sha256": "7db123fee8009654877e5308e16fc4e262644207a10895b362b057b6f922cfb0",
+  "analysis_version": "primary-analysis-2026-08-08-r4",
+  "dataset_id": "primary-final-v04-20260808-r5",
+  "decision_adjudication_id": "decision-adjudication-primary-20260806-r1",
+  "files": {
+    "data_dictionary.json": "f4af0d896a09c464593ac1b8c072a1e5699b8adb0b8262f75132a183c6dfe66a",
+    "derived_selections.jsonl": "917e11e258c9d31bb79bba82f8fbe5a478e86bccb453d5d72677730570b4fd28",
+    "outcomes.jsonl": "6f95223fdf8a73dc1fd9d8b9647e166c09ab3442815b6cd6c0615245e0675178",
+    "stage_calls.jsonl": "ec947597530cee1a380af7bd9cbf25eaf66fc1951d2345df8a2df4e16a789567"
+  },
+  "paper_facing": true,
+  "pending_confirmation_count": 0,
+  "producer_git_commit": "a15ce86c6b51e242d0bac8343d6f93ce9091098f",
+  "result_status": "final",
+  "row_counts": {
+    "derived_selections": 30186,
+    "models": 6,
+    "outcomes": 120744,
+    "protocols": 12,
+    "stage_calls": 120656,
+    "tasks": 1677
+  },
+  "schema_version": "processed-dataset-manifest-v2",
+  "source_files": [
+    {
+      "path": "runs/logs/decision-adjudication/decision-adjudication-primary-20260806-r1/status.json",
+      "sha256": "63c4e225c55ec70c5f9196bb4388fe37555bcea36608ed14b0e4b70083691707"
+    },
+    {
+      "path": "runs/logs/decision-adjudication/decision-adjudication-primary-20260806-r1/validation.json",
+      "sha256": "69fc783d3307071046ac7bffac35abdd8796f454030b9bed1df12639a0df3a3a"
+    },
+    {
+      "path": "runs/logs/evaluation-campaign/evaluation-role-separated-primary-20260807-r1/status.json",
+      "sha256": "ee72430d0c8b07d9df4500a2c3d887668f101906e9b3c35b948500eca14b3716"
+    },
+    {
+      "path": "runs/logs/evaluation-campaign/evaluation-role-separated-primary-20260807-r1/validation.json",
+      "sha256": "54f33dd74403e0b21ef74e98d4b964a4e436683ff4e2f4f213ab89503c8df03e"
+    },
+    {
+      "path": "runs/logs/evaluation-campaign/evaluation-single-call-primary-20260807-r1/status.json",
+      "sha256": "3d200080dfa04db5809a23e5e11833fdfee1498e09a69cbd3fcda4327501bb59"
+    },
+    {
+      "path": "runs/logs/evaluation-campaign/evaluation-single-call-primary-20260807-r1/validation.json",
+      "sha256": "4c050428ad12d4db4d44ff0d519014d4e9ddfec1b7a7620f7db7c7cd9b98c6bc"
+    },
+    {
+      "path": "runs/logs/evaluation-remediation/evaluation-remediation-v02-20260808-r4/status.json",
+      "sha256": "de53ad76983872d82baa0a200aa046f000be7c5bc06a95199a6f789547170376"
+    },
+    {
+      "path": "runs/logs/evaluation-remediation/evaluation-remediation-v02-20260808-r4/validation.json",
+      "sha256": "3bf4c6abdf20ed1c0d82f3328183924bcb3c84a9c74f584c291aadd651f98b24"
+    },
+    {
+      "path": "runs/logs/model-campaign/campaign-primary-20260804T104734Z/status.json",
+      "sha256": "4d394d936613efbae8ffd8d114efd69562ff861f4c9fc4f82e80210029a1fbf2"
+    },
+    {
+      "path": "runs/logs/model-campaign/campaign-primary-20260804T104734Z/validation.json",
+      "sha256": "af01d879eddfe16242f24520d375b299556a7a1cf7782655ed3434595b67fb68"
+    },
+    {
+      "path": "runs/registry/run_1dd46dd4a0ae265ab7a184a9/launch.json",
+      "sha256": "235bcea4e6be09f27905dd4f86fe675c7f3dde922ff97db7c14330312a228d24"
+    },
+    {
+      "path": "runs/registry/run_5a4129eed4283cd222e2de9e/launch.json",
+      "sha256": "cde9c223e90b7229115a794b465cc5bce0e733726dec8b2a9d20278a6212df54"
+    },
+    {
+      "path": "runs/registry/run_c99d3b1d562acc3e80026e48/launch.json",
+      "sha256": "ff32cb8642faf074eaac36eae84b5720b548992d9d907bc3e189dcb2d3cfc2e5"
+    }
+  ],
+  "source_runs": {
+    "base_evaluation": "run_b25b1ec137928799f30217af",
+    "base_inference": "run_c99d3b1d562acc3e80026e48",
+    "base_remediation": "run_cfde994451c10e10b850905f",
+    "role_evaluation": "run_1e4f588e7975f8b97a71400f",
+    "role_inference": "run_1dd46dd4a0ae265ab7a184a9",
+    "single_evaluation": "run_7e4ee0647f99f8eb90c1aecd",
+    "single_inference": "run_5a4129eed4283cd222e2de9e"
+  },
+  "status_counts": {
+    "complete": 119540,
+    "final_timeout": 44,
+    "initial_timeout": 342,
+    "malformed_final_candidate": 722,
+    "malformed_initial": 96
+  },
+  "study_version": "study-v0.4.0"
+}

@@ -148,7 +148,12 @@ def write_csv(path: Path, rows: Sequence[Mapping[str, Any]], fields: Sequence[st
     temporary = Path(temporary_name)
     try:
         with os.fdopen(descriptor, "w", encoding="utf-8", newline="") as handle:
-            writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="raise")
+            writer = csv.DictWriter(
+                handle,
+                fieldnames=fields,
+                extrasaction="raise",
+                lineterminator="\n",
+            )
             writer.writeheader()
             for row in rows:
                 writer.writerow({field: _csv_value(row.get(field)) for field in fields})

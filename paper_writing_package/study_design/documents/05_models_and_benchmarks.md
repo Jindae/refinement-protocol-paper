@@ -127,7 +127,9 @@ BigCodeBench-Instruct의 candidate execution은 공식 local evaluator가 사용
 두 환경은 package state와 process namespace를 공유하지 않으며, BigCodeBench execution environment는 network가 차단된 sandbox 안에서만 candidate와 hidden tests를 실행한다.
 
 Benchmark별 interpreter 차이는 protocol별로 달라지는 treatment가 아니다.
-동일 task의 Direct, `R`, `CR`, `CPR` 및 Decision-Conditioned final candidate는 모두 동일한 benchmark-specific evaluator environment에서 평가한다.
+동일 task의 Direct, `R`, `CR`, `CPR`, 다섯 `SC-*` 및 Decision-Conditioned final candidate는 모두 동일한 benchmark-specific evaluator environment에서 평가한다.
+Single-call evaluation campaign은 서버의 다른 workload를 고려해 evaluator worker를 2개로
+제한하며, GPU inference와 기본 schedule에서 겹치지 않는다.
 환경 identifier, Python patch version, complete package lock, sandbox 및 timeout configuration을 모든 evaluation record와 run manifest에 연결한다.
 Benchmark execution 결과와 diagnostic은 model prompt 또는 이후 refinement call에 전달하지 않는다.
 

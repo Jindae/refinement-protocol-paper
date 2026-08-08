@@ -1,0 +1,13 @@
+sensitivity,always_refine_protocol,decision_protocol,outcome,combination_count,pearson_descriptive,spearman_descriptive
+all_resolved,r,dr,correctness_difference,18,0.20361908441083526,0.5132746414436408
+all_resolved,r,dr,net_token_saving_mean,18,-0.21943558866111387,-0.10841508930578804
+all_resolved,cr,dcr,correctness_difference,18,-0.13167377509560652,0.05475206611570248
+all_resolved,cr,dcr,net_token_saving_mean,18,-0.5272382677534474,-0.40371714208155357
+all_resolved,cpr,dcpr,correctness_difference,18,-0.1413306521444889,-0.023760330578512397
+all_resolved,cpr,dcpr,net_token_saving_mean,18,-0.5268127085251242,-0.44398560382370345
+exact_only,r,dr,correctness_difference,18,0.19949887792925125,0.48165608036908386
+exact_only,r,dr,net_token_saving_mean,18,-0.22710542694956487,-0.10118741668540217
+exact_only,cr,dcr,correctness_difference,18,-0.1455445672625382,0.03202479338842975
+exact_only,cr,dcr,net_token_saving_mean,18,-0.5218597046923198,-0.38616422286061647
+exact_only,cpr,dcpr,correctness_difference,18,-0.15162418358194835,-0.023760330578512397
+exact_only,cpr,dcpr,net_token_saving_mean,18,-0.5232505739828249,-0.4130098640220497

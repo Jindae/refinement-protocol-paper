@@ -8,9 +8,11 @@
 모델과 benchmark는 protocol 효과를 관찰하는 조건을 제공한다.
 모델 간 절대 성능 순위보다 각 model-benchmark combination 안에서 protocol을 비교하고, 그 결과가 combinations 사이에서 어떻게 달라지는지 분석한다.
 
-## RQ1. Refinement Stage Composition
+## RQ1. Refinement Performance and Repair–Regression Balance
 
-**RQ1. How does the stage composition of self-refinement affect final code correctness?**
+**RQ1. How does the stage composition of self-refinement affect final code correctness, and how is
+that effect explained by repairs of initially incorrect candidates and regressions of initially
+correct candidates?**
 
 ### Motivation
 
@@ -24,6 +26,12 @@ Critique는 오류가 반드시 있다고 가정하지 않고 no-problem 결론�
 conditioned Revision은 같은 candidate를 다시 독립적으로 review하는 단계가 아니라 각각
 upstream 진단을 계획으로 변환하고 supplied artifact를 실행한다. Direct Revision만 선행
 artifact가 없으므로 review와 수정 필요성 판단을 자체적으로 수행한다.
+이러한 Planning의 도입은 임의적인 stage 추가로만 보지 않는다. Code generation 선행연구는
+solution plan을 code implementation 전에 명시적인 artifact와 phase로 분리했고, verified
+plan을 initial generation과 후속 refinement에 재사용한 workflow도 평가했다. 그러나 이들은
+주로 initial code 이전에 planning을 수행하고, post-hoc diagnosis와 revision suggestion을
+분리하지 않는다. 본 연구는 이 motivation을 independently generated Critique 이후의
+Revision Planning으로 옮겨 그 증분 효과를 평가한다.
 
 ### Empirical Scope
 
@@ -39,53 +47,35 @@ RQ1은 다음 paired protocol comparison을 중심으로 분석한다.
 - Initial candidate 대비 refinement gain
 - 동일 task에서 protocol 간 final correctness transition
 - Model-benchmark combination별 paired difference와 confidence interval
+- Repair count와 initially incorrect candidate 기준 repair rate
+- Regression count와 initially correct candidate 기준 regression rate
+- Functional Preservation과 Unrepaired Failure
+- Candidate change 여부와 functional transition의 관계
 
 ### Intended Discussion
 
-결과에서는 stage가 많을수록 성능이 증가하는지 여부를 단순히 확인하는 데 그치지 않는다.
-어떤 stage를 추가했을 때 final correctness가 개선되거나 감소하는지, 그 효과가 model-benchmark combination에 따라 달라지는지를 논의한다.
+결과에서는 stage가 많을수록 성능이 증가하는지 또는 pass rate가 달라지는지만 독립적으로
+논의하지 않는다. 각 pass-rate/refinement-gain 차이를 Repair와 Correct-to-Incorrect
+Regression으로 함께 분해하여, 개선이 더 많은 repair에서 비롯됐는지 또는 correct
+candidate 보존에서 비롯됐는지 설명한다. Functional Preservation, Unrepaired Failure,
+malformed output도 같은 결과 경계 안에서 함께 보고한다.
 다만 `R`-`CR` 및 `CR`-`CPR` 차이는 각각 완전한 정보 경로의 효과이며, Critique 또는 Plan의
 의미 정확성을 독립적으로 식별한 인과 효과로 해석하지 않는다. Upstream 오진과 downstream
 지시 이행 실패는 해당 protocol의 관찰된 성능에 포함된다.
+특히 `CR`-`CPR` 결과는 code generation의 explicit Planning 선행연구와 비교하되, physical
+call separation이 항상 유리하다고 전제하지 않는다. Self-Planning의 reported variant에서는
+one-phase plan+code가 two-phase보다 약간 높았으므로, CPR이 CR보다 낮거나 같은 경우에도
+Planning construct의 부재로 단정하지 않고 context transformation, error propagation,
+plan-following failure, token cost를 함께 검토한다. 반대로 CPR이 높더라도 post-critique
+Planning의 전체 protocol effect로 제한하여 해석한다.
 
-## RQ2. Repair and Regression Balance
+Initial candidate와 final candidate의 paired correctness는 `Repair`, `Regression`, `Functional
+Preservation`, `Unrepaired Failure`의 네 transition으로 분류한다. Decision-conditioned
+protocol의 세부 gating tradeoff는 RQ2에서 always-refine counterpart와 직접 비교한다.
 
-**RQ2. How do alternative refinement protocols balance repairs of initially incorrect candidates and regressions of initially correct candidates?**
+## RQ2. Initial Pass Rate and Decision-Conditioned Refinement
 
-### Motivation
-
-동일한 Refinement Gain은 서로 다른 Repair와 Correct-to-Incorrect Regression 조합에서 발생할 수 있다.
-Final pass rate만 비교하면 protocol이 initial failures를 효과적으로 수정했는지, 또는 correct candidates를 보존했기 때문에 좋은 결과를 얻었는지 구분하기 어렵다.
-Self-refinement의 실용적 가치는 incorrect candidate를 repair하는 능력과 correct candidate를 보존하는 능력을 함께 고려해야 한다.
-
-### Empirical Scope
-
-Initial candidate와 final candidate의 paired correctness outcome을 다음 네 transition으로 분류한다.
-
-- Incorrect-to-Correct: Repair
-- Correct-to-Incorrect: Regression
-- Correct-to-Correct: Functional Preservation
-- Incorrect-to-Incorrect: Unrepaired Failure
-
-Always-Refine Protocol과 Decision-Conditioned Refinement를 모두 이 transition 기준으로 분석한다.
-
-### Evidence Used to Answer the RQ
-
-- Repair count와 repair rate
-- Regression count와 regression rate
-- Functional preservation rate
-- Unrepaired failure rate
-- Candidate change 여부와 functional transition의 관계
-- Protocol별 repair-regression balance
-
-### Intended Discussion
-
-결과에서는 Refinement Gain을 Repair와 Correct-to-Incorrect Regression으로 분해한다.
-Critique Generation과 Revision Planning이 repair와 regression에 각각 어떤 영향을 주는지, Decision-Conditioned Refinement가 regression을 줄이는 대신 repair를 놓치는지, 동일한 refinement gain이 서로 다른 repair-regression balance에서 발생하는지를 논의한다.
-
-## RQ3. Initial Pass Rate and Decision-Conditioned Refinement
-
-**RQ3. How does the value of decision-conditioned refinement vary across model-benchmark combinations with different initial pass rates?**
+**RQ2. How does the value of decision-conditioned refinement vary across model-benchmark combinations with different initial pass rates?**
 
 ### Motivation
 
@@ -129,45 +119,102 @@ Model-benchmark combination별 initial pass rate와 Decision-Conditioned Refinem
 결과에서는 Decision의 binary accuracy보다 `PRESERVE`와 `REFINE`이 만든 실제 outcome에 중점을 둔다.
 어떤 combination에서 prevented regression과 token saving이 발생하는지, 어떤 combination에서 missed repair가 더 큰 손실이 되는지, initial pass rate가 이러한 tradeoff와 어떤 관계를 갖는지를 논의한다.
 
-## RQ4. Cost-Effectiveness
+## RQ3. Single-Call versus Multi-Call Role Realization
 
-**RQ4. Do the correctness effects of additional refinement stages justify their token costs?**
+**RQ3. How does realizing refinement roles within one model call versus externalizing them across multiple calls affect correctness and preservation?**
 
 ### Motivation
 
-Critique와 Plan을 별도 call로 추가하면 더 많은 input 및 output token이 필요하다.
-Decision은 추가 call을 요구하지만 `PRESERVE`된 candidate에서는 refinement calls를 실행하지 않는다.
-따라서 protocol의 비용은 call count만으로 판단할 수 없으며, benchmark에서 `PRESERVE`와 `REFINE`이 각각 얼마나 발생하는지 함께 고려해야 한다.
+`CR`, `CPR`, `DR`, `DCR`, `DCPR`은 역할을 별도 call과 observable artifact 또는 exact
+selection으로 외부화한다. 같은 역할을 한 prompt 안에 순서대로 명시하면 intermediate
+artifact를 다시 입력하는 비용과 정보 변환은 줄지만, stage boundary와 exact preservation은
+보장되지 않는다. 선행 planning 연구에서도 one-phase와 two-phase realization의 결과가
+항상 같은 방향은 아니므로, stage composition과 call topology를 별개의 설계 축으로 본다.
 
 ### Empirical Scope
 
-Cost analysis는 candidate level과 benchmark level로 구분한다.
-Candidate level에서는 Decision이 refinement tokens를 절약하면서 regression을 방지했는지, 또는 repair를 놓쳤는지 확인한다.
-Benchmark level에서는 이러한 결과를 합산하여 total tokens와 total correct solutions를 비교한다.
+동일한 exact initial candidate에서 다음 paired comparison을 수행한다.
+
+- `CR`과 `SC-CR`: C와 R을 두 call로 외부화하거나 한 call에 명시한 차이
+- `CPR`과 `SC-CPR`: C, P, R을 세 call로 외부화하거나 한 call에 명시한 차이
+- `DR`과 `SC-DR`: 별도 Decision selection과 한 call의 D-R 지시 차이
+- `DCR`과 `SC-DCR`: 별도 D/C/R 경계와 한 call의 D-C-R 지시 차이
+- `DCPR`과 `SC-DCPR`: 별도 D/C/P/R 경계와 한 call의 D-C-P-R 지시 차이
+
+Single-call 조건은 hidden reasoning stage의 실제 수행을 입증하지 않는다. Treatment는
+prompt에 명시된 역할 순서와 물리적 call topology 전체다.
 
 ### Evidence Used to Answer the RQ
 
-- Stage별 input tokens와 output tokens
-- Protocol별 token cost per candidate
-- Benchmark total tokens
-- Mean 및 median tokens per task
-- Decision overhead
-- Avoided refinement tokens
-- Net token saving
+- Final pass rate와 refinement gain
+- Repair, Correct-to-Incorrect Regression, Functional Preservation, Unrepaired Failure
+- Exact 및 normalized candidate change
+- Single-call Decision label과 emitted code change의 교차표
+- `PRESERVE`와 changed code, `REFINE`과 unchanged code의 불일치
+- Paired correctness difference와 confidence interval
+
+### Intended Discussion
+
+결과는 “single-call 내부에서 C/P/D가 실제로 수행되었다”는 해석이 아니라, 동일 역할을
+한 prompt에 명시한 protocol과 별도 call로 외부화한 protocol의 end-to-end 차이로 제한한다.
+Single-call Decision 조건의 주 outcome은 label과 무관하게 같은 응답에서 emitted된 code다.
+Label이 `PRESERVE`인데 code가 바뀐 사례는 별도 Decision의 exact-selection 경계가 제공하는
+보존 효과와 대비한다. Label에 따라 exact initial 또는 emitted code를 선택한 결과는
+추가 model call이 없는 supplementary analysis로만 보고한다.
+
+## RQ4. Cost-Effectiveness
+
+**RQ4. Do the correctness effects of alternative refinement protocols justify their token costs?**
+
+### Motivation
+
+별도 Critique, Plan, Decision call은 token consumption을 늘리지만 observable artifact와 exact
+selection 경계를 제공한다. Single-call protocols는 call과 intermediate-input tokens를 줄일
+수 있지만 correctness 또는 preservation이 달라질 수 있다. 따라서 전체 protocol panel에서
+correctness와 실제 및 protocol-implied token cost를 함께 비교해야 한다.
+
+### Empirical Scope
+
+Candidate level과 benchmark level에서 multi-call 및 single-call protocol 전체를 비교한다.
+물리적으로 실행한 Experimental Token Consumption과 한 protocol을 적용할 때의
+Protocol-Implied Token Cost를 분리한다.
+
+### Evidence Used to Answer the RQ
+
+- Stage/call별 input, output, total tokens
+- Protocol별 incremental 및 end-to-end token cost
+- Benchmark total tokens와 task당 mean/median
+- Decision overhead, avoided refinement tokens, net token saving
 - Correctness-cost Pareto comparison
 - Tokens per additional correct solution
 
 ### Intended Discussion
 
-결과에서는 가장 높은 pass rate를 제공하는 protocol과 가장 효율적인 protocol을 구분한다.
-추가 stage가 final correctness를 높이지만 token consumption도 크게 늘리는 경우, correctness를 유지하면서 token consumption을 줄이는 경우, 더 많은 tokens를 사용하면서 correctness도 낮아지는 경우를 구분한다.
-Token count는 tokenizer가 다른 모델 사이의 절대 계산량 비교보다 동일 모델 내부의 protocol comparison에 우선 사용한다.
+가장 높은 pass rate와 가장 효율적인 protocol을 구분하고, call separation이 제공하는
+correctness/preservation 변화가 추가 token을 정당화하는지 분석한다. Token count는 같은
+모델 안의 protocol comparison을 우선하며 모델 간 compute equivalence로 해석하지 않는다.
 
 ## Research Question to Analysis Mapping
 
 | Research Question | Comparison | Main Outcomes |
 |---|---|---|
-| RQ1 | Direct, `R`, `CR`, `CPR` | Final pass rate, refinement gain, paired correctness difference |
-| RQ2 | Initial-to-final transitions for all protocols | Repair, regression, preservation, unrepaired failure |
-| RQ3 | `R` vs `DR`, `CR` vs `DCR`, `CPR` vs `DCPR` across model-benchmark combinations | Prevented regression, missed repair, Decision-Conditioned Refinement effect |
+| RQ1 | Direct, `R`, `CR`, `CPR`; initial-to-final transitions for all protocols | Pass rate and paired correctness together with repair, regression, preservation, and unrepaired failure |
+| RQ2 | `R` vs `DR`, `CR` vs `DCR`, `CPR` vs `DCPR` across model-benchmark combinations | Prevented regression, missed repair, Decision-Conditioned Refinement effect |
+| RQ3 | `CR`/`CPR`/`DR`/`DCR`/`DCPR` vs 대응 `SC-*` 조건 | Paired correctness, repair/regression, preservation and Decision-code consistency |
 | RQ4 | Correctness and token consumption of all protocols | Total and per-task tokens, net token saving, correctness-cost tradeoff |
+
+## Exploratory Mechanism Supplement and Follow-up Questions
+
+Accepted RQ1–RQ4를 변경하지 않고 다음 네 post-hoc 분석을 별도 versioned supplement로 수행한다.
+
+1. Protocol별 repair/regression model-task 집합의 교집합, 차집합, Jaccard overlap
+2. Always-refine, separate Decision, integrated single-call Decision의 repair/regression mediation
+3. 여러 generated condition의 cumulative empirical candidate reachability와 unique repair
+4. Critique의 explicit no-problem 및 Plan의 explicit no-change surface signal에서 candidate
+   change와 CR/CPR transition으로 이어지는 artifact chain
+
+Prospective option-A pilot은 다음 질문을 진단한다: initial code 없이 다시 생성해도 repair가
+나오는가, 한 response의 draft가 뒤의 critique/final token을 조건화하는가, stored Critique의
+정보가 original code 없이도 유용한가. 이는 소규모 mechanism pilot이며 population-level
+effect estimate가 아니다. Option B의 Planning ablation과 Option C의 matched-budget stochastic
+capability envelope는 option-A 결과 검토 후에만 구체화한다.

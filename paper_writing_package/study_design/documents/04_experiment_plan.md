@@ -8,10 +8,11 @@ Intermediate artifact의 정확성을 직접 평가하지 않고, 주요 outcome
 실험의 기본 단위는 하나의 model-task pair다.
 각 모델은 각 task에 대해 자신의 initial candidate를 생성하며, 해당 candidate는 모든 protocol에서 동일하게 재사용된다.
 
-현재 paper-facing protocol 실행은 `study-v0.3.0`이다. `study-v0.2.0`의 전체 실행은 prompt
+현재 paper-facing protocol 실행은 `study-v0.4.0`이다. `study-v0.2.0`의 전체 실행은 prompt
 역할 중복을 발견하게 한 참고용 결과 및 재현 근거로 보존한다. 새 버전은 검증된 v0.2.0의
 exact Initial Candidate, Direct Revision, Decision과 그 평가를 재사용하며, Critique,
-Critique-Conditioned Revision, Revision Planning, Plan-Conditioned Revision만 새로 호출한다.
+Critique-Conditioned Revision, Revision Planning, Plan-Conditioned Revision은 v0.3.0의
+role-separated 실행을 재사용한다. v0.4.0에서는 다섯 single-call conditions만 새로 호출한다.
 
 ## 2. 실험 대상 Protocol
 
@@ -34,7 +35,20 @@ Critique-Conditioned Revision, Revision Planning, Plan-Conditioned Revision만 �
 `DR`, `DCR`, `DCPR`을 위한 별도의 revision generation은 수행하지 않는다.
 하나의 Decision output과 이미 생성한 revised candidate를 결합하여 final outcome과 Protocol Token Cost를 구성한다.
 
-### 2.4 Role responsibility and no-change contract
+### 2.4 Single-Call Role Protocols
+
+- **SC-CR**: 한 call에 C-R 역할을 명시하고 emitted code를 평가
+- **SC-CPR**: 한 call에 C-P-R 역할을 명시하고 emitted code를 평가
+- **SC-DR**: 한 call에 D-R 역할을 명시하고 Decision label과 emitted code를 함께 저장
+- **SC-DCR**: 한 call에 D-C-R 역할을 명시하고 label과 emitted code를 함께 저장
+- **SC-DCPR**: 한 call에 D-C-P-R 역할을 명시하고 label과 emitted code를 함께 저장
+
+`SC-D*`의 주 final candidate는 reported Decision label과 무관하게 같은 call이 emitted한
+code다. Label-enforced selection은 별도 supplementary derived outcome으로만 구성한다.
+Single-call protocols에는 external Critique 또는 Plan artifact가 없으며, 그 역할의 내부
+수행 여부를 별도 artifact correctness로 해석하지 않는다.
+
+### 2.5 Role responsibility and no-change contract
 
 | Stage | Primary responsibility | No-change behavior | Not a primary responsibility or direct input |
 |---|---|---|---|
@@ -142,6 +156,19 @@ BigCodeBench-Instruct의 candidate execution만 upstream evaluator dependency와
 경계를 통과하는 입력은 task identifier와 평가할 exact candidate source이고, 평가 결과나 diagnostic은 이후 model call에 전달하지 않는다.
 동일 task의 initial 및 모든 final candidates에는 model과 protocol에 관계없이 동일한 environment identifier, package lock, task별 timeout 및 sandbox configuration을 적용한다.
 
+### Step 10. Single-Call Candidate Generation and Evaluation
+
+`SC-CR`, `SC-CPR`, `SC-DR`, `SC-DCR`, `SC-DCPR`은 각각 task specification과 exact initial
+candidate를 입력으로 받는 독립 model call이다. 모든 call은 최종 code를 한 complete Python
+fence에 출력한다. `SC-D*`는 첫 non-empty line에 exact Decision label도 출력한다. Code와
+label parser는 독립적이며 raw response를 먼저 저장한다.
+
+Single-call inference는 v0.3.0 평가 결과를 입력으로 요구하지 않는다. 검증된 v0.2.0 exact
+initial candidate만 참조하므로 v0.3.0 inference가 terminal validation을 통과한 뒤에는 그
+evaluation 완료 전에도 시작할 수 있다. 다만 wall-time evaluation의 server-load 오염을
+피하기 위해 GPU inference와 benchmark evaluation을 기본 schedule에서 동시에 실행하지 않는다.
+Single-call candidate evaluation은 inference와 분리하고 `evaluation_workers=2`로 제한한다.
+
 Task별 primary timeout은 model candidate를 생성하기 전에 official reference solution을 고정된 evaluator environment에서 세 번 실행한 timing audit으로 정한다.
 세 benchmark의 공통 default primary timeout은 10초다. Accepted reference의 최대 관측 시간이 10초를 넘은 task만 사전 override 대상으로 삼고, 그 최대값이 `(10, 20]`, `(20, 40]`, `(40, 80]`, `(80, 160]`초에 속하면 각각 30, 60, 120, 240초를 적용한다. 이 규칙은 HumanEval+ 0개, MBPP+ 1개, BigCodeBench-Instruct 15개 override를 만든다.
 Reference summary hash, 최대 관측값, 산정식 및 primary override 목록은 보존한다. 공통
@@ -186,6 +213,22 @@ phase의 입력이나 진행 결정에 사용하지 않으며, 한 model/protoco
 resume와 failure 규칙은 repository-level `EXPERIMENT_EXECUTION_GUIDELINES.md`를 따른다.
 새 CR/CPR evaluation은 네 phase와 lineage validation이 완료된 뒤 별도 campaign으로 수행한다.
 
+`study-v0.4.0` single-call campaign은 model을 최외곽 상주 단위로 둔다. 한 exact checkpoint를
+TP=2로 한 번 로드한 뒤 다음 다섯 condition을 각각 세 benchmark 전체에 대해 batch size
+32로 순서대로 처리하고 model을 내린다.
+
+1. `SC-CR`
+2. `SC-CPR`
+3. `SC-DR`
+4. `SC-DCR`
+5. `SC-DCPR`
+
+Condition을 batch 안에서 섞지 않는다. 각 `(model, condition)` 경계는 immutable record와
+progress checkpoint를 가지며, 중단 후에는 completed logical call을 재사용한다. 이 순서는
+condition을 최외곽에 둘 때 필요한 최대 30회 model load를 6회로 줄인다. Full execution
+전에 같은 six-model, nine-task scope에서 prompt 형식, code/label 독립 parsing, candidate
+lineage와 resume를 검증한다. Full configuration은 pilot review 전까지 execution-gated다.
+
 ### 4.1 Independent model calls
 
 전체 연구 construct에는 Direct Generation, Refinement-Need Decision, Direct Revision,
@@ -204,6 +247,18 @@ Decision은 `DR`, `DCR`, `DCPR` 구성에 공통으로 사용한다.
 Initial Candidate, Decision, Direct Revision은 source run
 `run_c99d3b1d562acc3e80026e48`에서 exact record/hash로 참조한다. 새 raw response나 source
 record로 복사해 가장하지 않으며 새 run manifest가 source run을 parent로 기록한다.
+
+v0.4.0에는 다음 다섯 독립 single-call 종류가 추가된다.
+
+1. Single-Call Critique and Revision
+2. Single-Call Critique, Planning, and Revision
+3. Single-Call Decision and Revision
+4. Single-Call Decision, Critique, and Revision
+5. Single-Call Decision, Critique, Planning, and Revision
+
+각 model-task-condition은 한 call만 수행하므로 full scope에는 최대
+`6 × 1,677 × 5 = 50,310` task-condition units가 있다. Malformed source initial로 blocked된
+unit에는 call을 만들지 않으며 분모와 explicit blocked status는 유지한다.
 
 이 구조는 각 protocol을 처음부터 독립적으로 실행하는 경우 발생하는 중복 call을 제거한다.
 동일한 critique artifact와 revision plan을 재사용하므로 protocol 비교에 artifact별 sampling 차이가 추가되지 않는다.
@@ -306,6 +361,11 @@ Always-Refine Protocol의 candidate-level cost는 다음과 같다.
 Cost(R)   = Revision call
 Cost(CR)  = Critique call + Critique-Conditioned Revision call
 Cost(CPR) = Critique call + Plan call + Plan-Conditioned Revision call
+Cost(SC-CR)   = one SC-CR call
+Cost(SC-CPR)  = one SC-CPR call
+Cost(SC-DR)   = one SC-DR call
+Cost(SC-DCR)  = one SC-DCR call
+Cost(SC-DCPR) = one SC-DCPR call
 ```
 
 Decision-Conditioned Refinement의 candidate-level cost는 다음과 같다.
@@ -337,6 +397,35 @@ Decision-Conditioned Refinement의 benchmark-level net token saving은 다음 �
 Model마다 tokenizer가 다르므로 raw token count는 같은 모델 안의 protocol comparison에 사용한다.
 모델 간 token count는 직접적인 compute equivalence로 해석하지 않는다.
 
+## Exploratory Mechanism Supplement and Staged Follow-up
+
+### Existing-data supplement
+
+Accepted `primary-final-v04-20260808-r5` outcome grid와 validated v0.3.0 C/P artifacts를 이용해
+task-set overlap, Decision mediation, empirical reachability, artifact-chain surface analysis를
+실행한다. 결과는 `exploratory_post_hoc`으로 표시하고 accepted four-RQ outputs와 혼합하지 않는다.
+
+### Option A: initial-code and within-call conditioning pilot
+
+첫 실행 범위는 DeepSeek-Coder-V2-Lite, Qwen3-Coder-30B-A3B, Gemma-4-31B의 세 모델과 기존
+public-only 9-task pilot scope다. 한 모델을 한 번 load한 뒤 `REGEN-NO-INIT`,
+`DRAFT-CR-FINAL`, `C-GENERATE-NO-INITIAL`을 세 benchmark 전체에 대해 순서대로 처리한다.
+총 81 model calls이며 `DRAFT-CR-FINAL`은 두 code candidates와 critique를 보존한다.
+
+Pilot acceptance는 exact prompt/hash/source lineage, raw-first storage, parser/malformed accounting,
+resume, token/finish metadata, candidate count를 검증한다. Candidate evaluation은 inference와
+별도 attempt로 수행하며, inference validation 전에 시작하지 않는다. 이 pilot의 결과는 prompt
+및 mechanism feasibility이지 six-model population estimate가 아니다.
+
+### Deferred options
+
+- Option B: `DRAFT-CPR-FINAL`, Plan-only code-omitted generation 등 Planning ablation
+- Option C: 동일 call/token budget의 independent samples와 refinement branches를 비교하는
+  stochastic capability-envelope experiment
+
+두 옵션은 option-A inference/evaluation/review가 모두 validated된 뒤 새로운 user decision과
+versioned configuration 없이는 실행하지 않는다.
+
 ## 9. Model-Benchmark Combination별 분석
 
 여섯 모델과 세 benchmark는 총 18개의 model-benchmark combinations를 구성한다.
@@ -357,32 +446,38 @@ Benchmark는 specification style, library usage, task complexity도 다르므로
 
 ## 10. RQ별 분석 절차
 
-### RQ1: Refinement Stage Composition
+### RQ1: Refinement Performance and Repair–Regression Balance
 
 - Direct Generation과 `R` 비교
 - `R`과 `CR` 비교
 - `CR`과 `CPR` 비교
 - Model-benchmark combination별 paired pass-rate difference 계산
 - 각 stage를 추가했을 때 효과의 방향과 크기 비교
-
-### RQ2: Repair and Regression Balance
-
 - 각 protocol의 initial-final transition matrix 생성
 - Initially incorrect candidates에서 repair rate 비교
 - Initially correct candidates에서 regression rate 비교
-- Similar refinement gain을 가진 protocol의 repair-regression balance 비교
+- pass-rate difference를 repair와 regression의 순차이로 재구성
+- 최종 성능을 pass rate만으로 해석하지 않고 repair/regression/preservation과 함께 논의
 
-### RQ3: Initial Pass Rate and Decision-Conditioned Refinement
+### RQ2: Initial Pass Rate and Decision-Conditioned Refinement
 
 - `R`과 `DR`, `CR`과 `DCR`, `CPR`과 `DCPR` 비교
 - Prevented regression과 missed repair 계산
 - Combination별 initial pass rate와 Decision-Conditioned Refinement effect 비교
 - Candidate-level outcome과 benchmark-level result를 분리하여 보고
 
+### RQ3: Single-Call versus Multi-Call Role Realization
+
+- `CR` 대 `SC-CR`, `CPR` 대 `SC-CPR` paired comparison
+- `DR` 대 `SC-DR`, `DCR` 대 `SC-DCR`, `DCPR` 대 `SC-DCPR` paired comparison
+- Final correctness와 repair/regression/preservation 비교
+- Single-call Decision label과 exact/normalized code change consistency 비교
+- Main emitted-code outcome과 supplementary label-enforced outcome 구분
+
 ### RQ4: Cost-Effectiveness
 
 - 각 stage의 additional token cost 계산
-- Protocol별 final correctness와 benchmark total tokens 비교
+- Multi-call 및 single-call protocol 전체의 final correctness와 benchmark total tokens 비교
 - Correctness-cost Pareto comparison 수행
 - 동일 correctness에서 더 낮은 비용을 제공하는 protocol과, 추가 비용에도 correctness가 개선되지 않는 protocol 식별
 

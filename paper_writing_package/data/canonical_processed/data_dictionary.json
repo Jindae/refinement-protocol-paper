@@ -1,0 +1,22 @@
+{
+  "primary_success_measure": "end_to_end_success; malformed model candidates are zero, timeouts/infrastructure are null",
+  "protocols": [
+    "direct",
+    "r",
+    "cr",
+    "cpr",
+    "dr",
+    "dcr",
+    "dcpr",
+    "sc_cr",
+    "sc_cpr",
+    "sc_dr",
+    "sc_dcr",
+    "sc_dcpr"
+  ],
+  "schema_version": "processed-data-dictionary-v2",
+  "single_call_primary_semantics": "emitted code is primary irrespective of emitted Decision label",
+  "single_call_supplementary_semantics": "label_enforced_* selects exact initial on PRESERVE and emitted code on REFINE",
+  "token_boundary": "v0.2 Direct/Decision/R + v0.3 role-separated C/CR/P/CPR + v0.4 five single-call stages; superseded v0.2 C/CR/P/CPR excluded",
+  "unit_of_analysis": "one logical model-task-protocol"
+}

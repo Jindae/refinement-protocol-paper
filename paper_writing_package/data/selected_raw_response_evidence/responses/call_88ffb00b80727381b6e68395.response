@@ -1,5 +1,0 @@
-REFINE
-
-The initial candidate has a few issues that need to be addressed:
-
-1. The function signature doesn't match the specification - it takes `data` as input but the specification doesn't specify what format `data` should be in, and the candidate assumes it's a dictionary with 'date', 'month',

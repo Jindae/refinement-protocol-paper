@@ -4,9 +4,9 @@
 연구 construct, protocol 정의, 입력 의존성은 `documents/`가 정의하며, 이 지침은 그
 설계를 바꾸지 않고 GPU 상주 시간, 재개 가능성, 진행 확인을 최적화한다.
 
-현재 paper-facing replacement는 `study-v0.3.0`이며 Section 2.2의 phase-separated schedule을
-사용한다. 아래 원래 model-resident seven-phase schedule은 `study-v0.2.0` 결과를 같은
-조건으로 재현하기 위해 보존한다.
+현재 paper-facing version은 `study-v0.4.0`이다. Section 2.2의 v0.3.0 role-separated
+multi-call 결과를 재사용하고 Section 2.3의 single-call comparison을 추가한다. 아래 원래
+model-resident seven-phase schedule은 `study-v0.2.0` 결과를 같은 조건으로 재현하기 위해 보존한다.
 
 ## 1. 실행 계층
 
@@ -107,6 +107,26 @@ registry는 수정하거나 새 결과와 혼합하지 않는다.
 no-problem 또는 no-change이면 exact initial source를 다시 출력하도록 요구한다. Decision은
 이 네 phase의 prompt input이나 실행 진행 조건이 아니며, 후속 derived outcome 선택에만 쓴다.
 
+## 2.3 Single-call v0.4.0 schedule
+
+검증된 v0.2.0 exact Initial Candidate를 재사용하여 `SC-CR`, `SC-CPR`, `SC-DR`, `SC-DCR`,
+`SC-DCPR`을 새로 생성한다. 이 run은 v0.3.0 evaluation을 입력으로 요구하지 않으며, v0.3.0
+inference가 terminal validation을 통과한 뒤 prompt pilot이 승인되면 독립적으로 시작할 수 있다.
+
+모델을 최외곽 상주 단위로 둔다. 한 모델을 TP=2로 한 번 로드한 뒤 다음 다섯 condition을
+각각 세 benchmark 전체에 대해 batch size 32로 처리하고 나서만 unload한다.
+
+1. **Single-Call Critique and Revision** (`single_call_cr`)
+2. **Single-Call Critique, Planning, and Revision** (`single_call_cpr`)
+3. **Single-Call Decision and Revision** (`single_call_dr`)
+4. **Single-Call Decision, Critique, and Revision** (`single_call_dcr`)
+5. **Single-Call Decision, Critique, Planning, and Revision** (`single_call_dcpr`)
+
+Condition을 같은 inference batch에 섞지 않는다. 각 `(model, condition)`은 progress와
+logical-call resume 경계이며 completed call은 재생성하지 않는다. 정상 full run의 model
+load는 여섯 번이다. Full gate를 열기 전에 같은 six-model nine-task pilot로 모든 prompt,
+code/Decision 독립 parsing, lineage, malformed accounting과 resume를 검증한다.
+
 ## 3. 평가와 분석 경계
 
 Benchmark evaluation은 model inference와 별도 campaign으로 실행한다. 모델 상주
@@ -114,11 +134,21 @@ campaign 도중 candidate를 평가하여 다음 phase의 진행 여부나 promp
 평가 결과, timeout, diagnostic, compiler/runtime 정보는 어떤 후속 model call에도
 전달하지 않는다.
 
-생성 조건은 Direct, `R`, `CR`, `CPR`뿐이다. 각 candidate condition의 평가 batch도
+생성 조건은 Direct, `R`, `CR`, `CPR` 및 다섯 `SC-*` 조건이다. 각 candidate condition의 평가 batch도
 대상 model과 protocol에 속한 세 benchmark 전체를 한 실행 범위로 삼는다. Primary
 evaluation의 모든 예정 candidate가 처리될 때까지 timeout은 잠정 상태로 모은 다음,
 frozen timeout policy에 따라 timeout candidate만 별도 confirmation batch에서 한 번
 재평가한다.
+
+Single-call candidate evaluation은 inference와 별도 campaign으로 실행하고 worker 수를 2로
+고정한다. Registry write는 main process 하나가 담당하고 두 evaluator worker는 격리된 candidate
+execution 결과만 반환한다. 이미 완료된 v0.3.0 role-separated inference의 CR/CPR evaluation은
+새 single-call inference에 의존하지 않으므로 둘을 병행한다.
+
+정상 unattended 경로는 full single-call inference와 role-separated CR/CPR candidate
+evaluation을 동시에 시작해 각각 검증한다. 두 branch가 모두 통과한 뒤 새 single-call candidate
+evaluation을 두 worker로 실행한다. Child 실패 시 종속 stage를 시작하지 않고, 각 child
+attempt의 raw status/log/registry를 보존해 해당 stage만 별도로 재개할 수 있게 한다.
 
 Benchmark 하나가 끝난 시점의 산출물은 진행 정보일 뿐 분석 dataset이 아니다. 대상
 model/phase 또는 model/protocol의 세 benchmark가 모두 completeness gate를 통과한 뒤
@@ -161,6 +191,15 @@ record를 atomic하게 기록한다. 한 task의 실패가 사라지거나 전�
 동일 canonical target에 concurrent writer를 두지 않는다. Resume preflight는 phase의
 upstream artifact count와 hash를 먼저 검증하고, 의존 artifact가 불완전하면 downstream
 phase를 시작하지 않는다.
+
+Terminal candidate-evaluation run에서 confirmation-stage `evaluation_failure`가 발생한 경우,
+functional outcome과 무관하게 그 failure inventory 전체를 정확히 한 번 재실행하는 별도
+remediation attempt를 사용할 수 있다. 이 retry는 기존 primary, failed confirmation,
+resolution을 수정하지 않고 동일 evaluator configuration과 동일 frozen confirmation timeout을
+사용한다. 새 confirmation과 replacement resolution은 각각 기존 record를 `supersedes`로
+연결하며 독립 검증을 거친다. 다른 candidate evaluation이 active이면 remediation launch를
+거부하여 추가 부하가 frozen worker bound에 섞이지 않게 한다. 재시도도 evaluator failure이면
+자동으로 반복하지 않고 새 결정을 요구한다.
 
 Clean-worktree preflight는 실행 코드, configuration, dependency lock과 해당 job이 실제로
 읽는 입력 경로에 적용한다. 실행과 무관한 untracked 연구 노트 때문에 사용자 파일을

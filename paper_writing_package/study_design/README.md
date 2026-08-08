@@ -6,8 +6,9 @@ Contributors and automated agents must read `AGENTS.md`. It defines the durable
 status, logging, PID-namespace, retry, and validation rules for every
 long-running background job. Experiment campaigns additionally follow
 `EXPERIMENT_EXECUTION_GUIDELINES.md`: one model stays resident while separate
-Direct, Decision, and refinement phases each cover all three benchmarks, and
-Decision-conditioned protocols are derived from stored artifacts.
+Direct, Decision, and refinement phases each cover all three benchmarks.
+Decision-conditioned protocols are derived from stored artifacts, while the v0.4.0 single-call
+comparison keeps each model resident across five condition-wide phases.
 
 ## Environment setup
 
@@ -230,12 +231,13 @@ After the status becomes `completed`, run:
 
 Generated data, model weights, benchmark caches, and secrets are ignored by Git. Placeholder files retain the intended directory topology.
 
-Each prompt version directory is a complete seven-stage snapshot. In particular,
+Each prompt version directory is a complete snapshot for its study version. In particular,
 `prompts/v4/` contains the full role-separated `study-v0.3.0` set, including
 byte-identical copies of the three unchanged v3 templates. See
 [`prompts/README.md`](prompts/README.md) for the version history, stage inputs,
 and the distinction between the self-contained v4 snapshot and immutable frozen
 execution provenance.
+`prompts/v5/` adds the five single-call templates to the complete seven-template v4 set.
 
 For copy-and-paste pilot and primary execution commands, monitoring, independent
 validation, and failure-resume procedures, follow
@@ -262,6 +264,23 @@ that stored diagnosis into minimal changes; CR acts on Critique; and CPR
 implements Plan without receiving Critique directly. Decision is absent from
 all four prompts and is applied only when deriving D-protocol final candidate
 selections.
+
+The paper-facing v0.4.0 extension reuses those multi-call paths and adds `SC-CR`, `SC-CPR`,
+`SC-DR`, `SC-DCR`, and `SC-DCPR`. `scripts/run_single_call_campaign.py` loads each model once,
+runs all five conditions over all three benchmarks in stage-homogeneous batches, and unloads it
+only after the five conditions finish. The six-model nine-task pilot passed validation and review;
+the full `r2` configuration is enabled. Static pilot preflight is:
+
+```bash
+.venv/bin/python scripts/run_single_call_campaign.py --preflight \
+  --campaign-configuration configs/experiments/single_call_pilot_campaign.toml
+```
+
+Candidate evaluation remains a separate campaign. New full evaluations use exactly two isolated
+evaluator workers via `scripts/run_evaluation_campaign.py --workers 2`; registry writes stay in the
+main process. `scripts/run_single_call_full_sequence.py` is the default unattended entrypoint: it
+runs full inference concurrently with the independent role-separated evaluation at two workers, then
+runs single-call evaluation after both branches validate.
 
 Both runners checkpoint model calls and artifacts per task, reconstruct a
 missing artifact only from its already completed immutable raw response, and

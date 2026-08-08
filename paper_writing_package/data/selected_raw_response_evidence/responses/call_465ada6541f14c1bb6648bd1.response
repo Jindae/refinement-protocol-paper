@@ -1,3 +1,0 @@
-REFINE
-
-The initial candidate has a flaw in its exception handling. It re-raises any exception as-is, but the task specification requires a specific exception type for deletion errors. The candidate should catch and re-raise with a more specific exception type for deletion failures, rather than letting all exceptions propagate unchanged.

@@ -3,17 +3,19 @@
 ## 1. 통합 결과
 
 두 보고서에서 제목과 출판본 중복을 제거한 기존 44개 후보에 Decision 분리와
-selective refinement를 직접 다루는 ART, GLoRe, DeCRIM을 추가하면 47개의 고유 후보가
-남는다.
+selective refinement를 직접 다루는 ART, GLoRe, DeCRIM, 그리고 Planning의 명시적
+분리와 인접한 효과를 다루는 Self-Planning Code Generation, Planning-Driven Programming
+(LPW), CRAFT, Chain-of-Verification, Plan-and-Solve, Structured CoT, CritiCS를 추가하면
+54개의 고유 후보가 남는다.
 이 중 SelfRACG는 initial candidate의 검토, 수정, 보존, 또는 선택을 다루지 않는 retrieval-augmented code generation 연구이므로 현재 연구의 Background에서는 제외했다.
-나머지 46편을 현재 문헌 지도에 유지한다.
+나머지 53편을 현재 문헌 지도에 유지한다.
 
-46편을 현재 연구와의 관련성에 따라 다시 분류하면 다음과 같다.
+53편을 현재 연구와의 관련성에 따라 다시 분류하면 다음과 같다.
 
 | 분류 | 수 | 용도 |
 |---|---:|---|
-| 핵심 문헌 | 15 | Background의 주요 논지와 research gap을 직접 뒷받침 |
-| 보조 문헌 | 19 | execution-guided refinement, stage decomposition, verification, agent workflow의 범위를 설명할 때 선택적으로 사용 |
+| 핵심 문헌 | 17 | Background의 주요 논지와 research gap을 직접 뒷받침 |
+| 보조 문헌 | 24 | planning, execution-guided refinement, stage decomposition, verification, agent workflow의 범위를 설명할 때 선택적으로 사용 |
 | 주변 문헌 | 12 | 전체 문헌 지도에는 포함하지만 현재 논문의 Background에서는 원칙적으로 생략 |
 | 제외 | 1 | 현재 연구와의 연결이 약하여 bibliography에서도 제외 |
 
@@ -30,6 +32,13 @@ selective refinement를 직접 다루는 ART, GLoRe, DeCRIM을 추가하면 47�
 | GLoRe | 기존 코드 중심 문헌 지도에서 누락됨 | refinement를 when, where, how로 명시적으로 분해한다. ORM이 when, SORM이 where, global/local refiner가 how를 담당하며 GSM8K와 SVAMP 수학 추론을 평가한다 (`havrilla2024glore`; [arXiv](https://arxiv.org/abs/2402.10963)) |
 | DeCRIM | 기존 코드 중심 문헌 지도에서 누락됨 | Critic이 multi-constraint response의 refinement 필요성과 위치를 판단한 뒤 Refiner가 수정한다. RealInstruct와 IFEval instruction following을 평가하고 code generation은 별도 평가하지 않는다 (`palmeira-ferraz-etal-2024-llm`; [ACL Anthology](https://aclanthology.org/2024.findings-emnlp.458/)) |
 | ReVISE | code benchmark 포함 여부가 불명확하게 기술됨 | MBPP 실험을 포함함. 다만 주된 실험과 논지는 일반 reasoning 및 학습된 intrinsic verification에 있음 |
+| Self-Planning Code Generation | 기존 문헌 지도에서 post-generation refinement가 아니라는 이유로 Planning 근거가 약하게 드러남 | 자연어 요구사항에서 plan을 먼저 생성하고 별도 implementation phase에서 plan을 입력받아 code를 생성한다. Two-phase는 Direct와 Code CoT보다 높지만 one-phase plan+code보다 약간 낮아, plan artifact의 유용성과 call separation의 우월성을 구분해야 한다 ([arXiv](https://arxiv.org/abs/2303.06689)) |
+| Planning-Driven Programming (LPW) | 기존 문헌 지도에서 누락됨 | solution plan, plan verification, code implementation을 여러 호출로 분리하고 plan verification을 initial generation과 refinement 모두에 사용한다. 그러나 post-hoc error analysis와 refinement suggestion은 한 단계에 결합된다 ([ACL Anthology](https://aclanthology.org/2025.acl-long.621/)) |
+| CRAFT | code 중심 문헌 지도에서 누락됨 | constrained text revision에서 별도 prompt로 revision plan을 생성한 뒤 plan에 따라 수정하고 plan/no-plan 비교를 제공한다. 다만 plan 생성 prompt가 문제 진단과 수정 전략을 함께 생성하므로 현재의 독립 Critique 후 Planning과는 다르다 ([ACL Anthology](https://aclanthology.org/2025.findings-acl.1377/)) |
+| Chain-of-Verification | 일반 factuality method라서 누락됨 | draft 뒤에 verification-question planning을 두고 검증을 분리한다. 명시적 intermediate planning의 보조 근거지만 revision plan이나 code refinement는 아니다 ([ACL Anthology](https://aclanthology.org/2024.findings-acl.212/)) |
+| Plan-and-Solve | 일반 CoT 변형이라서 누락됨 | 문제 해결 전에 plan을 명시하게 하여 일반 Zero-shot CoT보다 나은 reasoning을 보고한다. 대체로 한 generation 안의 plan-and-execute이며 별도 Revision Planning call의 근거는 아니다 ([ACL Anthology](https://aclanthology.org/2023.acl-long.147/)) |
+| Structured CoT | code reasoning과 plan이 혼용될 여지가 있음 | program structure를 반영한 intermediate reasoning 뒤 code를 생성해 일반 Code CoT보다 높은 성능을 보고한다. 구조화된 reasoning의 보조 근거지만 독립 plan call은 아니다 ([arXiv](https://arxiv.org/abs/2305.06599)) |
+| CritiCS | creative-writing 연구라서 누락됨 | story plan을 독립 artifact로 생성·비평·수정한 뒤 story를 생성한다. plan과 realization의 분리 사례지만 existing output을 위한 revision plan과는 다르다 ([ACL Anthology](https://aclanthology.org/2024.emnlp-main.1046/)) |
 | CRITIC | code refinement 문헌처럼 분류될 여지가 있음 | code interpreter를 사용하지만 주요 code-related task는 mathematical program synthesis에 가까움. 일반적인 자연어-to-code refinement의 핵심 근거로 사용하지 않는 편이 안전함 |
 | RefineCoder | inference-time candidate refinement와 가까운 것으로 분류됨 | external critic과 LLM-as-a-judge를 이용해 training data와 model series를 개선하는 연구임. 현재 protocol의 직접 선행연구로 보기 어려움 |
 | FunCoder | refinement 및 planning 문헌으로 분류됨 | initial candidate를 수정하기보다 generation 과정에서 recursive function decomposition과 consensus를 사용하는 방법임 |
@@ -61,7 +70,60 @@ RCO는 critique의 표면적 품질이 아니라 downstream refinement를 얼마
 SCOPE는 code candidate에 대해 subgoal, gap analysis, robustness checklist로 구성된 structured critique를 생성하고 이를 revision에 사용한다 (`zhang2026scope`).
 다만 두 연구 모두 현재 연구의 `R`, `CR`, `CPR` 누적 비교와는 설계가 다르다.
 
-### 3.2 Execution-guided code refinement
+### 3.2 Explicit Planning과 Revision Planning
+
+현재 연구의 Revision Planning을 정당화할 때는 일반 CoT보다 code generation에서 Planning을
+명시적으로 분리한 연구를 우선 사용한다. Self-Planning Code Generation은 요구사항을
+subproblem과 solution steps로 변환하는 Planning phase와, 그 plan을 입력으로 code를 만드는
+Implementation phase를 분리한다. HumanEval에서 보고된 대표 비교는 Direct 48.1, Code CoT
+53.9, two-phase Self-Planning 60.3 Pass@1이며, 논문은 Direct 대비 최대 25.4%, Code CoT 대비
+최대 11.9%의 상대 향상을 보고한다. 이는 code realization 전에 명시적인 plan artifact를
+두는 것이 유용할 수 있다는 직접 근거다.
+
+그러나 이 결과를 별도 call 자체의 우월성으로 해석해서는 안 된다. 같은 연구의 variant
+comparison에서는 plan과 code를 한 응답에서 생성하는 one-phase가 62.8로 two-phase 60.3보다
+약간 높았다. 연구진도 one-phase의 prompt가 plan뿐 아니라 대응 code example까지 요구되어
+prompt construction이 더 복잡하다고 설명한다. 따라서 비교는 완전히 동일한 정보량에서
+call boundary만 바꾼 isolated ablation이 아니다. 논문에서는 이 결과를 "explicit planning은
+도움이 될 수 있지만 physical call separation은 자동으로 이득을 보장하지 않는다"는
+선행 관찰로 사용하고, 현재 `CR` 대 `CPR` 결과와 사후 비교한다.
+
+LPW는 Planning과 refinement를 연결하는 가장 가까운 code-specific 선례다. 이 연구는
+solution plan을 생성하고 visible tests로 plan verification을 만든 뒤, plan과 verification으로
+initial code를 생성한다. Code가 visible test에 실패하면 execution trace와 plan verification의
+불일치를 분석하여 error analysis와 refinement suggestions를 만들고, 이를 별도 code
+refinement call에 전달한다. GPT-3.5 ablation에서 plan verification을 제거하면 HumanEval과
+MBPP Pass@1이 각각 3.0과 2.8 percentage points 감소하고, solution-generation phase 전체를
+제거하면 각각 3.0 points 감소한다. 다만 이 ablation은 plan verification 또는 phase bundle의
+효과이며 standalone Planning call만의 인과 효과가 아니다. 또한 solution plan은 initial code
+이전에 생성되고, post-hoc error analysis와 refinement suggestions는 하나의 artifact에
+결합된다.
+
+현재 연구는 이 두 흐름을 general self-refinement의 Critique 변형과 연결한다. Self-Refine류의
+Critique는 diagnosis와 actionable suggestion을 함께 포함할 수 있지만, 현재 protocol은 이를
+기능적으로 나누어 Critique가 functional problem의 존재, root cause, location을 진단하고,
+Revision Planning이 그 stored Critique를 minimal change instructions와 preservation constraints로
+변환하게 한다. CPR Revision에는 plan만 직접 전달하므로 `CR`과 `CPR` 비교는 "Critique와
+Revision 사이에 별도 plan artifact와 call을 삽입한 전체 정보 경로"의 효과다. 이는 plan
+내용의 정확성이나 call separation 자체만을 독립적으로 식별하는 효과가 아니다.
+
+Code 밖의 사례는 보조 근거로 제한한다. CRAFT는 constrained text revision에서 GPT-4o가
+먼저 revision plan을 생성한 뒤 별도 prompt로 수정하며, no-plan 대비 constraint adherence가
+constraint 수에 따라 3.0에서 7.5 percentage points 높고 fluency, grammaticality, coherence도
+개선됐다고 보고한다. 그러나 plan prompt 안에서 issue diagnosis와 improvement strategy를
+함께 생성하므로 현재의 Critique/Planning 경계와는 거리가 있다. Chain-of-Verification은
+draft 이후 verification planning을, CritiCS는 story plan의 독립 생성과 refinement를 보여준다.
+이들은 explicit intermediate planning이 여러 generation/revision task에서 사용된다는
+구조적 사례이지, code CPR protocol의 직접 효과 근거가 아니다.
+
+일반 CoT과 code-specific Structured CoT, Plan-and-Solve는 mechanism-level motivation으로만
+사용한다. CoT은 intermediate reasoning이 final generation을 도울 수 있음을 보여주지만
+diagnosis, plan, execution을 분리하지 않고 같은 response에서 생성되는 경우가 많다.
+Self-Planning 자체도 CoT을 concrete reasoning steps, plan을 abstraction과 decomposition으로
+구분한다. 따라서 논문의 직접 근거는 Self-Planning과 LPW로 두고, CoT 계열은 "structured
+intermediate reasoning"이라는 더 넓은 배경을 설명할 때만 짧게 인용한다.
+
+### 3.3 Execution-guided code refinement
 
 Code refinement의 다수 연구는 test result, compiler output, runtime state, 또는 execution trace를 correctness signal로 사용한다.
 Teaching Large Language Models to Self-Debug은 explanation과 unit-test 또는 execution result를 결합한 iterative debugging을 제시했다 (`chen2024selfdebug`).
@@ -73,7 +135,7 @@ LDB와 TraceCoder는 더 세밀한 runtime state와 trace를 diagnosis 및 repai
 동시에 이러한 방법은 모델이 task specification, initial candidate, self-generated critique와 plan만을 받는 현재 연구와 구분해야 한다.
 Self-generated tests도 실행 후 얻은 결과를 모델에 제공한다면 현재 연구에서 정의한 execution-feedback-free 조건에 해당하지 않는다.
 
-### 3.3 Regression, preservation, and selective refinement
+### 3.4 Regression, preservation, and selective refinement
 
 Decision을 revision과 분리하는 construct는 현재 연구만의 임의적인 stage 구성이 아니다.
 ART는 학습된 소형 Asker가 initial output의 refinement 필요성을 별도 판단하고, 필요하다고
@@ -169,7 +231,7 @@ refinement 자체의 최초 제안을 주장하지 않는다. 대신 standalone 
 missed repair, exact preservation, token saving을 여러 refinement path에 걸쳐 분리해
 측정한다.
 
-### 3.4 Stage composition and cost
+### 3.5 Stage composition and cost
 
 기존 연구는 critique, explanation, planning, localization, repair를 여러 형태로 분리한다.
 Code Reffix는 broad reflection generation과 reflection-guided repair를 별도 task로 평가하고 (`di-etal-2026-code`), CodeReviewQA는 code review comprehension을 change type recognition, localization, solution identification으로 분해한다 (`lin-etal-2025-codereviewqa`).
@@ -198,6 +260,8 @@ AgentCoder와 RepairAgent는 token 또는 monetary cost를 보고하지만, mult
 | `pmlr-v267-lee25ab` | SFT+DPO curriculum으로 intrinsic verification과 correction을 학습하고 MBPP 평가 | conventional code generation의 가장 가까운 Decision 선례 | `[eos]`/`[refine]`이 한 generation에 통합되며 standalone call과 Decision-only effect 분석이 아님 |
 | `yu-etal-2025-training` | downstream refinement utility로 critic 학습 | Critique Generation의 효용과 직접 연결 | general framework이며 code는 여러 task 중 하나 |
 | `zhang2026scope` | structured subgoal critique for code revision | critique content와 revision 연결 | 2026 preprint, trained critic과 execution-based reward 사용 |
+| Self-Planning Code Generation | code generation을 Planning과 Implementation의 two-phase로 분리 | 명시적 plan artifact를 code realization 전에 두는 직접 근거 | pre-generation plan이며 one-phase가 two-phase보다 약간 높음 |
+| Planning-Driven Programming (LPW) | plan, plan verification, code implementation과 iterative refinement를 연결 | Planning을 initial generation과 후속 refinement에 재사용하는 code-specific 근거 | execution feedback 사용; post-hoc analysis와 suggestions가 결합; plan-only effect가 아님 |
 | `chen2024selfdebug` | explanation 및 execution-guided iterative debugging | explanation과 revision을 분리한 대표 연구 | 주요 code conditions가 execution feedback 사용 |
 | `olausson2024selfrepair` | repair와 resampling의 budget allocation 비교 | 추가 call의 실용적 가치와 비용 | failing candidates와 execution feedback 중심 |
 | `guo2026codechateval` | multi-turn editing의 functional regression | correct-code preservation의 직접 근거 | 외부 developer instruction이며 self-generated critique가 아님 |
@@ -226,12 +290,22 @@ AgentCoder와 RepairAgent는 token 또는 monetary cost를 보고하지만, mult
 - `yang-etal-2025-coast`: debugging 능력을 여러 stage로 분해한 data synthesis와 training.
 - `le2024indict`: security와 helpfulness critic의 internal dialogue를 code generation에 사용.
 
+### Planning and structured intermediate reasoning
+
+- Self-Planning Code Generation: Planning과 Implementation을 분리하고 Direct 및 Code CoT와 비교한 code-specific 직접 근거.
+- Planning-Driven Programming (LPW): solution plan과 plan verification을 별도 생성하고 code generation 및 refinement에 재사용.
+- CRAFT: constrained text revision에서 revision plan generation과 plan-conditioned revision을 별도 prompt로 실행; Critique와 Plan은 plan prompt 안에서 결합.
+- `islam-etal-2024-mapcoder`: retrieval, planning, coding, debugging을 별도 agent 역할로 구성.
+- `dhuliawala-etal-2024-chain`: draft 뒤 verification-question planning을 분리하는 general self-correction 사례.
+- `wang-etal-2023-plan-and-solve`: 일반 reasoning에서 explicit plan-and-execute를 사용하는 CoT 변형.
+- Structured CoT: program structure를 반영한 intermediate reasoning을 code generation에 사용하지만 별도 plan call은 아님.
+- `bae-kim-2024-collective`: story plan을 별도 artifact로 생성, 비평, refinement한 뒤 장문 story를 생성.
+
 ### Verification, agents, and cost context
 
 - `chen2023codet`: generated tests와 execution agreement를 이용한 candidate selection.
 - `pmlr-v202-ni23b`: execution result를 입력으로 받는 learned verifier와 reranking.
 - `huang2023agentcoder`: test generation과 execution을 분리한 multi-agent refinement 및 token overhead.
-- `islam-etal-2024-mapcoder`: retrieval, planning, coding, debugging으로 구성된 multi-agent code generation.
 - `bouzenia2025repairagent`: repository-level autonomous repair와 token 및 monetary cost.
 - `xia2024agentless`: localization, repair, validation으로 단순화한 repository-level workflow와 비용 효율.
 
@@ -269,13 +343,16 @@ Initial candidate의 review, preservation, revision과 직접 연결되지 않�
 - refinement 필요성 판단과 revision의 기능적 분리
 - learned refine-or-stop behavior와 candidate verification
 - multi-stage agents와 additional inference cost
+- code generation 이전의 explicit solution planning과 plan-conditioned implementation
+- text revision 및 factual verification에서의 explicit intermediate planning
 
 그러나 검토한 문헌 중 다음 조건을 하나의 controlled experiment에서 함께 다룬 연구는 확인하지 못했다.
 
 1. Locally deployable open-weight code models만을 평가한다.
 2. 모든 protocol이 exact same initial candidate를 사용한다.
 3. 모델 입력에서 execution feedback과 external verifier feedback을 제외한다.
-4. Direct Revision, Critique-Conditioned Revision, Critique-and-Plan-Conditioned Revision을 누적 stage composition으로 비교한다.
+4. Post-hoc Critique 뒤의 Revision Planning을 독립 call로 두고 Direct Revision,
+   Critique-Conditioned Revision, Critique-and-Plan-Conditioned Revision을 누적 stage composition으로 비교한다.
 5. Initially incorrect candidates의 Repair와 initially correct candidates의 Correct-to-Incorrect Regression을 함께 측정한다.
 6. Refinement-Need Decision이 만든 Prevented Regression과 Missed Repair를 구분한다.
 7. 각 stage의 token consumption과 final correctness를 함께 비교한다.
@@ -290,12 +367,42 @@ regression, missed repair, exact preservation, token saving까지 함께 분석�
 
 ## 8. 권장 Background 구성
 
-실제 논문의 Background는 별도 subsection을 많이 만들기보다 다음 네 문단 정도로 압축하는 것이 적절하다.
+실제 논문의 Background는 별도 subsection을 많이 만들기보다 다음 다섯 문단 정도로 압축하는 것이 적절하다.
 
 1. **Self-refinement의 기본 구조**: Self-Refine을 중심으로 same-model critique와 revision을 정의하고, SCoRe, CoCoS, ReflexiCoder를 이용해 feedback-free self-correction과 training-based approaches를 소개한다.
-2. **Code refinement에서 execution feedback의 역할**: Teaching Large Language Models to Self-Debug, CYCLE, OpenCodeInterpreter, Revisit Self-Debugging을 묶어 execution-guided 계열을 설명하고 현재 연구의 input boundary를 명확히 한다.
-3. **Decision 분리와 selective refinement**: ART와 GLoRe로 whether-to-refine와 how-to-refine의 기능적 분리 근거를 제시하고, DeCRIM을 일반 instruction-following 사례로 짧게 보완한다. ReVISE는 MBPP를 평가한 가장 가까운 conventional code-generation 선례로 구분하고, RubricRefine은 code-mode tool-use 인접 사례로만 기술한다. CoCoS, CodeChat-Eval, Are LLMs Reliable Code Reviewers?는 preservation과 regression 위험의 근거로 연결한다.
-4. **Research gap**: Decision 분리 자체의 신규성을 주장하지 않는다. 기존 연구가 standalone Decision의 candidate-level consequences를 `R/CR/CPR`, shared initial candidate, prevented regression, missed repair, exact preservation, stage token cost와 함께 비교하지 않았다는 제한된 공백을 제시한다.
+2. **Planning과 code realization의 분리**: Self-Planning을 직접 근거로 explicit plan artifact의 효과를 설명하고, LPW로 verified plan이 initial generation과 refinement에 재사용되는 사례를 연결한다. Self-Planning의 one-phase가 two-phase보다 약간 높았다는 결과를 함께 밝혀 physical separation의 이득을 전제하지 않는다. CRAFT, CoVe, CritiCS, Plan-and-Solve, Structured CoT은 보조 사례로만 짧게 언급한다.
+3. **Code refinement에서 execution feedback의 역할**: Teaching Large Language Models to Self-Debug, CYCLE, OpenCodeInterpreter, Revisit Self-Debugging을 묶어 execution-guided 계열을 설명하고 현재 연구의 input boundary를 명확히 한다.
+4. **Decision 분리와 selective refinement**: ART와 GLoRe로 whether-to-refine와 how-to-refine의 기능적 분리 근거를 제시하고, DeCRIM을 일반 instruction-following 사례로 짧게 보완한다. ReVISE는 MBPP를 평가한 가장 가까운 conventional code-generation 선례로 구분하고, RubricRefine은 code-mode tool-use 인접 사례로만 기술한다. CoCoS, CodeChat-Eval, Are LLMs Reliable Code Reviewers?는 preservation과 regression 위험의 근거로 연결한다.
+5. **Research gap**: Planning stage 자체나 planning과 implementation의 분리 자체를 최초로 제안한다고 주장하지 않는다. 기존 연구가 independently generated Critique 뒤에 standalone Revision Planning call을 두고 그 전체 경로를 `R/CR/CPR`, shared initial candidate, repair/regression, stage token cost와 함께 비교하지 않았다는 제한된 공백을 제시한다. Decision 분리의 공백은 prevented regression, missed repair, exact preservation, token saving의 controlled analysis로 별도로 기술한다.
 
 Self-Repair와 Feedback Over Form은 cost paragraph나 research gap 마지막 문단에서 한두 문장으로 추가할 수 있다.
 나머지 보조 문헌은 모든 연구를 나열하기보다 특정 주장에 필요한 경우에만 선택적으로 인용하는 편이 안전하다.
+
+## 9. Plan 결과를 논의할 때 확인할 포인트
+
+`CR`과 `CPR`의 paired result가 나온 뒤에는 다음 순서로 해석한다.
+
+1. **전체 증분 효과**: `CPR - CR`은 Critique 뒤에 Revision Planning artifact와 call을
+   추가하고 Revision 입력을 Critique에서 Plan으로 바꾼 전체 protocol difference다. Plan의
+   semantic quality나 call separation만의 causal effect로 표현하지 않는다.
+2. **Self-Planning과의 비교**: CPR이 CR보다 높으면 pre-generation에서 관찰된 explicit
+   planning의 이점이 post-critique refinement에서도 나타난 것으로 제한적으로 해석한다.
+   CPR이 같거나 낮으면 Self-Planning의 one-phase가 two-phase보다 약간 높았던 결과와 함께,
+   physical separation이 항상 이득이 아니며 information loss, error propagation, instruction
+   compliance, 추가 context transformation이 비용이 될 수 있다고 논의한다.
+3. **LPW와의 비교**: LPW의 verified solution plan은 execution feedback과 visible tests를
+   사용하므로 execution-feedback-free CPR보다 강한 supervision을 받는다. LPW의 gain을 현재
+   Plan 효과의 예상 크기나 직접 baseline으로 사용하지 않는다.
+4. **Repair와 regression 분해**: 평균 pass-rate 차이만 보지 않고 Planning이 additional
+   repair를 만들었는지, regression을 줄였는지 또는 늘렸는지, no-problem Critique에서 exact
+   source preservation을 유지했는지 분석한다.
+5. **모델과 benchmark 이질성**: Plan-following 능력, initial code quality, task complexity에
+   따라 `CPR - CR`이 달라지는지 확인한다. 평균 효과가 서로 반대인 subgroup을 가리지 않게
+   model-benchmark combination별 결과를 함께 보고한다.
+6. **비용과 가치**: Planning call과 늘어난 Revision input의 token cost를 correctness gain과
+   함께 보고한다. CPR이 더 정확하더라도 tokens per additional correct solution 또는 Pareto
+   관점에서 비용을 정당화하는지 별도로 판단한다.
+7. **artifact-level 후속 분석**: 결과가 허용하면 Critique의 진단을 Plan이 충실히 변환했는지,
+   Plan이 보존 조건을 유지했는지, Revision이 supplied Plan을 실행했는지를 표본 기반으로
+   분석한다. 이는 protocol outcome을 설명하는 qualitative evidence이며 RQ1의 causal estimate를
+   대체하지 않는다.

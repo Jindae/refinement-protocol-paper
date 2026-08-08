@@ -1,0 +1,24 @@
+{
+  "analysis_configuration_path": "analysis_tools/analysis_config.toml",
+  "analysis_configuration_sha256": "7db123fee8009654877e5308e16fc4e262644207a10895b362b057b6f922cfb0",
+  "analysis_id": "primary-final-four-rq-20260808-r3",
+  "dataset_id": "primary-final-v04-20260808-r5",
+  "files": {
+    "experimental_token_consumption.csv": "d1a7e93d5563fd6d0b483300b717874db2a139482fd9494a048bbed318adc216",
+    "incremental_efficiency.csv": "2eb7d6106f2e9b994df933e4d8162f60883b27422f07d4ff48a61b6499887bdc",
+    "metrics.json": "cf12be9221a963ee5db74b21e3ee57176d4cb4e39b0e01da2d1d7c46af241c8e",
+    "pareto_common_complete_case.csv": "f6b7d874d95c867b61d3fafaa55f64288815456826a04b6db04181229bdb47a8",
+    "protocol_cost_summary.csv": "c2f6be6d7cb058368b3e05b09648a9f8257966b5d8b841da75b7109f7526771d",
+    "report.md": "0cd58d679f46ed2d1609408984adc2f50f3314309d5e671e426791db50501376",
+    "stage_token_summary.csv": "3e74779b3d3761185a34ecd1f698ab8f109a40771be445353f6b0ae2929a377b"
+  },
+  "paper_facing": true,
+  "pending_confirmation_count": 0,
+  "processed_manifest_path": "data/processed/primary-final-v04-20260808-r5/manifest.json",
+  "processed_manifest_portable": true,
+  "processed_manifest_sha256": "06828ac1bf1ab17bdf76e3667e55031e8901dcf6c78d84f7b383b903e374efcc",
+  "producer_git_commit": "a15ce86c6b51e242d0bac8343d6f93ce9091098f",
+  "result_status": "final",
+  "rq": "rq4",
+  "schema_version": "rq-analysis-manifest-v1"
+}
