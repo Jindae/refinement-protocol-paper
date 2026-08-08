@@ -7,7 +7,7 @@ This section defines the Research Questions, protocol stages and compositions, e
 \subsection{Research Questions}
 
 \researchquestion{RQ1}{How does the stage composition of Self-Refinement affect final code correctness, and how is that effect explained by repairs of initially incorrect candidates and regressions of initially correct candidates?}
-An explicit Critique or Revision Plan may structure refinement, but an added stage can also alter a candidate that was already correct.
+An explicit Critique or Plan may structure refinement, but an added stage can also alter a candidate that was already correct.
 We therefore compare Direct Generation with revision alone, Critique followed by Revision, and Critique followed by Planning and Revision, while jointly interpreting final correctness through Repair, Correct-to-Incorrect Regression, Functional Preservation, and Unrepaired Failure.
 
 \researchquestion{RQ2}{How does the value of Decision-Conditioned Refinement vary across model-benchmark combinations with different initial pass rates?}
@@ -115,48 +115,61 @@ The figure uses \texttt{D}, \texttt{C}, \texttt{P}, and \texttt{R} as compact ro
 \end{figure}
 \unskip
 
-\subsubsection{Refinement Stages and Separate-Call Prompts}
+\subsubsection{Stages and Separate-Call Prompt Templates}
 
 In the Separate-Call conditions, every purple stage box in Figure~\ref{fig:protocol-overview} is an observable prompt and model call, and every intermediate output is stored before it is supplied to another call.
-The four stages have the following responsibilities and input boundaries.
+The four stage names correspond directly to their abbreviations: Decision (\texttt{D}), Critique (\texttt{C}), Planning (\texttt{P}), and Revision (\texttt{R}).
+The following definitions use the frozen prompt templates to make each stage's inputs, task, and output contract explicit.
 
-\begin{itemize}
-\item \textbf{Refinement-Need Decision (\texttt{D})} receives only the Task Specification and exact Initial Candidate and returns \texttt{PRESERVE} or \texttt{REFINE}.
-It produces no Critique, Plan, or code and is not supplied to the other stage prompts.
-\item \textbf{Critique Generation (\texttt{C})} receives the Task Specification and Initial Candidate and identifies the root cause and location of functional problems, or explicitly states that none was found.
-It does not produce a Revision Plan or revised program, and its text is not assigned an independent correctness label.
-\item \textbf{Revision Planning (\texttt{P})} receives the Task Specification, Initial Candidate, and stored Critique and translates that diagnosis into minimal changes and preservation constraints.
-It is not asked to conduct a second independent review or output complete revised code, and it is used only after Critique Generation.
-\item \textbf{Code Revision (\texttt{R})} is the only Separate-Call stage that produces executable code.
-Direct Revision reviews the candidate without an upstream artifact, Critique-Conditioned Revision acts on the stored Critique, and Plan-Conditioned Revision implements the stored Plan without receiving the Critique directly.
-Every variant requires exactly one complete fenced Python block and receives neither a Decision nor execution feedback.
-\end{itemize}
-
-Listings~\ref{lst:prompt-decision} through~\ref{lst:prompt-plan-revision} reproduce the frozen Separate-Call templates for these four stages.
-Because the direct input and responsibility of \texttt{R} depend on the protocol path, its Direct, Critique-Conditioned, and Plan-Conditioned templates are shown separately.
+\paragraph{Decision (\texttt{D}).}
+Decision receives only the Task Specification and exact Initial Candidate.
+As Listing~\ref{lst:prompt-decision} shows, the prompt asks whether the candidate should be preserved exactly or refined and restricts the response to the single uppercase label \texttt{PRESERVE} or \texttt{REFINE}.
+It explicitly excludes a Critique, Plan, and code, and its label is not supplied to the other stage prompts.
 
 \noindent\begin{minipage}{\columnwidth}
-\lstinputlisting[style=prompt,caption={Frozen Refinement-Need Decision (\texttt{D}) prompt.},label={lst:prompt-decision}]{prompts/v5/refinement_need_decision.txt}
+\lstinputlisting[style=prompt,caption={Frozen Decision (\texttt{D}) prompt.},label={lst:prompt-decision}]{prompts/v5/refinement_need_decision.txt}
 \end{minipage}
 
-\noindent\begin{minipage}{\columnwidth}
-\lstinputlisting[style=prompt,caption={Frozen Critique Generation (\texttt{C}) prompt.},label={lst:prompt-critique}]{prompts/v5/critique_generation.txt}
-\end{minipage}
+\paragraph{Critique (\texttt{C}).}
+Critique also receives only the Task Specification and Initial Candidate.
+The template in Listing~\ref{lst:prompt-critique} asks for the root cause and relevant code location of each functional problem and requires an explicit no-problem statement when none is found.
+The final instruction, ``Return only the critique,'' keeps this stage from producing a Plan or revised program; the resulting Critique artifact is not assigned an independent correctness label.
 
 \noindent\begin{minipage}{\columnwidth}
-\lstinputlisting[style=prompt,caption={Frozen Revision Planning (\texttt{P}) prompt.},label={lst:prompt-planning}]{prompts/v5/revision_planning.txt}
+\lstinputlisting[style=prompt,caption={Frozen Critique (\texttt{C}) prompt.},label={lst:prompt-critique}]{prompts/v5/critique_generation.txt}
 \end{minipage}
 
-\noindent\begin{minipage}{\columnwidth}
-\lstinputlisting[style=prompt,caption={Frozen Direct Revision (\texttt{R}) prompt.},label={lst:prompt-direct-revision}]{prompts/v5/direct_revision.txt}
-\end{minipage}
+\paragraph{Planning (\texttt{P}).}
+Planning receives the Task Specification, Initial Candidate, and stored Critique.
+As shown in Listing~\ref{lst:prompt-planning}, it translates the supplied Critique into concrete minimal changes and identifies existing behavior that should remain unchanged; if the Critique reports no problem, it must state that no change is needed.
+The prompt requests only a revision plan, not complete code.
+Planning is therefore placed after Critique rather than being treated as a second independent review.
 
 \noindent\begin{minipage}{\columnwidth}
-\lstinputlisting[style=prompt,caption={Frozen Critique-Conditioned Revision prompt used as \texttt{R} in \texttt{CR}.},label={lst:prompt-critique-revision}]{prompts/v5/critique_conditioned_revision.txt}
+\lstinputlisting[style=prompt,caption={Frozen Planning (\texttt{P}) prompt.},label={lst:prompt-planning}]{prompts/v5/revision_planning.txt}
 \end{minipage}
 
+\paragraph{Revision (\texttt{R}).}
+Revision is the only Separate-Call stage that returns executable code.
+Its template changes with the available upstream artifact, but every version requires exactly one complete fenced Python block and prohibits assumptions about tests, execution results, diagnostics, or external feedback.
+In the \texttt{R} protocol, Listing~\ref{lst:prompt-direct-revision} asks Revision to review the Initial Candidate directly and revise it only if needed.
+
 \noindent\begin{minipage}{\columnwidth}
-\lstinputlisting[style=prompt,caption={Frozen Plan-Conditioned Revision prompt used as \texttt{R} in \texttt{CPR}.},label={lst:prompt-plan-revision}]{prompts/v5/plan_conditioned_revision.txt}
+\lstinputlisting[style=prompt,caption={Frozen Revision (\texttt{R}) prompt for the \texttt{R} protocol.},label={lst:prompt-direct-revision}]{prompts/v5/direct_revision.txt}
+\end{minipage}
+
+In the \texttt{CR} protocol, the Revision prompt instead receives the stored Critique and asks the model to address its identified problems, as shown in Listing~\ref{lst:prompt-critique-revision}.
+If the Critique identifies no functional problem, the prompt requires exact reproduction of the Initial Candidate.
+
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen Revision (\texttt{R}) prompt for the \texttt{CR} protocol.},label={lst:prompt-critique-revision}]{prompts/v5/critique_conditioned_revision.txt}
+\end{minipage}
+
+In the \texttt{CPR} protocol, Revision receives only the stored Plan, not the Critique from which it was produced.
+Listing~\ref{lst:prompt-plan-revision} directs the model to implement that Plan and to reproduce the Initial Candidate unchanged when the Plan indicates that no change is needed.
+
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen Revision (\texttt{R}) prompt for the \texttt{CPR} protocol.},label={lst:prompt-plan-revision}]{prompts/v5/plan_conditioned_revision.txt}
 \end{minipage}
 
 \subsubsection{Protocol Composition}
@@ -165,12 +178,12 @@ The four stages are connected into three types of protocol.
 
 \begin{itemize}
 \item \textbf{Always-Refine Protocols.}
-Direct Revision (\texttt{R}) makes one Revision call without an upstream artifact.
-Critique-Conditioned Revision (\texttt{CR}) stores the output of a \texttt{C} call and supplies it to a separate Critique-Conditioned \texttt{R} call.
-Critique-and-Plan-Conditioned Revision (\texttt{CPR}) stores a \texttt{C} artifact, translates it in a separate \texttt{P} call, and supplies only the resulting Plan to Plan-Conditioned \texttt{R}.
+The \texttt{R} protocol invokes Revision once without an upstream artifact.
+The \texttt{CR} protocol stores the output of Critique and supplies it to a separate Revision call.
+The \texttt{CPR} protocol stores a Critique, translates it into a Plan in a separate Planning call, and supplies only that Plan to Revision.
 The same stored Critique is used by \texttt{CR} and \texttt{P}, so their comparison does not introduce independently sampled Critiques.
 \item \textbf{Decision-Conditioned Protocols.}
-Combining \texttt{D} with \texttt{R} yields Decision-Conditioned Direct Revision (\texttt{DR}).
+Combining Decision with the \texttt{R} protocol yields \texttt{DR}.
 The analogous combinations with \texttt{CR} and \texttt{CPR} yield \texttt{DCR} and \texttt{DCPR}.
 Each combines one stored \texttt{D} result with the corresponding Always-Refine candidate.
 A \texttt{PRESERVE} Decision selects the exact Initial Candidate, whereas \texttt{REFINE} selects the matched revised candidate.
@@ -313,8 +326,8 @@ Initial Pass Rate was treated as an observed characteristic of each of the 18 mo
 \subsection{Experimental Setting}
 
 To reduce model-loading and duplicate-call costs, we executed the experiment in stage-homogeneous, model-resident phases rather than running each task through every protocol end to end.
-For each checkpoint, Direct Generation first produced the shared Initial Candidates, after which the separate Decision and Direct Revision calls were executed over the full task set.
-The role-separated Critique, Critique-Conditioned Revision, Planning, and Plan-Conditioned Revision phases were then executed in dependency order, reusing the same stored Critique for \texttt{CR} and Planning and the stored Plan for \texttt{CPR}.
+For each checkpoint, Direct Generation first produced the shared Initial Candidates, after which the separate Decision and \texttt{R}-protocol Revision calls were executed over the full task set.
+The Critique, \texttt{CR}-protocol Revision, Planning, and \texttt{CPR}-protocol Revision phases were then executed in dependency order, reusing the same stored Critique for \texttt{CR} and Planning and the stored Plan for \texttt{CPR}.
 Finally, the model remained resident while the five Single-Call Role Protocols were executed sequentially over all three benchmarks.
 Immutable artifacts and their lineage were checkpointed at phase boundaries so completed logical calls could be resumed without regeneration.
 
