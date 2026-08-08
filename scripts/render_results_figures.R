@@ -1,0 +1,389 @@
+#!/usr/bin/env Rscript
+
+# Render the paper's Results figures and LaTeX tables from validated CSV assets in
+# data/paper_writing_package/results/paper_assets.
+#
+# Usage:
+#   Rscript scripts/render_results_figures.R
+#   Rscript scripts/render_results_figures.R \
+#     --asset-dir ../data/paper_writing_package/results/paper_assets \
+#     --output-dir figures/results \
+#     --table-output-dir tables/results
+
+args <- commandArgs(trailingOnly = TRUE)
+full_args <- commandArgs(trailingOnly = FALSE)
+script_arg <- full_args[grepl("^--file=", full_args)]
+script_file <- if (length(script_arg)) sub("^--file=", "", script_arg[[1]]) else "scripts/render_results_figures.R"
+main_dir <- dirname(dirname(normalizePath(script_file, mustWork = FALSE)))
+
+option_value <- function(name, default) {
+  match_index <- match(name, args)
+  if (is.na(match_index)) return(default)
+  if (match_index == length(args)) stop(sprintf("Missing value for %s", name))
+  args[[match_index + 1]]
+}
+
+asset_dir <- normalizePath(
+  option_value(
+    "--asset-dir",
+    file.path(main_dir, "..", "data", "paper_writing_package", "results", "paper_assets")
+  ),
+  mustWork = TRUE
+)
+output_dir <- option_value("--output-dir", file.path(main_dir, "figures", "results"))
+dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+output_dir <- normalizePath(output_dir, mustWork = TRUE)
+table_output_dir <- option_value("--table-output-dir", file.path(main_dir, "tables", "results"))
+dir.create(table_output_dir, recursive = TRUE, showWarnings = FALSE)
+table_output_dir <- normalizePath(table_output_dir, mustWork = TRUE)
+
+read_asset <- function(name) {
+  path <- file.path(asset_dir, name)
+  if (!file.exists(path)) stop(sprintf("Missing paper asset: %s", path))
+  read.csv(path, check.names = FALSE, stringsAsFactors = FALSE)
+}
+
+protocol_label <- function(x) {
+  labels <- c(
+    direct = "Direct", r = "R", cr = "CR", cpr = "CPR",
+    dr = "DR", dcr = "DCR", dcpr = "DCPR",
+    sc_cr = "SC-CR", sc_cpr = "SC-CPR", sc_dr = "SC-DR",
+    sc_dcr = "SC-DCR", sc_dcpr = "SC-DCPR"
+  )
+  unname(labels[x])
+}
+
+blue <- "#0072B2"
+orange <- "#D55E00"
+green <- "#009E73"
+gray <- "#737373"
+light_gray <- "#D9D9D9"
+grid_gray <- "#E6E6E6"
+
+open_pdf <- function(name, width, height) {
+  cairo_pdf(
+    filename = file.path(output_dir, name),
+    width = width,
+    height = height,
+    family = "Verdana"
+  )
+}
+
+rq1_balance <- read_asset("figure_data_rq1_performance_balance.csv")
+rq1_selected <- rq1_balance[match(c("r", "cr", "cpr"), rq1_balance$protocol), ]
+direct_pass_rate <- rq1_balance$pass_rate[rq1_balance$protocol == "direct"]
+rq1_selected$pass_rate_difference <- 100 * (rq1_selected$pass_rate - direct_pass_rate)
+
+open_pdf("rq1_stage_composition.pdf", 7.4, 3.35)
+par(mar = c(3.4, 3.9, 1.1, 0.5))
+y <- rev(seq_len(nrow(rq1_selected)))
+x_limits <- c(-820, 610)
+plot(
+  NA,
+  xlim = x_limits,
+  ylim = c(0.45, nrow(rq1_selected) + 0.58),
+  xlab = "Number of model-task transitions",
+  ylab = "",
+  yaxt = "n",
+  xaxt = "n",
+  bty = "n",
+  cex.lab = 0.82,
+  mgp = c(2.0, 0.6, 0)
+)
+ticks <- seq(-800, 400, by = 200)
+abline(v = ticks, col = grid_gray, lwd = 0.7)
+abline(v = 0, col = gray, lwd = 0.9)
+axis(1, at = ticks, labels = abs(ticks), cex.axis = 0.72, tcl = -0.25)
+axis(2, at = y, labels = protocol_label(rq1_selected$protocol), las = 1, tick = FALSE, cex.axis = 0.82)
+rect(-rq1_selected$regression, y - 0.23, 0, y + 0.23, col = orange, border = NA)
+rect(0, y - 0.23, rq1_selected$repair, y + 0.23, col = green, border = NA)
+text(-rq1_selected$regression - 18, y, rq1_selected$regression, adj = 1, cex = 0.70)
+text(rq1_selected$repair + 18, y, rq1_selected$repair, adj = 0, cex = 0.70)
+text(
+  335,
+  y,
+  sprintf(
+    "Final %.2f%% (%+.2f pp)",
+    100 * rq1_selected$pass_rate,
+    rq1_selected$pass_rate_difference
+  ),
+  adj = 0,
+  cex = 0.70
+)
+text(-420, nrow(rq1_selected) + 0.43, "Regression", col = orange, font = 2, cex = 0.72)
+text(105, nrow(rq1_selected) + 0.43, "Repair", col = green, font = 2, cex = 0.72)
+dev.off()
+
+format_signed_pp <- function(value) {
+  value <- 100 * value
+  if (value < 0) sprintf("$-$%.2f", abs(value)) else sprintf("+%.2f", value)
+}
+
+significance_marker <- function(low, high) {
+  if (low > 0 || high < 0) "\\textsuperscript{$\\dagger$}" else ""
+}
+
+rq2 <- read_asset("figure_data_rq2_decision_tradeoff.csv")
+rq2_rows <- vapply(seq_len(nrow(rq2)), function(index) {
+  row <- rq2[index, ]
+  sprintf(
+    "\\texttt{%s} to \\texttt{%s} & %s%s & %s & %s & %.2f \\\\",
+    protocol_label(row$always_refine_protocol),
+    protocol_label(row$decision_protocol),
+    format_signed_pp(row$paired_difference),
+    significance_marker(row$bootstrap_ci_low, row$bootstrap_ci_high),
+    format(row$prevented_regression, big.mark = ",", scientific = FALSE),
+    format(row$missed_repair, big.mark = ",", scientific = FALSE),
+    row$net_token_saving_total / 1e6
+  )
+}, character(1))
+
+writeLines(
+  c(
+    "% Generated by scripts/render_results_figures.R. Do not edit manually.",
+    "\\begin{table}[H]",
+    "\\caption{Pooled correctness, selection, and token effects of Decision conditioning.}",
+    "\\label{tab:rq2-decision-results}",
+    "\\centering",
+    "\\begingroup",
+    "\\scriptsize",
+    "\\renewcommand{\\arraystretch}{1.12}",
+    "\\begin{threeparttable}",
+    "\\begin{tabularx}{0.94\\columnwidth}{",
+    "    >{\\raggedright\\arraybackslash}p{0.19\\columnwidth}",
+    "    >{\\centering\\arraybackslash}p{0.15\\columnwidth}",
+    "    >{\\centering\\arraybackslash}X",
+    "    >{\\centering\\arraybackslash}X",
+    "    >{\\centering\\arraybackslash}p{0.18\\columnwidth}",
+    "}",
+    "\\toprule",
+    "Comparison & $\\Delta$ correct, pp & Prevented Regressions & Missed Repairs & Tokens saved, million \\\\",
+    "\\midrule",
+    rq2_rows,
+    "\\bottomrule",
+    "\\end{tabularx}",
+    "\\begin{tablenotes}[flushleft]",
+    "\\footnotesize",
+    "\\item Correctness differences use paired-complete outcomes.",
+    "Transition counts require complete Decision and Initial-to-final outcomes and can therefore use slightly different denominators.",
+    "\\textsuperscript{$\\dagger$} The paired 95\\% bootstrap interval excludes zero.",
+    "\\end{tablenotes}",
+    "\\end{threeparttable}",
+    "\\endgroup",
+    "\\end{table}"
+  ),
+  file.path(table_output_dir, "rq2_decision_tradeoff.tex")
+)
+
+rq3 <- read_asset("figure_data_rq3_topology_effects.csv")
+rq3_labels <- read_asset("table_rq3_label_consistency.csv")
+rq3_effect_rows <- vapply(seq_len(nrow(rq3)), function(index) {
+  row <- rq3[index, ]
+  sprintf(
+    "\\texttt{%s} / \\texttt{%s} & %.2f\\%% & %.2f\\%% & %s%s \\\\",
+    protocol_label(row$multi_call_protocol),
+    protocol_label(row$single_call_protocol),
+    100 * row$lhs_pass_rate,
+    100 * row$rhs_pass_rate,
+    format_signed_pp(row$paired_difference),
+    significance_marker(row$bootstrap_ci_low, row$bootstrap_ci_high)
+  )
+}, character(1))
+rq3_label_rows <- vapply(seq_len(nrow(rq3_labels)), function(index) {
+  row <- rq3_labels[index, ]
+  sprintf(
+    "\\texttt{%s} & %s & %s & %s (%.2f\\%%) \\\\",
+    protocol_label(row$protocol),
+    format(row$preserve_changed, big.mark = ",", scientific = FALSE),
+    format(row$refine_unchanged, big.mark = ",", scientific = FALSE),
+    format(row$behavior_label_inconsistency, big.mark = ",", scientific = FALSE),
+    100 * row$behavior_label_inconsistency_rate
+  )
+}, character(1))
+
+writeLines(
+  c(
+    "% Generated by scripts/render_results_figures.R. Do not edit manually.",
+    "\\begin{table}[H]",
+    "\\caption{Correctness effects of call topology and consistency of Single-Call Decision labels.}",
+    "\\label{tab:rq3-topology-results}",
+    "\\centering",
+    "\\begingroup",
+    "\\scriptsize",
+    "\\renewcommand{\\arraystretch}{1.10}",
+    "\\begin{threeparttable}",
+    "\\textit{Panel A: Matched Separate-Call and Single-Call correctness}\\\\[2pt]",
+    "\\begin{tabularx}{0.88\\columnwidth}{",
+    "    >{\\raggedright\\arraybackslash}p{0.27\\columnwidth}",
+    "    >{\\centering\\arraybackslash}X",
+    "    >{\\centering\\arraybackslash}X",
+    "    >{\\centering\\arraybackslash}p{0.16\\columnwidth}",
+    "}",
+    "\\toprule",
+    "Comparison & Separate-Call pass rate & Single-Call pass rate & $\\Delta$ correct, pp \\\\",
+    "\\midrule",
+    rq3_effect_rows,
+    "\\bottomrule",
+    "\\end{tabularx}",
+    "",
+    "\\vspace{5pt}",
+    "\\textit{Panel B: Exact Decision-label consistency with emitted code}\\\\[2pt]",
+    "\\begin{tabularx}{0.88\\columnwidth}{",
+    "    >{\\raggedright\\arraybackslash}p{0.18\\columnwidth}",
+    "    >{\\centering\\arraybackslash}X",
+    "    >{\\centering\\arraybackslash}X",
+    "    >{\\centering\\arraybackslash}p{0.21\\columnwidth}",
+    "}",
+    "\\toprule",
+    "Protocol & \\texttt{PRESERVE} with changed code & \\texttt{REFINE} with unchanged code & Total inconsistency \\\\",
+    "\\midrule",
+    rq3_label_rows,
+    "\\bottomrule",
+    "\\end{tabularx}",
+    "\\begin{tablenotes}[flushleft]",
+    "\\footnotesize",
+    "\\item Panel A uses the paired-complete denominator, and positive differences favor Single-Call.",
+    "\\textsuperscript{$\\dagger$} The paired 95\\% bootstrap interval excludes zero.",
+    "Panel B reports counts and percentages among 10,054 exact-label responses per protocol.",
+    "\\end{tablenotes}",
+    "\\end{threeparttable}",
+    "\\endgroup",
+    "\\end{table}"
+  ),
+  file.path(table_output_dir, "rq3_call_topology.tex")
+)
+
+rq4 <- read_asset("table_rq4_cost_pareto.csv")
+rq4_direct <- rq4[rq4$protocol == "direct", ]
+rq4$added_tokens <- rq4$tokens_per_model_task - rq4_direct$tokens_per_model_task
+rq4$gain <- 100 * (rq4$pass_rate - rq4_direct$pass_rate)
+rq4$label <- protocol_label(rq4$protocol)
+rq4$composition <- ifelse(
+  grepl("cpr", rq4$protocol),
+  "CPR",
+  ifelse(grepl("cr", rq4$protocol), "CR", "R")
+)
+rq4$decision_conditioned <- grepl("(^d|_d)", rq4$protocol)
+composition_colors <- c(R = blue, CR = orange, CPR = green)
+
+label_positions <- data.frame(
+  protocol = c("r", "dr", "cr", "dcr", "cpr", "dcpr", "sc_cr", "sc_cpr", "sc_dr", "sc_dcr", "sc_dcpr"),
+  label_x = c(900, 300, 1950, 900, 2440, 900, 1160, 1160, 1160, 1160, 1160),
+  label_y = c(0.56, 0.58, -3.65, -0.22, -4.88, -0.60, -0.25, -1.95, 0.58, 0.12, -0.62),
+  stringsAsFactors = FALSE
+)
+
+plot_rq4_panel <- function(protocols, title, show_y_axis) {
+  panel <- rq4[match(protocols, rq4$protocol), ]
+  positions <- label_positions[match(panel$protocol, label_positions$protocol), ]
+  plot(
+    NA,
+    xlim = c(0, 2700),
+    ylim = c(-5.6, 0.85),
+    xlab = "Added tokens per model-task",
+    ylab = if (show_y_axis) "Correctness change from Direct (pp)" else "",
+    yaxt = if (show_y_axis) "s" else "n",
+    bty = "n",
+    main = title,
+    cex.main = 0.90,
+    cex.lab = 0.72,
+    cex.axis = 0.70,
+    mgp = c(1.8, 0.55, 0),
+    tcl = -0.25
+  )
+  abline(v = seq(0, 2500, by = 500), h = seq(-5, 0, by = 1), col = grid_gray, lwd = 0.7)
+  abline(h = 0, col = gray, lwd = 1.1, lty = 2)
+  segments(
+    panel$added_tokens,
+    panel$gain,
+    positions$label_x,
+    positions$label_y,
+    col = light_gray,
+    lwd = 0.7
+  )
+  points(
+    panel$added_tokens,
+    panel$gain,
+    pch = ifelse(panel$decision_conditioned, 24, 21),
+    bg = composition_colors[panel$composition],
+    col = composition_colors[panel$composition],
+    cex = 1.25,
+    lwd = 1.2
+  )
+  text(
+    positions$label_x,
+    positions$label_y,
+    panel$label,
+    cex = 0.68,
+    font = 2,
+    col = composition_colors[panel$composition]
+  )
+}
+
+open_pdf("rq4_gain_token_overhead.pdf", 7.6, 4.15)
+layout(matrix(c(1, 2, 3, 3), nrow = 2, byrow = TRUE), heights = c(1, 0.22))
+par(mar = c(2.6, 3.7, 2.0, 0.5))
+plot_rq4_panel(c("r", "cr", "cpr", "dr", "dcr", "dcpr"), "Separate-Call", TRUE)
+par(mar = c(2.6, 0.7, 2.0, 0.8))
+plot_rq4_panel(c("sc_cr", "sc_cpr", "sc_dr", "sc_dcr", "sc_dcpr"), "Single-Call", FALSE)
+par(mar = c(0, 0, 0, 0))
+plot.new()
+legend(
+  "center",
+  legend = c("R", "CR", "CPR", "Always-Refine", "Decision-conditioned"),
+  col = c(blue, orange, green, gray, gray),
+  pt.bg = c(blue, orange, green, gray, gray),
+  pch = c(21, 21, 21, 21, 24),
+  pt.cex = 1.0,
+  horiz = TRUE,
+  bty = "n",
+  cex = 0.65,
+  x.intersp = 0.7
+)
+dev.off()
+
+source_files <- c(
+  "figure_data_rq1_performance_balance.csv",
+  "figure_data_rq2_decision_tradeoff.csv",
+  "figure_data_rq3_topology_effects.csv",
+  "table_rq3_label_consistency.csv",
+  "table_rq4_cost_pareto.csv"
+)
+output_files <- c(
+  "rq1_stage_composition.pdf",
+  "rq4_gain_token_overhead.pdf"
+)
+table_files <- c(
+  "rq2_decision_tradeoff.tex",
+  "rq3_call_topology.tex"
+)
+manifest <- data.frame(
+  type = c(
+    rep("source", length(source_files)),
+    rep("figure", length(output_files)),
+    rep("table", length(table_files))
+  ),
+  file = c(source_files, output_files, table_files),
+  md5 = unname(tools::md5sum(c(
+    file.path(asset_dir, source_files),
+    file.path(output_dir, output_files),
+    file.path(table_output_dir, table_files)
+  ))),
+  stringsAsFactors = FALSE
+)
+write.csv(manifest, file.path(output_dir, "figure_manifest.csv"), row.names = FALSE)
+writeLines(
+  c(
+    sprintf("Generated with %s", R.version.string),
+    sprintf("Source asset directory: %s", asset_dir),
+    sprintf("Figure output directory: %s", output_dir),
+    sprintf("Table output directory: %s", table_output_dir)
+  ),
+  file.path(output_dir, "figure_build_info.txt")
+)
+
+message(sprintf(
+  "Rendered %d Results figures and %d LaTeX tables",
+  length(output_files),
+  length(table_files)
+))

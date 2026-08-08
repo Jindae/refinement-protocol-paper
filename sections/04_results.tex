@@ -1,72 +1,23 @@
 \section{Results}
 
 This section reports the correctness, transition, topology, and token-cost results for the four Research Questions.
-Each subsection begins with the aggregate pattern and then examines variation or secondary evidence needed to interpret that pattern.
 
 \subsection{Stage Composition and Regression Control}
 
-Table~\ref{tab:rq1-stage-results} summarizes two complementary views of the Separate-Call protocols.
-Panel A compares each outcome with its Shared Initial Candidate, whereas Panel B reports paired differences between adjacent Stage Compositions.
-The pooled rows provide overall magnitudes; the model-benchmark comparisons remain the primary evidence of heterogeneity.
+Figure~\ref{fig:rq1-stage-results} summarizes how each Separate-Call refinement protocol changed the Shared Initial Candidate.
+The bars place Repairs and Regressions on opposite sides of zero, while the annotation for each protocol reports its final pass rate and the change from Direct Generation.
+This view shows whether the final correctness change arose from additional Repairs or was offset by Regressions.
 
-\begin{table}[H]
-\caption{Pooled correctness and transition results for Separate-Call Stage Composition.}
-\label{tab:rq1-stage-results}
+\begin{figure}[H]
 \centering
-\begingroup
-\scriptsize
-\renewcommand{\arraystretch}{1.12}
-\begin{threeparttable}
-\textit{Panel A: Outcomes relative to the Shared Initial Candidate}\\[2pt]
-\begin{tabularx}{0.94\columnwidth}{
-    >{\raggedright\arraybackslash}p{0.14\columnwidth}
-    >{\centering\arraybackslash}p{0.15\columnwidth}
-    >{\centering\arraybackslash}p{0.13\columnwidth}
-    >{\centering\arraybackslash}X
-    >{\centering\arraybackslash}X
-    >{\centering\arraybackslash}X
-}
-\toprule
-Outcome & Determinate & Pass rate & Repairs & Regressions & Repair $-$ regression \\
-\midrule
-Direct & 10,033 & 56.44\% & 0 & 0 & 0 \\
-\texttt{R} & 10,032 & 56.79\% & 56 & 22 & +34 \\
-\texttt{CR} & 10,029 & 52.54\% & 222 & 610 & $-$388 \\
-\texttt{CPR} & 10,027 & 51.31\% & 209 & 725 & $-$516 \\
-\bottomrule
-\end{tabularx}
-
-\vspace{5pt}
-\textit{Panel B: Paired differences between adjacent compositions}\\[2pt]
-\begin{tabularx}{0.94\columnwidth}{
-    >{\raggedright\arraybackslash}p{0.20\columnwidth}
-    >{\centering\arraybackslash}p{0.14\columnwidth}
-    >{\centering\arraybackslash}X
-    >{\centering\arraybackslash}p{0.14\columnwidth}
-    >{\centering\arraybackslash}p{0.14\columnwidth}
-}
-\toprule
-Comparison & Paired $N$ & $\Delta$ correct, pp [95\% CI] & Improved & Worsened \\
-\midrule
-Direct to \texttt{R} & 10,032 & +0.34 [0.16, 0.52] & 56 & 22 \\
-\texttt{R} to \texttt{CR} & 10,021 & $-$4.26 [$-$4.81, $-$3.71] & 188 & 615 \\
-\texttt{CR} to \texttt{CPR} & 10,023 & $-$1.24 [$-$1.61, $-$0.87] & 112 & 236 \\
-\bottomrule
-\end{tabularx}
-\begin{tablenotes}[flushleft]
-\footnotesize
-\item Pass rates exclude indeterminate functional outcomes.
-Repairs and Regressions in Panel A are transitions from the Initial Candidate and use complete-transition denominators.
-Improved and Worsened in Panel B instead compare the two named outcomes on their paired-complete denominator.
-Confidence intervals are paired bootstrap intervals.
-\end{tablenotes}
-\end{threeparttable}
-\endgroup
-\end{table}
+\includegraphics[width=0.92\columnwidth]{figures/results/rq1_stage_composition.pdf}
+\caption{Repair, Regression, and final correctness under Separate-Call Stage Composition. Bars count complete transitions from the Shared Initial Candidate; the final pass rates exclude indeterminate outcomes and therefore use slightly different denominators. Parenthesized changes compare each final pass rate with the Direct pass rate of 56.44\%.}
+\label{fig:rq1-stage-results}
+\end{figure}
 
 Revision alone produced the highest pooled determinate pass rate among the Separate-Call refinement protocols.
-Relative to Direct Generation, \texttt{R} increased correctness by 0.34 percentage points, with 56 improved and 22 worsened pairs; the exact McNemar test also rejected equality ($p=0.00015$).
-The magnitude was nevertheless small and heterogeneous: the difference was positive in 11 of the 18 model-benchmark combinations, negative in three, and zero in four, and only one individual combination had $p<0.05$.
+Relative to Direct Generation, \texttt{R} increased correctness by 0.34 percentage points, with 56 improved and 22 worsened pairs.
+Its 95\% bootstrap interval excluded zero, but the magnitude was small and heterogeneous: the difference was positive in 11 of the 18 model-benchmark combinations, negative in three, and zero in four.
 
 Adding Critique before Revision reversed the net result.
 The \texttt{CR} protocol was 4.26 percentage points below \texttt{R} and was negative in 17 of 18 model-benchmark combinations.
@@ -82,42 +33,10 @@ The comparisons are complete protocol effects and do not establish whether a har
 \subsection{Decision Benefits Regression-Prone Refinement}
 
 Table~\ref{tab:rq2-decision-results} compares each Always-Refine protocol with the outcome obtained by applying the shared Decision.
+The columns report the paired correctness difference, the selection trade-off between prevented Regressions and missed Repairs, and the downstream tokens omitted after \texttt{PRESERVE} under protocol-implied execution.
 Prevented Regression counts an initially correct candidate that Always-Refine damaged but Decision preserved, whereas Missed Repair counts an initially incorrect candidate that Always-Refine repaired but Decision preserved.
-Token savings represent the downstream calls omitted after \texttt{PRESERVE} under protocol-implied execution.
 
-\begin{table}[H]
-\caption{Correctness and cost effects of Decision conditioning.}
-\label{tab:rq2-decision-results}
-\centering
-\begingroup
-\scriptsize
-\renewcommand{\arraystretch}{1.12}
-\begin{threeparttable}
-\begin{tabularx}{0.98\columnwidth}{
-    >{\raggedright\arraybackslash}p{0.16\columnwidth}
-    >{\centering\arraybackslash}X
-    >{\centering\arraybackslash}p{0.13\columnwidth}
-    >{\centering\arraybackslash}p{0.12\columnwidth}
-    >{\centering\arraybackslash}p{0.13\columnwidth}
-    >{\centering\arraybackslash}p{0.13\columnwidth}
-}
-\toprule
-Comparison & $\Delta$ correct, pp [95\% CI] & Prevented Regression & Missed Repair & Tokens saved, million & Mean saved \\
-\midrule
-\texttt{R} to \texttt{DR} & $-$0.13 [$-$0.27, 0.00] & 18 & 31 & 1.93 & 192 \\
-\texttt{CR} to \texttt{DCR} & +3.95 [3.45, 4.45] & 540 & 149 & 11.59 & 1,153 \\
-\texttt{CPR} to \texttt{DCPR} & +5.10 [4.55, 5.65] & 646 & 136 & 18.84 & 1,874 \\
-\bottomrule
-\end{tabularx}
-\begin{tablenotes}[flushleft]
-\footnotesize
-\item Correctness differences use paired-complete outcomes.
-Transition counts use the corresponding complete Decision and Initial-to-final outcomes and can differ slightly from the paired correctness counts.
-Mean savings are protocol-implied tokens per model-task unit.
-\end{tablenotes}
-\end{threeparttable}
-\endgroup
-\end{table}
+\input{tables/results/rq2_decision_tradeoff.tex}
 
 Decision was strongly conservative: 9,244 of 10,054 resolved labels were \texttt{PRESERVE} (91.94\%), and 810 were \texttt{REFINE}.
 For the relatively stable \texttt{R} path, this policy prevented 18 Regressions but missed 31 Repairs, resulting in a small difference whose confidence interval included zero.
@@ -140,61 +59,11 @@ The present result therefore extends the preservation concern to final code outc
 
 \subsection{Single-Call and Separate-Call Topology}
 
-Table~\ref{tab:rq3-topology-results} reports matched topology comparisons and the consistency of exact Decision labels with emitted code behavior.
-Panel A compares final correctness under the Separate-Call and Single-Call realizations, while Panel B records whether the code changed in the direction implied by each Single-Call Decision label.
+Table~\ref{tab:rq3-topology-results} reports the matched topology comparisons and the consistency of exact Single-Call Decision labels with emitted code behavior.
+Panel A gives both pass rates and their paired difference, while Panel B separates \texttt{PRESERVE} responses with changed code from \texttt{REFINE} responses with unchanged code.
+This consistency measure concerns source-code equality to the Initial Candidate and does not determine whether a change was semantically justified.
 
-\begin{table}[H]
-\caption{Correctness effects of call topology and consistency of Single-Call Decision labels.}
-\label{tab:rq3-topology-results}
-\centering
-\begingroup
-\scriptsize
-\renewcommand{\arraystretch}{1.12}
-\begin{threeparttable}
-\textit{Panel A: Single-Call minus matched Separate-Call correctness}\\[2pt]
-\begin{tabularx}{0.94\columnwidth}{
-    >{\raggedright\arraybackslash}p{0.23\columnwidth}
-    >{\centering\arraybackslash}p{0.15\columnwidth}
-    >{\centering\arraybackslash}X
-    >{\centering\arraybackslash}p{0.14\columnwidth}
-    >{\centering\arraybackslash}p{0.14\columnwidth}
-}
-\toprule
-Comparison & Paired $N$ & $\Delta$ correct, pp [95\% CI] & Improved & Worsened \\
-\midrule
-\texttt{CR} to \texttt{SC-CR} & 10,023 & +3.95 [3.41, 4.49] & 607 & 211 \\
-\texttt{CPR} to \texttt{SC-CPR} & 10,020 & +3.21 [2.58, 3.83] & 667 & 345 \\
-\texttt{DR} to \texttt{SC-DR} & 10,032 & +0.07 [$-$0.11, 0.25] & 43 & 36 \\
-\texttt{DCR} to \texttt{SC-DCR} & 10,029 & +0.05 [$-$0.22, 0.33] & 100 & 95 \\
-\texttt{DCPR} to \texttt{SC-DCPR} & 10,027 & $-$0.09 [$-$0.40, 0.22] & 114 & 123 \\
-\bottomrule
-\end{tabularx}
-
-\vspace{5pt}
-\textit{Panel B: Exact Decision-label consistency with emitted code}\\[2pt]
-\begin{tabularx}{0.94\columnwidth}{
-    >{\raggedright\arraybackslash}p{0.18\columnwidth}
-    >{\centering\arraybackslash}p{0.16\columnwidth}
-    >{\centering\arraybackslash}X
-    >{\centering\arraybackslash}X
-    >{\centering\arraybackslash}p{0.17\columnwidth}
-}
-\toprule
-Protocol & Exact labels & \texttt{PRESERVE} with changed code & \texttt{REFINE} with unchanged code & Inconsistency rate \\
-\midrule
-\texttt{SC-DR} & 10,054 & 180 & 674 & 8.49\% \\
-\texttt{SC-DCR} & 10,054 & 123 & 763 & 8.81\% \\
-\texttt{SC-DCPR} & 10,054 & 114 & 297 & 4.09\% \\
-\bottomrule
-\end{tabularx}
-\begin{tablenotes}[flushleft]
-\footnotesize
-\item Positive differences in Panel A favor Single-Call.
-Label inconsistency is behavioral: it compares the exact label with source-code equality to the Initial Candidate and does not evaluate whether changing the code was semantically justified.
-\end{tablenotes}
-\end{threeparttable}
-\endgroup
-\end{table}
+\input{tables/results/rq3_call_topology.tex}
 
 Combining Critique and Revision in one call recovered 3.95 percentage points relative to \texttt{CR}, and combining Critique, Planning, and Revision recovered 3.21 points relative to \texttt{CPR}.
 The first difference was positive in 17 of 18 model-benchmark combinations, and the second was positive in 16 and negative in two.
@@ -214,54 +83,26 @@ Within our setting, call topology mattered specifically for the Critique and Pla
 \subsection{Correctness Relative to Token Cost}
 
 The final physical experiment consumed 91,816,683 tokens, comprising 65,295,167 input and 26,521,516 output tokens.
-Table~\ref{tab:rq4-cost-results} compares protocol-implied correctness and token use on the 10,006 model-task units with determinate outcomes for every protocol.
-The Pareto column marks protocols for which no other protocol was both at least as correct and no more expensive, with one strict advantage.
+Figure~\ref{fig:rq4-cost-results} plots the added protocol-implied tokens per model-task against the correctness change from Direct Generation on the 10,006 model-task units with determinate outcomes for every protocol.
+The two panels separate Separate-Call and Single-Call protocols but use common axes, with Direct Generation defining zero added tokens and zero correctness change.
+Color groups protocols by their refinement-stage composition, and point shape distinguishes Always-Refine from Decision-conditioned execution.
 
-\begin{table}[H]
-\caption{Pooled correctness-cost comparison on the common-complete subset.}
-\label{tab:rq4-cost-results}
+\begin{figure}[H]
 \centering
-\begingroup
-\scriptsize
-\renewcommand{\arraystretch}{1.08}
-\begin{threeparttable}
-\begin{tabularx}{0.76\columnwidth}{
-    >{\raggedright\arraybackslash}X
-    >{\centering\arraybackslash}p{0.18\columnwidth}
-    >{\centering\arraybackslash}p{0.23\columnwidth}
-    >{\centering\arraybackslash}p{0.14\columnwidth}
-}
-\toprule
-Protocol & Correct & Tokens per model-task & Pareto \\
-\midrule
-Direct & 56.58\% & 460 & Yes \\
-\texttt{DR} & 56.79\% & 974 & Yes \\
-\texttt{DCR} & 56.61\% & 1,098 & No \\
-\texttt{R} & 56.92\% & 1,166 & Yes \\
-\texttt{DCPR} & 56.52\% & 1,186 & No \\
-\texttt{SC-CR} & 56.61\% & 1,200 & No \\
-\texttt{SC-DR} & 56.86\% & 1,217 & No \\
-\texttt{SC-DCR} & 56.66\% & 1,234 & No \\
-\texttt{SC-CPR} & 54.63\% & 1,254 & No \\
-\texttt{SC-DCPR} & 56.43\% & 1,255 & No \\
-\texttt{CR} & 52.65\% & 2,250 & No \\
-\texttt{CPR} & 51.41\% & 3,059 & No \\
-\bottomrule
-\end{tabularx}
-\begin{tablenotes}[flushleft]
-\footnotesize
-\item Direct includes Initial Candidate generation.
-Every other row includes Direct plus the calls implied by that protocol.
-Tokens are model-tokenizer counts and are not hardware-normalized compute measures.
-\end{tablenotes}
-\end{threeparttable}
-\endgroup
-\end{table}
+\includegraphics[width=0.98\columnwidth]{figures/results/rq4_gain_token_overhead.pdf}
+\caption{Pooled correctness gain against added token overhead on the common-complete subset. Each point is a protocol, measured relative to Direct Generation. Colors identify the refinement-stage composition, and circles and triangles identify Always-Refine and Decision-conditioned protocols, respectively. Token counts are model-tokenizer units rather than hardware-normalized compute.}
+\label{fig:rq4-cost-results}
+\end{figure}
 
-Only Direct, \texttt{DR}, and \texttt{R} lay on the pooled correctness-cost frontier.
-Direct was the low-cost anchor, \texttt{R} had the highest correctness, and \texttt{DR} provided an intermediate cost and correctness point.
-Every protocol containing an external Critique or Plan was dominated in the pooled common-complete comparison.
-The Single-Call protocols were much cheaper than their corresponding multi-call \texttt{CR} and \texttt{CPR} paths, but none exceeded the frontier established by Direct, \texttt{DR}, and \texttt{R}.
+The Separate-Call panel shows that greater token overhead did not generally correspond to greater correctness.
+Relative to Direct Generation, \texttt{R} added 705 tokens per model-task and improved correctness by 0.34 percentage points, while \texttt{DR} added 513 tokens and improved correctness by 0.21 points.
+In contrast, \texttt{CR} and \texttt{CPR} added 1,790 and 2,598 tokens while reducing correctness by 3.93 and 5.17 points, respectively.
+Decision conditioning reduced these larger overheads to 638 tokens for \texttt{DCR} and 725 for \texttt{DCPR}, while returning their correctness to within 0.06 points of Direct Generation.
+
+The Single-Call protocols occupied a much narrower overhead range of 739 to 794 added tokens per model-task.
+\texttt{SC-DR} produced the largest Single-Call gain at 0.28 percentage points.
+\texttt{SC-CR}, \texttt{SC-DCR}, and \texttt{SC-DCPR} remained within 0.15 points of Direct Generation, whereas \texttt{SC-CPR} reduced correctness by 1.95 points.
+Single-Call composition therefore avoided the high overhead of the corresponding multi-call \texttt{CR} and \texttt{CPR} paths, but did not provide a stronger pooled gain than \texttt{R} or \texttt{DR}.
 
 Relative to Direct, \texttt{R} added 34 correct outcomes at an additional 7.06 million tokens, or about 208 thousand tokens per additional correct outcome.
 The corresponding \texttt{DR} increment was 21 correct outcomes and 5.14 million tokens, or about 245 thousand tokens per additional correct outcome.
@@ -269,4 +110,4 @@ These ratios describe pooled token accounting rather than monetary or hardware-n
 
 The limited return from additional refinement computation aligns with prior evidence that repeated self-repair is not uniformly more effective than alternative use of a generation budget \cite{olausson2024selfrepair}.
 That work compares repair with independent resampling and often uses execution-derived feedback, whereas our comparison holds one Initial Candidate fixed, supplies no Execution Feedback, and accounts for the calls in each Stage Composition.
-Within this narrower setting, additional Critique and Planning calls did not justify their token cost in the pooled panel, even though Single-Call composition improved correctness relative to its matched multi-call path.
+Within this narrower setting, additional Critique and Planning calls did not yield a pooled correctness gain commensurate with their token overhead, even though Single-Call composition improved correctness relative to its matched multi-call path.

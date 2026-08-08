@@ -1,0 +1,4 @@
+Generated with R version 4.4.1 (2024-06-14)
+Source asset directory: /Users/jindae/Library/CloudStorage/OneDrive-개인/02_Research/Papers/refinement-protocol-paper/data/paper_writing_package/results/paper_assets
+Figure output directory: /Users/jindae/Library/CloudStorage/OneDrive-개인/02_Research/Papers/refinement-protocol-paper/main/figures/results
+Table output directory: /Users/jindae/Library/CloudStorage/OneDrive-개인/02_Research/Papers/refinement-protocol-paper/main/tables/results

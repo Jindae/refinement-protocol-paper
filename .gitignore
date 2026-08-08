@@ -17,7 +17,7 @@
 *.vrb
 
 # PDF output (comment out if you want to track PDFs)
-*.pdf
+main.pdf
 
 # Editor files
 .DS_Store
