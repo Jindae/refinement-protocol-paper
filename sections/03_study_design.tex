@@ -1,25 +1,26 @@
 \section{Study Design}
 
-We designed a controlled study to isolate how the composition of inference-time Self-Refinement affects code correctness and token consumption.
-For each model and task, all variants used the same self-generated initial candidate and no execution feedback.
+We designed a controlled study of two protocol-design axes in inference-time Self-Refinement: which refinement roles are included and whether those roles are externalized across calls or specified within one call.
+For each model and task, every condition started from the same self-generated Initial Candidate, and no model call received execution feedback.
+This section defines the Research Questions, protocol stages and compositions, evaluated models and benchmarks, and experimental procedure.
 
 \subsection{Research Questions}
 
-\researchquestion{RQ1}{How does the composition of Self-Refinement affect final code correctness?}
-An explicit critique or revision plan may help a model review its candidate, but each additional step is useful only if it leads to a better final program.
-We isolate these contributions by successively comparing revision alone, revision guided by a self-generated critique, and revision guided by both a critique and an explicit plan while holding the initial candidate fixed.
+\researchquestion{RQ1}{How does the stage composition of Self-Refinement affect final code correctness, and how is that effect explained by repairs of initially incorrect candidates and regressions of initially correct candidates?}
+An explicit Critique or Revision Plan may structure refinement, but an added stage can also alter a candidate that was already correct.
+We therefore compare Direct Generation with revision alone, Critique followed by Revision, and Critique followed by Planning and Revision, while jointly interpreting final correctness through Repair, Correct-to-Incorrect Regression, Functional Preservation, and Unrepaired Failure.
 
-\researchquestion{RQ2}{How do alternative refinement approaches balance repairs of initially incorrect candidates and regressions of initially correct candidates?}
-A net change in pass rate can conceal whether refinement repairs many failures while also damaging programs that were already correct.
-We therefore compare the initial and final programs for each task and measure how often refinement repairs a failure, introduces a regression, or preserves the initial correctness outcome.
+\researchquestion{RQ2}{How does the value of Decision-Conditioned Refinement vary across model-benchmark combinations with different initial pass rates?}
+A Decision stage can preserve a candidate exactly and avoid unnecessary refinement, but an incorrect preservation decision can also forgo a possible repair.
+We compare each always-refine path with its Decision-conditioned counterpart and relate the resulting prevented regressions, missed repairs, correctness differences, and token savings to the observed Initial Pass Rate of each model-benchmark combination.
 
-\researchquestion{RQ3}{How does the value of selectively applying refinement vary across model-benchmark combinations with different initial pass rates?}
-Selective refinement can protect candidates that do not need revision, but an incorrect preservation decision can also forgo a possible repair.
-We examine how the model's decision to preserve or revise each initial program changes correctness and token use across model-benchmark combinations with different initial pass rates.
+\researchquestion{RQ3}{How does realizing refinement roles within one model call versus externalizing them across multiple calls affect correctness and preservation?}
+Separate calls make intermediate artifacts and exact selection observable, whereas one call avoids reintroducing those artifacts as later inputs but does not enforce the same boundaries.
+We compare matched single-call and separate-call realizations of the same role sequences using the exact same Initial Candidates and evaluate final correctness, functional transitions, candidate preservation, and agreement between an integrated Decision label and the code emitted with it.
 
-\researchquestion{RQ4}{Do the correctness effects of additional refinement steps justify their token costs?}
-Critique, planning, and selection require additional inference even when they do not improve the final program.
-We compare the resulting correctness changes with added token use at the candidate and benchmark levels, including the tokens avoided when refinement is not applied.
+\researchquestion{RQ4}{Do the correctness effects of alternative refinement protocols justify their token costs?}
+Externalized stages add calls and intermediate-input tokens, while single-call protocols reduce call count but may change correctness or preservation.
+We compare correctness with end-to-end Protocol-Implied Token Cost across the complete protocol panel, including the calls avoided by a \texttt{PRESERVE} Decision.
 
 \subsection{Self-Refinement Protocols}
 
@@ -28,13 +29,61 @@ The candidate was stored once and reused as the exact input to every refinement 
 We refer to this control as the Shared-Initial Design.
 Benchmark execution was reserved for evaluation and provided no feedback to the model.
 
-We decomposed refinement into four observable Refinement Stages: Refinement-Need Decision (\texttt{D}), Critique Generation (\texttt{C}), Revision Planning (\texttt{P}), and Code Revision (\texttt{R}).
-Each stage was a separate prompt and model call with a stored output artifact, rather than an inferred internal reasoning step.
-This separation lets us add one explicit operation at a time, reuse the same upstream artifact in downstream variants, and attribute token consumption to the calls that produced it.
+We describe refinement using four role labels: Refinement-Need Decision (\texttt{D}), Critique Generation (\texttt{C}), Revision Planning (\texttt{P}), and Code Revision (\texttt{R}).
+In the separate-call conditions, each label denotes an observable prompt and model call whose output was stored before a downstream call.
+In the single-call conditions, the labels instead denote roles ordered within one prompt and do not establish that the model's unobserved reasoning followed those roles internally.
 
-The three Always-Refine Protocols are named by their execution order.
-Direct Revision (\texttt{R}) performs Code Revision without an upstream artifact, Critique-Conditioned Revision (\texttt{CR}) supplies a stored critique artifact to Code Revision, and Critique-and-Plan-Conditioned Revision (\texttt{CPR}) inserts Revision Planning between Critique Generation and Code Revision.
-Figure~\ref{fig:protocol-overview} summarizes the common generation step, the cumulative Stage Compositions, and the independent Decision used for selective refinement.
+\subsubsection{Refinement Stages}
+
+Refinement-Need Decision (\texttt{D}) receives only the Task Specification and exact Initial Candidate and returns \texttt{PRESERVE} or \texttt{REFINE}.
+It does not generate a Critique, Plan, or revised code and is not provided to any Critique, Planning, or Revision prompt.
+Its function in a separate-call protocol is exact selection: \texttt{PRESERVE} selects the stored Initial Candidate, whereas \texttt{REFINE} selects the candidate from a matched refinement path.
+
+Critique Generation (\texttt{C}) receives the Task Specification and Initial Candidate and diagnoses whether the candidate has a functional problem.
+When a problem is found, the Critique identifies its root cause and relevant code location; otherwise, it records a no-problem conclusion.
+The call is not asked to produce a completed Revision Plan or a revised solution, and we do not assign an independent correctness label to its text artifact.
+
+Revision Planning (\texttt{P}) receives the Task Specification, Initial Candidate, and stored Critique.
+It translates the Critique into concrete minimal changes and preservation constraints, or records that no change is needed when the Critique found no problem.
+Planning is not instructed to conduct a second independent review and does not produce the complete revised program.
+We use Planning only after Critique because a plan produced without a prior diagnosis would combine problem identification and edit planning rather than isolate the same translation role.
+
+Code Revision (\texttt{R}) is the only separate-call Refinement Stage that produces executable code.
+Direct Revision receives the Task Specification and Initial Candidate and must determine for itself whether a functional change is needed.
+Critique-Conditioned Revision instead acts on the stored Critique, whereas Plan-Conditioned Revision acts on the stored Plan and does not receive the Critique text directly.
+The conditioned Revision prompts request an exact reproduction of the Initial Candidate when their supplied artifact indicates that no change is needed.
+Every Revision response must contain exactly one complete fenced Python block, and no Revision prompt receives a Decision or execution feedback.
+
+\subsubsection{Separate-Call Protocols for RQ1 and RQ2}
+
+The three Always-Refine Protocols are named by the execution order of their separately invoked stages.
+Direct Revision (\texttt{R}) performs one Revision call without an upstream artifact.
+Critique-Conditioned Revision (\texttt{CR}) executes Critique Generation and then provides the stored Critique to a separate Revision call.
+Critique-and-Plan-Conditioned Revision (\texttt{CPR}) executes Critique Generation, translates the stored Critique in a separate Planning call, and provides only the resulting Plan to a separate Revision call.
+The same Critique artifact is reused by \texttt{CR} and Planning, so their difference does not include independently sampled Critiques.
+RQ1 compares Direct Generation with \texttt{R}, \texttt{R} with \texttt{CR}, and \texttt{CR} with \texttt{CPR} to measure complete Stage-Composition effects together with their Repair and Regression balance.
+
+Combining \texttt{D} with \texttt{R} yields Decision-Conditioned Direct Revision (\texttt{DR}).
+Its combinations with \texttt{CR} and \texttt{CPR} yield Decision-Conditioned \texttt{CR} (\texttt{DCR}) and Decision-Conditioned \texttt{CPR} (\texttt{DCPR}), respectively.
+No additional Revision call is made to construct these outcomes.
+If the Decision is \texttt{PRESERVE}, the protocol selects the exact Initial Candidate; if it is \texttt{REFINE}, it selects the matched Always-Refine candidate.
+RQ2 compares each Decision-conditioned protocol with its Always-Refine counterpart to quantify prevented regressions, missed repairs, and conditionally avoided calls across model-benchmark combinations.
+
+\subsubsection{Single-Call Protocols for RQ3}
+
+The Single-Call Role Protocols specify multiple roles in one prompt but make one model call from the Task Specification and exact Initial Candidate.
+Single-Call Critique and Revision (\texttt{SC-CR}) orders the \texttt{C} and \texttt{R} roles, and Single-Call Critique, Planning, and Revision (\texttt{SC-CPR}) orders \texttt{C}, \texttt{P}, and \texttt{R}; both responses require only the final code.
+Single-Call Decision and Revision (\texttt{SC-DR}), Single-Call Decision, Critique, and Revision (\texttt{SC-DCR}), and Single-Call Decision, Critique, Planning, and Revision (\texttt{SC-DCPR}) additionally require an exact first-line Decision label in the same response as the final code.
+We do not define a separate \texttt{SC-R} condition because \texttt{R} is already a one-call protocol with the same role scope.
+
+For the primary \texttt{SC-D*} outcome, the Final Candidate is the code emitted by that call regardless of its Decision label.
+The label and code are parsed independently, so a valid code candidate remains available even if its label is invalid, and a valid label remains recorded when the code is malformed.
+Selecting the exact Initial Candidate for \texttt{PRESERVE} and the emitted code for \texttt{REFINE} forms a supplementary label-enforced outcome without another model call.
+RQ3 compares \texttt{CR} with \texttt{SC-CR}, \texttt{CPR} with \texttt{SC-CPR}, and each of \texttt{DR}, \texttt{DCR}, and \texttt{DCPR} with its matched \texttt{SC-D*} protocol.
+These contrasts estimate the end-to-end effect of prompt-and-call topology, not the independent semantic accuracy of an unobserved internal Critique, Plan, or Decision process.
+RQ4 places Direct Generation and all 11 refinement outcomes in a common correctness-cost comparison.
+
+Figure~\ref{fig:protocol-overview} summarizes the separate-call compositions used for RQ1 and RQ2 and their single-call counterparts used for RQ3.
 
 \begin{figure}[H]
 \centering
@@ -44,118 +93,85 @@ Figure~\ref{fig:protocol-overview} summarizes the common generation step, the cu
     artifact/.style={draw, dashed, rounded corners=2pt, fill=black!3, align=center, minimum height=0.72cm, inner xsep=8pt, font=\small},
     outcome/.style={draw, rounded corners=2pt, fill=green!8, align=center, minimum height=0.72cm, inner xsep=8pt, font=\small},
     flow/.style={->, >=latex, thick},
-    reuse/.style={->, >=latex, dashed, thick},
     label/.style={font=\small\ttfamily\bfseries}
 ]
-\node[artifact] (task) at (0,4.2) {Task Specification};
-\node[stage] (generation) at (3.2,4.2) {Direct\\Generation};
-\node[artifact] (initial) at (6.4,4.2) {Initial Candidate};
+\node[artifact] (task) at (4.0,5.0) {Task Specification};
+\node[stage] (generation) at (8.0,5.0) {Direct\\Generation};
+\node[artifact] (initial) at (12.0,5.0) {Shared Initial Candidate};
 \draw[flow] (task) -- (generation);
 \draw[flow] (generation) -- (initial);
 
-\node[label] at (0,2.6) {R};
-\node[artifact] (input-r) at (2.0,2.6) {$T + I$};
-\node[stage] (r-direct) at (5.0,2.6) {Code\\Revision};
-\node[outcome] (r-candidate) at (8.2,2.6) {\texttt{R} Revised\\Candidate};
-\draw[flow] (input-r) -- (r-direct);
+\node at (5.0,3.9) {\small\bfseries Separate calls (RQ1 and RQ2)};
+\node at (16.8,3.9) {\small\bfseries One call (RQ3)};
+
+\node[label] at (0.0,2.8) {R};
+\node[stage] (r-direct) at (4.0,2.8) {R};
+\node[outcome] (r-candidate) at (8.0,2.8) {\texttt{R} candidate};
 \draw[flow] (r-direct) -- (r-candidate);
 
-\node[label] at (0,1.0) {CR};
-\node[artifact] (input-cr) at (2.0,1.0) {$T + I$};
-\node[stage] (critique) at (5.0,1.0) {Critique\\Generation};
-\node[artifact] (critique-artifact) at (8.2,1.0) {Critique\\Artifact};
-\node[stage] (r-critique) at (11.4,1.0) {Code\\Revision};
-\node[outcome] (cr-candidate) at (14.6,1.0) {\texttt{CR} Revised\\Candidate};
-\draw[flow] (input-cr) -- (critique);
+\node[label] at (0.0,1.5) {CR};
+\node[stage] (critique) at (2.7,1.5) {C};
+\node[artifact] (critique-artifact) at (5.0,1.5) {Critique};
+\node[stage] (r-critique) at (7.3,1.5) {R};
+\node[outcome] (cr-candidate) at (9.7,1.5) {\texttt{CR} candidate};
 \draw[flow] (critique) -- (critique-artifact);
 \draw[flow] (critique-artifact) -- (r-critique);
 \draw[flow] (r-critique) -- (cr-candidate);
 
-\node[label] at (0,-0.8) {CPR};
-\node[stage] (planning) at (5.0,-0.8) {Revision\\Planning};
-\node[artifact] (plan-artifact) at (8.2,-0.8) {Revision\\Plan};
-\node[stage] (r-plan) at (11.4,-0.8) {Code\\Revision};
-\node[outcome] (cpr-candidate) at (14.6,-0.8) {\texttt{CPR} Revised\\Candidate};
-\draw[reuse] (critique-artifact) -- (planning);
+\node[label] at (0.0,0.0) {CPR};
+\node[stage] (critique-cpr) at (1.6,0.0) {C};
+\node[artifact] (critique-cpr-artifact) at (3.4,0.0) {Critique};
+\node[stage] (planning) at (5.2,0.0) {P};
+\node[artifact] (plan-artifact) at (7.0,0.0) {Plan};
+\node[stage] (r-plan) at (8.7,0.0) {R};
+\node[outcome] (cpr-candidate) at (10.7,0.0) {\texttt{CPR}};
+\draw[flow] (critique-cpr) -- (critique-cpr-artifact);
+\draw[flow] (critique-cpr-artifact) -- (planning);
 \draw[flow] (planning) -- (plan-artifact);
 \draw[flow] (plan-artifact) -- (r-plan);
 \draw[flow] (r-plan) -- (cpr-candidate);
 
-\node[label] at (0,-2.7) {D};
-\node[artifact] (input-d) at (2.0,-2.7) {$T + I$};
-\node[stage] (decision) at (5.0,-2.7) {Refinement-Need\\Decision};
-\node[artifact] (decision-artifact) at (8.2,-2.7) {\texttt{PRESERVE}\\or \texttt{REFINE}};
-\node[outcome] (selection) at (12.5,-2.7) {Final Candidate\\\texttt{PRESERVE}: exact Initial Candidate\\\texttt{REFINE}: matched Revised Candidate};
-\draw[flow] (input-d) -- (decision);
+\node[label] at (0.0,-1.5) {D*};
+\node[stage] (decision) at (2.2,-1.5) {D};
+\node[artifact] (decision-artifact) at (5.2,-1.5) {\texttt{PRESERVE} or \texttt{REFINE}};
+\node[outcome] (selection) at (9.0,-1.5) {exact Initial or matched\\\texttt{R}/\texttt{CR}/\texttt{CPR} candidate};
 \draw[flow] (decision) -- (decision-artifact);
 \draw[flow] (decision-artifact) -- (selection);
+
+\node[label] at (12.0,2.8) {SC-CR};
+\node[stage] (sc-cr) at (16.0,2.8) {one call: C $\rightarrow$ R};
+\node[outcome] (sc-cr-candidate) at (20.7,2.8) {code};
+\draw[flow] (sc-cr) -- (sc-cr-candidate);
+
+\node[label] at (12.0,1.5) {SC-CPR};
+\node[stage] (sc-cpr) at (16.0,1.5) {one call: C $\rightarrow$ P $\rightarrow$ R};
+\node[outcome] (sc-cpr-candidate) at (20.7,1.5) {code};
+\draw[flow] (sc-cpr) -- (sc-cpr-candidate);
+
+\node[label] at (12.0,0.0) {SC-DR};
+\node[stage] (sc-dr) at (16.0,0.0) {one call: D $\rightarrow$ R};
+\node[outcome] (sc-dr-candidate) at (20.7,0.0) {label + code};
+\draw[flow] (sc-dr) -- (sc-dr-candidate);
+
+\node[label] at (12.0,-1.2) {SC-DCR};
+\node[stage] (sc-dcr) at (16.0,-1.2) {one call: D $\rightarrow$ C $\rightarrow$ R};
+\node[outcome] (sc-dcr-candidate) at (20.7,-1.2) {label + code};
+\draw[flow] (sc-dcr) -- (sc-dcr-candidate);
+
+\node[label] at (12.0,-2.4) {SC-DCPR};
+\node[stage] (sc-dcpr) at (16.0,-2.4) {one call: D $\rightarrow$ C $\rightarrow$ P $\rightarrow$ R};
+\node[outcome] (sc-dcpr-candidate) at (20.7,-2.4) {label + code};
+\draw[flow] (sc-dcpr) -- (sc-dcpr-candidate);
 \end{tikzpicture}%
 }
-\caption{Overview of the Shared-Initial Design and protocol composition. $T + I$ denotes the Task Specification and exact Initial Candidate. Solid arrows denote stage execution and artifact flow; the dashed arrow denotes reuse of the same stored Critique in Revision Planning. Code Revision additionally receives the artifact or artifacts shown on its path. The same Decision is combined with each Always-Refine outcome to derive \texttt{DR}, \texttt{DCR}, and \texttt{DCPR}.}
+\caption{Overview of the Shared-Initial Design and protocol composition. Every row receives the Task Specification and exact Initial Candidate. Separate boxes in the left panel denote distinct calls and stored artifact flow; each stage sequence in the right panel is specified within one call. \texttt{D*} combines one separate Decision with each matched Always-Refine candidate to derive \texttt{DR}, \texttt{DCR}, and \texttt{DCPR}.}
 \label{fig:protocol-overview}
 \end{figure}
 \unskip
 
-Direct Revision provides the least structured refinement condition.
-Its single call must inspect the Task Specification, decide whether the Initial Candidate has a functional problem, and produce the complete Revised Candidate.
-It therefore serves as the reference point for asking whether externalizing intermediate work changes the outcome, rather than as a condition with no review.
-
-Critique Generation separates diagnosis from code production.
-Given only the Task Specification and Initial Candidate, the model was asked to identify potential functional mismatches and relevant fault locations, or to recommend preservation when it found no problem.
-The prompt prohibited a complete revised solution and a completed revision plan, so the resulting critique artifact records what may be wrong without asking the same call to implement the correction.
-Code Revision in \texttt{CR} then receives this stored artifact as guidance.
-
-Revision Planning tests whether an additional translation from diagnosis to an actionable edit strategy benefits revision.
-A critique may identify a defect without specifying which behavior should change, which parts should remain intact, or how multiple changes should be ordered.
-The Planning call therefore receives the Task Specification, Initial Candidate, and stored critique artifact and is asked to state the changes and relevant locations without producing a complete solution.
-We place Planning only after Critique Generation because a plan generated without a critique would combine defect identification and planning in one call and would not isolate the same intermediate operation.
-This stage may also propagate an incorrect critique or add cost without improving the code; accordingly, the \texttt{CPR} versus \texttt{CR} comparison measures the net effect of the Planning call, its artifact, and its token consumption rather than the intrinsic quality of plans in isolation.
-
-Code Revision is the only Refinement Stage that produces executable code.
-Every Revision call receives the Task Specification and exact Initial Candidate; \texttt{CR} additionally receives the critique artifact, and \texttt{CPR} receives both the critique artifact and revision plan.
-All three templates permit the model to retain the candidate when no functional change is needed and require exactly one complete fenced Python block as output.
-No stage receives tests or execution feedback.
-
-For complete reproducibility, Listings~\ref{lst:prompt-direct-generation} through~\ref{lst:prompt-plan-revision} reproduce all seven frozen templates used in Direct Generation and refinement.
-Each listing is included directly from its checked prompt file without normalization, placeholder substitution, reordered text, or deduplication of repeated instructions.
-
-\noindent\begin{minipage}{\columnwidth}
-\lstinputlisting[style=prompt,caption={Frozen Direct Generation prompt.},label={lst:prompt-direct-generation}]{prompts/v3/direct_generation.txt}
-\end{minipage}
-
-\noindent\begin{minipage}{\columnwidth}
-\lstinputlisting[style=prompt,caption={Frozen Refinement-Need Decision prompt.},label={lst:prompt-decision}]{prompts/v3/refinement_need_decision.txt}
-\end{minipage}
-
-\noindent\begin{minipage}{\columnwidth}
-\lstinputlisting[style=prompt,caption={Frozen Critique Generation prompt.},label={lst:prompt-critique}]{prompts/v3/critique_generation.txt}
-\end{minipage}
-
-\noindent\begin{minipage}{\columnwidth}
-\lstinputlisting[style=prompt,caption={Frozen Revision Planning prompt.},label={lst:prompt-planning}]{prompts/v3/revision_planning.txt}
-\end{minipage}
-
-\noindent\begin{minipage}{\columnwidth}
-\lstinputlisting[style=prompt,caption={Frozen Direct Revision prompt.},label={lst:prompt-direct-revision}]{prompts/v3/direct_revision.txt}
-\end{minipage}
-
-\noindent\begin{minipage}{\columnwidth}
-\lstinputlisting[style=prompt,caption={Frozen Critique-Conditioned Revision prompt.},label={lst:prompt-critique-revision}]{prompts/v3/critique_conditioned_revision.txt}
-\end{minipage}
-
-\noindent\begin{minipage}{\columnwidth}
-\lstinputlisting[style=prompt,caption={Frozen Critique-and-Plan-Conditioned Revision prompt.},label={lst:prompt-plan-revision}]{prompts/v3/plan_conditioned_revision.txt}
-\end{minipage}
-
-Refinement-Need Decision is independent of the intermediate refinement artifacts.
-It receives only the Task Specification and Initial Candidate and returns \texttt{PRESERVE} or \texttt{REFINE}, without generating a critique, plan, or code.
-When the Decision is \texttt{PRESERVE}, the Final Candidate is the exact stored Initial Candidate; when it is \texttt{REFINE}, the Final Candidate is the Revised Candidate produced by the matched \texttt{R}, \texttt{CR}, or \texttt{CPR} sequence.
-This construction yields Decision-Conditioned Direct Revision (\texttt{DR}), Decision-Conditioned Critique-Conditioned Revision (\texttt{DCR}), and Decision-Conditioned Critique-and-Plan-Conditioned Revision (\texttt{DCPR}) without additional revision calls.
-The same Decision was reused for all three outcomes and received neither the later intermediate artifacts nor the identity of the sequence whose outcome it selected.
-
-The incremental comparisons concern complete Stage Compositions.
-Thus, \texttt{CR} versus \texttt{R} measures the combined effect of the Critique Generation call, its artifact, and its token cost, while \texttt{CPR} versus \texttt{CR} measures the corresponding combined effect of Revision Planning.
-We do not interpret either contrast as an independent evaluation of critique or plan correctness.
+The complete frozen prompt sets were versioned before their respective executions, and raw responses were stored before parsing.
+The incremental contrasts concern complete protocols: for example, \texttt{CR} versus \texttt{R} includes the Critique call, its artifact, its downstream conditioning, and its token cost, while \texttt{CPR} versus \texttt{CR} also changes the direct input to Revision from Critique to Plan.
+We therefore do not interpret either contrast as an isolated causal evaluation of Critique or Plan correctness.
 
 \subsection{Models}
 
@@ -264,25 +280,32 @@ Initial Pass Rate was treated as an observed characteristic of each of the 18 mo
 
 \subsection{Experimental Setting}
 
-To reduce model-loading and duplicate-call costs, we executed the experiment by model-resident phase rather than running each task through every protocol end to end.
-For each checkpoint, we first completed Direct Generation for all 1,677 tasks, then generated all \texttt{D} decisions, \texttt{R} candidates, \texttt{C} artifacts, \texttt{CR} candidates, \texttt{P} artifacts, and \texttt{CPR} candidates in dependency order.
-The stored Critique was reused by \texttt{CR} and \texttt{P}, the stored Plan was reused by \texttt{CPR}, and one Decision was reused to derive \texttt{DR}, \texttt{DCR}, and \texttt{DCPR}.
-Immutable artifacts were checkpointed at phase boundaries so completed logical calls could be resumed without regeneration.
+To reduce model-loading and duplicate-call costs, we executed the experiment in stage-homogeneous, model-resident phases rather than running each task through every protocol end to end.
+For each checkpoint, Direct Generation first produced the shared Initial Candidates, after which the separate Decision and Direct Revision calls were executed over the full task set.
+The role-separated Critique, Critique-Conditioned Revision, Planning, and Plan-Conditioned Revision phases were then executed in dependency order, reusing the same stored Critique for \texttt{CR} and Planning and the stored Plan for \texttt{CPR}.
+Finally, the model remained resident while the five Single-Call Role Protocols were executed sequentially over all three benchmarks.
+Immutable artifacts and their lineage were checkpointed at phase boundaries so completed logical calls could be resumed without regeneration.
+
+The physical collection executed every Always-Refine and Single-Call path for each available Initial Candidate regardless of the separate Decision.
+We then derived \texttt{DR}, \texttt{DCR}, and \texttt{DCPR} by combining that Decision with the matched stored candidate, which made both prevented regressions and missed repairs observable without additional inference.
+Protocol-Implied Token Cost nevertheless follows conditional execution: a \texttt{PRESERVE} outcome includes the Decision but excludes the skipped downstream refinement calls.
+The final paper-facing inventory contains 120,656 logical calls across Direct Generation and the 11 downstream call types; eight malformed Initial Candidates account for the 88 unavailable downstream calls from the complete 120,744-unit grid.
 
 All inference ran on an Ubuntu 22.04 server with two 24~GiB NVIDIA GeForce RTX 4090 GPUs.
 We used vLLM 0.26.0 with tensor parallelism of two, a batch size of 32, a 16,384-token context limit, and GPU memory utilization of 0.85.
 Prompts used each checkpoint's tokenizer and chat template, automatic prompt truncation was disabled, and every rendered prompt was required to fit the common context limit together with its output allowance.
 Generation used batch-invariant greedy decoding with one output, temperature 0, top-$p$ 1, seed 0, and all penalties disabled.
-Maximum output lengths were 4,096 tokens for candidate generation, 2,048 for Critique and Plan, and 64 for Decision.
+Maximum output lengths were 4,096 tokens for every candidate-producing call, 2,048 for separate Critique and Plan calls, and 64 for the separate Decision call.
 
 We applied a strict output contract to every generated candidate.
 The response had to contain exactly one complete fenced Python block; otherwise, no candidate was extracted or repaired.
-Across 70,386 executed model calls, eight Direct Generation responses and ten revision responses violated this contract and were retained as \texttt{malformed\_candidate}; the eight malformed Initial Candidates blocked their 48 dependent calls.
+Eight Direct Generation responses and 717 final-candidate call responses violated this contract and were retained as \texttt{malformed\_candidate} without regeneration or parser repair.
 These cases remained in the study scope and counted as zero only for end-to-end success, while functional transitions were left unavailable because no candidate was executed.
 
 Decision responses were parsed only when the complete trimmed response was \texttt{PRESERVE} or \texttt{REFINE}.
 Among 202 non-exact responses, 156 differed only by one terminal period and were normalized deterministically, while 46 unambiguous explanations were coded before candidate evaluation under a fixed execution-blind rubric.
 All 202 responses were resolved, their original status and token counts were retained, and exact-parsed Decisions were analyzed separately as a sensitivity check.
+Integrated \texttt{SC-D*} labels were parsed independently from code and were not manually normalized or adjudicated.
 
 We evaluated Initial and Final Candidates in processes separated from model inference, and a candidate passed only if it satisfied the benchmark's full test suite.
 HumanEval+ and MBPP+ used EvalPlus 0.3.1 in the Python 3.12 environment also used for orchestration and analysis.
@@ -294,7 +317,11 @@ The default primary limit was 10 seconds; \texttt{Mbpp/599} used 60 seconds, and
 After the complete primary batch, a provisional timeout was retried once using the larger of 120 seconds and 1.5 times its primary limit; \texttt{HumanEval/38}, \texttt{/50}, and \texttt{/53} used a pre-specified 180-second confirmation limit.
 A candidate was assigned final \texttt{TIMEOUT} only when both attempts timed out.
 
-The analysis paired every evaluable Initial Candidate with the Final Candidate selected by each protocol.
-We reported Initial and Final Pass Rates and decomposed their difference into Repair, Correct-to-Incorrect Regression, Functional Preservation, and Unrepaired Failure.
-Protocol comparisons used a task-level paired bootstrap with 10,000 resamples, a fixed seed of 20260804, and 95\% confidence intervals.
-Token cost was computed from the calls required by each protocol; a Decision-Conditioned protocol included only the Decision cost after \texttt{PRESERVE} and added the corresponding Always-Refine cost after \texttt{REFINE}.
+The primary correctness measure was end-to-end success: a malformed model candidate counted as zero, while a timeout or evaluation-infrastructure outcome remained indeterminate.
+For pairs with determinate functional outcomes, we also decomposed Initial-to-Final transitions into Repair, Correct-to-Incorrect Regression, Functional Preservation, and Unrepaired Failure.
+Protocol contrasts paired tasks on the exact Initial Candidate and used a deterministic task-level bootstrap with 10,000 resamples and 95\% confidence intervals; exact two-sided McNemar tests were supplementary.
+RQ2 additionally compared the 18 model-benchmark combinations descriptively rather than interpreting Initial Pass Rate as a causal treatment.
+
+End-to-end Protocol-Implied Token Cost included the shared Direct Generation call and all incremental calls required by a protocol.
+An Always-Refine composition included every stage on its path, a Single-Call Role Protocol added its one combined call, and a Decision-conditioned protocol added its matched refinement path only after \texttt{REFINE}.
+We compared raw token counts within a model because the six checkpoints used different tokenizers, and we distinguished this protocol cost from the total tokens physically consumed to collect the complete panel.
