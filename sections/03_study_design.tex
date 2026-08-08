@@ -118,30 +118,27 @@ The figure uses \texttt{D}, \texttt{C}, \texttt{P}, and \texttt{R} as compact ro
 \subsubsection{Stages and Separate-Call Prompt Templates}
 
 In the Separate-Call conditions, every purple stage box in Figure~\ref{fig:protocol-overview} is an observable prompt and model call, and every intermediate output is stored before it is supplied to another call.
-The four stage names correspond directly to their abbreviations: Decision (\texttt{D}), Critique (\texttt{C}), Planning (\texttt{P}), and Revision (\texttt{R}).
-The following definitions use the frozen prompt templates to make each stage's inputs, task, and output contract explicit.
+These protocols use four stages: Decision (\texttt{D}), Critique (\texttt{C}), Planning (\texttt{P}), and Revision (\texttt{R}).
+The frozen templates below define the information and output boundary of each stage.
 
-\paragraph{Decision (\texttt{D}).}
-Decision receives only the Task Specification and exact Initial Candidate.
-As Listing~\ref{lst:prompt-decision} shows, the prompt asks whether the candidate should be preserved exactly or refined and restricts the response to the single uppercase label \texttt{PRESERVE} or \texttt{REFINE}.
-It explicitly excludes a Critique, Plan, and code, and its label is not supplied to the other stage prompts.
+The \textbf{Decision (\texttt{D})} stage receives only the Task Specification and exact Initial Candidate.
+In Listing~\ref{lst:prompt-decision}, the opening instruction frames the choice as preserving the candidate exactly or refining it, and the final line restricts the response to the single uppercase label \texttt{PRESERVE} or \texttt{REFINE}.
+The prompt excludes additional analysis or code, and the resulting label is used for candidate selection rather than supplied to another stage.
 
 \noindent\begin{minipage}{\columnwidth}
 \lstinputlisting[style=prompt,caption={Frozen Decision (\texttt{D}) prompt.},label={lst:prompt-decision}]{prompts/v5/refinement_need_decision.txt}
 \end{minipage}
 
-\paragraph{Critique (\texttt{C}).}
-Critique also receives only the Task Specification and Initial Candidate.
-The template in Listing~\ref{lst:prompt-critique} asks for the root cause and relevant code location of each functional problem and requires an explicit no-problem statement when none is found.
-The final instruction, ``Return only the critique,'' keeps this stage from producing a Plan or revised program; the resulting Critique artifact is not assigned an independent correctness label.
+The \textbf{Critique (\texttt{C})} stage also receives only the Task Specification and Initial Candidate.
+Its template asks for the root cause and relevant code location of each functional problem and requires an explicit no-problem statement when none is found.
+The output contract in Listing~\ref{lst:prompt-critique} limits the response to a Critique artifact, which is stored for downstream use rather than evaluated as an executable candidate.
 
 \noindent\begin{minipage}{\columnwidth}
 \lstinputlisting[style=prompt,caption={Frozen Critique (\texttt{C}) prompt.},label={lst:prompt-critique}]{prompts/v5/critique_generation.txt}
 \end{minipage}
 
-\paragraph{Planning (\texttt{P}).}
-Planning receives the Task Specification, Initial Candidate, and stored Critique.
-As shown in Listing~\ref{lst:prompt-planning}, it translates the supplied Critique into concrete minimal changes and identifies existing behavior that should remain unchanged; if the Critique reports no problem, it must state that no change is needed.
+The \textbf{Planning (\texttt{P})} stage receives the Task Specification, Initial Candidate, and stored Critique.
+The template in Listing~\ref{lst:prompt-planning} translates that Critique into concrete minimal changes and identifies existing behavior that should remain unchanged; if the Critique reports no problem, the response must state that no change is needed.
 The prompt requests only a revision plan, not complete code.
 Planning is therefore placed after Critique rather than being treated as a second independent review.
 
@@ -149,8 +146,7 @@ Planning is therefore placed after Critique rather than being treated as a secon
 \lstinputlisting[style=prompt,caption={Frozen Planning (\texttt{P}) prompt.},label={lst:prompt-planning}]{prompts/v5/revision_planning.txt}
 \end{minipage}
 
-\paragraph{Revision (\texttt{R}).}
-Revision is the only Separate-Call stage that returns executable code.
+The \textbf{Revision (\texttt{R})} stage is the only Separate-Call stage that returns executable code.
 Its template changes with the available upstream artifact, but every version requires exactly one complete fenced Python block and prohibits assumptions about tests, execution results, diagnostics, or external feedback.
 In the \texttt{R} protocol, Listing~\ref{lst:prompt-direct-revision} asks Revision to review the Initial Candidate directly and revise it only if needed.
 
