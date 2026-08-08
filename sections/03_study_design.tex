@@ -28,62 +28,8 @@ For each model-task pair, Direct Generation produced one Initial Candidate from 
 The candidate was stored once and reused as the exact input to every refinement variant, so differences between variants did not arise from different initial generations.
 We refer to this control as the Shared-Initial Design.
 Benchmark execution was reserved for evaluation and provided no feedback to the model.
-
-We describe refinement using four role labels: Refinement-Need Decision (\texttt{D}), Critique Generation (\texttt{C}), Revision Planning (\texttt{P}), and Code Revision (\texttt{R}).
-In the separate-call conditions, each label denotes an observable prompt and model call whose output was stored before a downstream call.
-In the single-call conditions, the labels instead denote roles ordered within one prompt and do not establish that the model's unobserved reasoning followed those roles internally.
-
-\subsubsection{Refinement Stages}
-
-Refinement-Need Decision (\texttt{D}) receives only the Task Specification and exact Initial Candidate and returns \texttt{PRESERVE} or \texttt{REFINE}.
-It does not generate a Critique, Plan, or revised code and is not provided to any Critique, Planning, or Revision prompt.
-Its function in a separate-call protocol is exact selection: \texttt{PRESERVE} selects the stored Initial Candidate, whereas \texttt{REFINE} selects the candidate from a matched refinement path.
-
-Critique Generation (\texttt{C}) receives the Task Specification and Initial Candidate and diagnoses whether the candidate has a functional problem.
-When a problem is found, the Critique identifies its root cause and relevant code location; otherwise, it records a no-problem conclusion.
-The call is not asked to produce a completed Revision Plan or a revised solution, and we do not assign an independent correctness label to its text artifact.
-
-Revision Planning (\texttt{P}) receives the Task Specification, Initial Candidate, and stored Critique.
-It translates the Critique into concrete minimal changes and preservation constraints, or records that no change is needed when the Critique found no problem.
-Planning is not instructed to conduct a second independent review and does not produce the complete revised program.
-We use Planning only after Critique because a plan produced without a prior diagnosis would combine problem identification and edit planning rather than isolate the same translation role.
-
-Code Revision (\texttt{R}) is the only separate-call Refinement Stage that produces executable code.
-Direct Revision receives the Task Specification and Initial Candidate and must determine for itself whether a functional change is needed.
-Critique-Conditioned Revision instead acts on the stored Critique, whereas Plan-Conditioned Revision acts on the stored Plan and does not receive the Critique text directly.
-The conditioned Revision prompts request an exact reproduction of the Initial Candidate when their supplied artifact indicates that no change is needed.
-Every Revision response must contain exactly one complete fenced Python block, and no Revision prompt receives a Decision or execution feedback.
-
-\subsubsection{Separate-Call Protocols for RQ1 and RQ2}
-
-The three Always-Refine Protocols are named by the execution order of their separately invoked stages.
-Direct Revision (\texttt{R}) performs one Revision call without an upstream artifact.
-Critique-Conditioned Revision (\texttt{CR}) executes Critique Generation and then provides the stored Critique to a separate Revision call.
-Critique-and-Plan-Conditioned Revision (\texttt{CPR}) executes Critique Generation, translates the stored Critique in a separate Planning call, and provides only the resulting Plan to a separate Revision call.
-The same Critique artifact is reused by \texttt{CR} and Planning, so their difference does not include independently sampled Critiques.
-RQ1 compares Direct Generation with \texttt{R}, \texttt{R} with \texttt{CR}, and \texttt{CR} with \texttt{CPR} to measure complete Stage-Composition effects together with their Repair and Regression balance.
-
-Combining \texttt{D} with \texttt{R} yields Decision-Conditioned Direct Revision (\texttt{DR}).
-Its combinations with \texttt{CR} and \texttt{CPR} yield Decision-Conditioned \texttt{CR} (\texttt{DCR}) and Decision-Conditioned \texttt{CPR} (\texttt{DCPR}), respectively.
-No additional Revision call is made to construct these outcomes.
-If the Decision is \texttt{PRESERVE}, the protocol selects the exact Initial Candidate; if it is \texttt{REFINE}, it selects the matched Always-Refine candidate.
-RQ2 compares each Decision-conditioned protocol with its Always-Refine counterpart to quantify prevented regressions, missed repairs, and conditionally avoided calls across model-benchmark combinations.
-
-\subsubsection{Single-Call Protocols for RQ3}
-
-The Single-Call Role Protocols specify multiple roles in one prompt but make one model call from the Task Specification and exact Initial Candidate.
-Single-Call Critique and Revision (\texttt{SC-CR}) orders the \texttt{C} and \texttt{R} roles, and Single-Call Critique, Planning, and Revision (\texttt{SC-CPR}) orders \texttt{C}, \texttt{P}, and \texttt{R}; both responses require only the final code.
-Single-Call Decision and Revision (\texttt{SC-DR}), Single-Call Decision, Critique, and Revision (\texttt{SC-DCR}), and Single-Call Decision, Critique, Planning, and Revision (\texttt{SC-DCPR}) additionally require an exact first-line Decision label in the same response as the final code.
-We do not define a separate \texttt{SC-R} condition because \texttt{R} is already a one-call protocol with the same role scope.
-
-For the primary \texttt{SC-D*} outcome, the Final Candidate is the code emitted by that call regardless of its Decision label.
-The label and code are parsed independently, so a valid code candidate remains available even if its label is invalid, and a valid label remains recorded when the code is malformed.
-Selecting the exact Initial Candidate for \texttt{PRESERVE} and the emitted code for \texttt{REFINE} forms a supplementary label-enforced outcome without another model call.
-RQ3 compares \texttt{CR} with \texttt{SC-CR}, \texttt{CPR} with \texttt{SC-CPR}, and each of \texttt{DR}, \texttt{DCR}, and \texttt{DCPR} with its matched \texttt{SC-D*} protocol.
-These contrasts estimate the end-to-end effect of prompt-and-call topology, not the independent semantic accuracy of an unobserved internal Critique, Plan, or Decision process.
-RQ4 places Direct Generation and all 11 refinement outcomes in a common correctness-cost comparison.
-
-Figure~\ref{fig:protocol-overview} summarizes the separate-call compositions used for RQ1 and RQ2 and their single-call counterparts used for RQ3.
+Figure~\ref{fig:protocol-overview} presents the complete protocol family before the individual stages and their prompt templates are defined.
+The figure uses \texttt{D}, \texttt{C}, \texttt{P}, and \texttt{R} as compact role labels that are explained immediately afterward.
 
 \begin{figure}[H]
 \centering
@@ -101,8 +47,8 @@ Figure~\ref{fig:protocol-overview} summarizes the separate-call compositions use
 \draw[flow] (task) -- (generation);
 \draw[flow] (generation) -- (initial);
 
-\node at (5.0,3.9) {\small\bfseries Separate calls (RQ1 and RQ2)};
-\node at (16.8,3.9) {\small\bfseries One call (RQ3)};
+\node at (5.0,3.9) {\small\bfseries Separate-call protocols};
+\node at (16.8,3.9) {\small\bfseries Single-call protocols};
 
 \node[label] at (0.0,2.8) {R};
 \node[stage] (r-direct) at (4.0,2.8) {R};
@@ -139,39 +85,125 @@ Figure~\ref{fig:protocol-overview} summarizes the separate-call compositions use
 \draw[flow] (decision-artifact) -- (selection);
 
 \node[label] at (12.0,2.8) {SC-CR};
-\node[stage] (sc-cr) at (16.0,2.8) {one call: C $\rightarrow$ R};
+\node[stage] (sc-cr) at (16.0,2.8) {C and R instructions};
 \node[outcome] (sc-cr-candidate) at (20.7,2.8) {code};
 \draw[flow] (sc-cr) -- (sc-cr-candidate);
 
 \node[label] at (12.0,1.5) {SC-CPR};
-\node[stage] (sc-cpr) at (16.0,1.5) {one call: C $\rightarrow$ P $\rightarrow$ R};
+\node[stage] (sc-cpr) at (16.0,1.5) {C, P, and R instructions};
 \node[outcome] (sc-cpr-candidate) at (20.7,1.5) {code};
 \draw[flow] (sc-cpr) -- (sc-cpr-candidate);
 
 \node[label] at (12.0,0.0) {SC-DR};
-\node[stage] (sc-dr) at (16.0,0.0) {one call: D $\rightarrow$ R};
+\node[stage] (sc-dr) at (16.0,0.0) {D and R instructions};
 \node[outcome] (sc-dr-candidate) at (20.7,0.0) {label + code};
 \draw[flow] (sc-dr) -- (sc-dr-candidate);
 
 \node[label] at (12.0,-1.2) {SC-DCR};
-\node[stage] (sc-dcr) at (16.0,-1.2) {one call: D $\rightarrow$ C $\rightarrow$ R};
+\node[stage] (sc-dcr) at (16.0,-1.2) {D, C, and R instructions};
 \node[outcome] (sc-dcr-candidate) at (20.7,-1.2) {label + code};
 \draw[flow] (sc-dcr) -- (sc-dcr-candidate);
 
 \node[label] at (12.0,-2.4) {SC-DCPR};
-\node[stage] (sc-dcpr) at (16.0,-2.4) {one call: D $\rightarrow$ C $\rightarrow$ P $\rightarrow$ R};
+\node[stage] (sc-dcpr) at (16.0,-2.4) {D, C, P, and R instructions};
 \node[outcome] (sc-dcpr-candidate) at (20.7,-2.4) {label + code};
 \draw[flow] (sc-dcpr) -- (sc-dcpr-candidate);
 \end{tikzpicture}%
 }
-\caption{Overview of the Shared-Initial Design and protocol composition. Every row receives the Task Specification and exact Initial Candidate. Separate boxes in the left panel denote distinct calls and stored artifact flow; each stage sequence in the right panel is specified within one call. \texttt{D*} combines one separate Decision with each matched Always-Refine candidate to derive \texttt{DR}, \texttt{DCR}, and \texttt{DCPR}.}
+\caption{Overview of the Shared-Initial Design and protocol composition. Every row receives the Task Specification and exact Initial Candidate. Each purple box denotes one model call, dashed boxes denote stored artifacts, and green boxes denote candidate outputs or exact selection. Multiple role labels inside a Single-Call box are instructions included together in one prompt; they do not denote separately observed stages or an evidenced internal execution order. \texttt{D*} combines one separate Decision with each matched Always-Refine candidate to derive \texttt{DR}, \texttt{DCR}, and \texttt{DCPR}.}
 \label{fig:protocol-overview}
 \end{figure}
 \unskip
 
-The complete frozen prompt sets were versioned before their respective executions, and raw responses were stored before parsing.
-The incremental contrasts concern complete protocols: for example, \texttt{CR} versus \texttt{R} includes the Critique call, its artifact, its downstream conditioning, and its token cost, while \texttt{CPR} versus \texttt{CR} also changes the direct input to Revision from Critique to Plan.
-We therefore do not interpret either contrast as an isolated causal evaluation of Critique or Plan correctness.
+\subsubsection{Refinement Stages and Separate-Call Prompts}
+
+In the Separate-Call conditions, every purple stage box in Figure~\ref{fig:protocol-overview} is an observable prompt and model call, and every intermediate output is stored before it is supplied to another call.
+The four stages have the following responsibilities and input boundaries.
+
+\begin{itemize}
+\item \textbf{Refinement-Need Decision (\texttt{D})} receives only the Task Specification and exact Initial Candidate and returns \texttt{PRESERVE} or \texttt{REFINE}.
+It produces no Critique, Plan, or code and is not supplied to the other stage prompts.
+\item \textbf{Critique Generation (\texttt{C})} receives the Task Specification and Initial Candidate and identifies the root cause and location of functional problems, or explicitly states that none was found.
+It does not produce a Revision Plan or revised program, and its text is not assigned an independent correctness label.
+\item \textbf{Revision Planning (\texttt{P})} receives the Task Specification, Initial Candidate, and stored Critique and translates that diagnosis into minimal changes and preservation constraints.
+It is not asked to conduct a second independent review or output complete revised code, and it is used only after Critique Generation.
+\item \textbf{Code Revision (\texttt{R})} is the only Separate-Call stage that produces executable code.
+Direct Revision reviews the candidate without an upstream artifact, Critique-Conditioned Revision acts on the stored Critique, and Plan-Conditioned Revision implements the stored Plan without receiving the Critique directly.
+Every variant requires exactly one complete fenced Python block and receives neither a Decision nor execution feedback.
+\end{itemize}
+
+Listings~\ref{lst:prompt-decision} through~\ref{lst:prompt-plan-revision} reproduce the frozen Separate-Call templates for these four stages.
+Because the direct input and responsibility of \texttt{R} depend on the protocol path, its Direct, Critique-Conditioned, and Plan-Conditioned templates are shown separately.
+
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen Refinement-Need Decision (\texttt{D}) prompt.},label={lst:prompt-decision}]{prompts/v5/refinement_need_decision.txt}
+\end{minipage}
+
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen Critique Generation (\texttt{C}) prompt.},label={lst:prompt-critique}]{prompts/v5/critique_generation.txt}
+\end{minipage}
+
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen Revision Planning (\texttt{P}) prompt.},label={lst:prompt-planning}]{prompts/v5/revision_planning.txt}
+\end{minipage}
+
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen Direct Revision (\texttt{R}) prompt.},label={lst:prompt-direct-revision}]{prompts/v5/direct_revision.txt}
+\end{minipage}
+
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen Critique-Conditioned Revision prompt used as \texttt{R} in \texttt{CR}.},label={lst:prompt-critique-revision}]{prompts/v5/critique_conditioned_revision.txt}
+\end{minipage}
+
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen Plan-Conditioned Revision prompt used as \texttt{R} in \texttt{CPR}.},label={lst:prompt-plan-revision}]{prompts/v5/plan_conditioned_revision.txt}
+\end{minipage}
+
+\subsubsection{Protocol Composition}
+
+The four stages are connected into three types of protocol.
+
+\begin{itemize}
+\item \textbf{Always-Refine Protocols.}
+Direct Revision (\texttt{R}) makes one Revision call without an upstream artifact.
+Critique-Conditioned Revision (\texttt{CR}) stores the output of a \texttt{C} call and supplies it to a separate Critique-Conditioned \texttt{R} call.
+Critique-and-Plan-Conditioned Revision (\texttt{CPR}) stores a \texttt{C} artifact, translates it in a separate \texttt{P} call, and supplies only the resulting Plan to Plan-Conditioned \texttt{R}.
+The same stored Critique is used by \texttt{CR} and \texttt{P}, so their comparison does not introduce independently sampled Critiques.
+\item \textbf{Decision-Conditioned Protocols.}
+Combining \texttt{D} with \texttt{R} yields Decision-Conditioned Direct Revision (\texttt{DR}).
+The analogous combinations with \texttt{CR} and \texttt{CPR} yield \texttt{DCR} and \texttt{DCPR}.
+Each combines one stored \texttt{D} result with the corresponding Always-Refine candidate.
+A \texttt{PRESERVE} Decision selects the exact Initial Candidate, whereas \texttt{REFINE} selects the matched revised candidate.
+These outcomes require no additional Revision call.
+\item \textbf{Single-Call Protocols.}
+Each Single-Call condition places several role-specific instructions in one prompt that receives only the Task Specification and exact Initial Candidate.
+\texttt{SC-CR} includes Critique and Revision requests; \texttt{SC-CPR} includes Critique, Planning, and Revision requests; and \texttt{SC-DR}, \texttt{SC-DCR}, and \texttt{SC-DCPR} additionally request a Decision label.
+These names identify the roles jointly requested in the prompt rather than separately observed stages inside the response.
+We omit \texttt{SC-R} because \texttt{R} is already a one-call protocol with the same role scope.
+\end{itemize}
+
+Listing~\ref{lst:prompt-single-dcpr} shows the most comprehensive Single-Call template.
+Unlike Separate-Call \texttt{DCPR}, it neither stores nor reinserts a Critique or Plan; one prompt asks the model to decide, and on the \texttt{REFINE} path to analyze, plan, and revise before emitting the Decision label and final code.
+The remaining Single-Call templates request the corresponding subsets of these roles under the same one-call boundary.
+
+\noindent\begin{minipage}{\columnwidth}
+\lstinputlisting[style=prompt,caption={Frozen \texttt{SC-DCPR} prompt illustrating how Decision, Critique, Planning, and Revision are requested within one call.},label={lst:prompt-single-dcpr}]{prompts/v5/single_call_dcpr.txt}
+\end{minipage}
+
+For the primary \texttt{SC-D*} outcome, the Final Candidate is the code emitted by that call regardless of its Decision label.
+The label and code are parsed independently, so a valid code candidate remains available even if its label is invalid, and a valid label remains recorded when the code is malformed.
+Selecting the exact Initial Candidate for \texttt{PRESERVE} and the emitted code for \texttt{REFINE} forms a supplementary label-enforced outcome without another model call.
+Prompting for several roles in one response does not establish that the model's unobserved reasoning performed them in a particular order.
+
+\subsubsection{Protocol Comparisons}
+
+The protocol panel supports a different controlled comparison for each Research Question.
+RQ1 compares Direct Generation with \texttt{R}, \texttt{R} with \texttt{CR}, and \texttt{CR} with \texttt{CPR} to determine how the Separate-Call Stage Composition changes final correctness and its Repair and Regression balance.
+RQ2 compares \texttt{R} with \texttt{DR}, \texttt{CR} with \texttt{DCR}, and \texttt{CPR} with \texttt{DCPR} to determine when Decision conditioning prevents regressions, misses repairs, and avoids downstream calls across model-benchmark combinations.
+RQ3 compares \texttt{CR} with \texttt{SC-CR}, \texttt{CPR} with \texttt{SC-CPR}, and each Decision-conditioned protocol with its matched \texttt{SC-D*} condition to estimate the end-to-end effect of externalized calls and artifacts versus a combined prompt.
+These topology contrasts do not isolate the semantic correctness of a Critique or Plan or prove an internal reasoning trace.
+RQ4 places Direct Generation and all 11 refinement outcomes in a common correctness-cost comparison.
+Each contrast is interpreted as a complete protocol effect that includes its prompts, call boundaries, artifact flow, output selection, and token cost.
 
 \subsection{Models}
 

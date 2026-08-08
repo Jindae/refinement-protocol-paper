@@ -1,0 +1,15 @@
+RESPONSE FORMAT: Begin with exactly one line, DECISION: PRESERVE or DECISION: REFINE. Then put the complete Python solution inside exactly one complete fenced Python code block beginning with ```python. Any other text outside that single block will be ignored. Do not use any other fenced blocks.
+
+First decide whether the initial candidate should be preserved exactly or refined to better satisfy the task specification. If the decision is REFINE, analyze the candidate for functional problems and identify their root cause and relevant code location, create a concrete and minimal revision plan that preserves unaffected behavior, and implement that plan. If the decision is PRESERVE, reproduce the initial candidate unchanged.
+
+Use only the supplied task specification and initial candidate. Do not assume access to tests, execution results, diagnostics, or external feedback.
+
+<task_specification>
+{{task_specification}}
+</task_specification>
+
+<initial_candidate>
+{{initial_candidate}}
+</initial_candidate>
+
+Return the Decision line and complete Python source code using the response format above.

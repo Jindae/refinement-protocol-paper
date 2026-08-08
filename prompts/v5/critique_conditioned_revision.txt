@@ -1,0 +1,19 @@
+RESPONSE FORMAT: Put the complete Python solution inside exactly one complete fenced Python code block beginning with ```python. Any text outside that single block will be ignored. Do not use any other fenced blocks.
+
+Revise the initial candidate to address the functional problems identified in the supplied critique. If the critique identifies no functional problem, reproduce the initial candidate unchanged.
+
+Use only the supplied task specification, initial candidate, and critique. Do not assume access to tests, execution results, diagnostics, or external feedback.
+
+<task_specification>
+{{task_specification}}
+</task_specification>
+
+<initial_candidate>
+{{initial_candidate}}
+</initial_candidate>
+
+<critique>
+{{critique}}
+</critique>
+
+Return the complete Python source code using the response format above.

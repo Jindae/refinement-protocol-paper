@@ -1,0 +1,17 @@
+Create a concrete and minimal revision plan based on the supplied critique.
+
+Describe the changes needed to address the identified problems and the existing behavior that should remain unchanged. If the critique identifies no functional problem, state that no change is needed.
+
+<task_specification>
+{{task_specification}}
+</task_specification>
+
+<initial_candidate>
+{{initial_candidate}}
+</initial_candidate>
+
+<critique>
+{{critique}}
+</critique>
+
+Return only the revision plan, not the complete revised code.
